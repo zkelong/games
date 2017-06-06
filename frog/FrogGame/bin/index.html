@@ -8,7 +8,8 @@
 	/>
 	<meta name='apple-mobile-web-app-capable' content='yes' />
 	<meta name='full-screen' content='true' />
-	<meta name='screen-orientation' content='portrait' />
+	<!--<meta name='screen-orientation' content='portrait' />-->
+	<meta name='laya' screenorientation='portrait'>
 	<meta name='x5-fullscreen' content='true' />
 	<meta name='360-fullscreen' content='true' />
 	<meta http-equiv='expires' content='0' />
@@ -45,9 +46,16 @@
 	<!--自定义的js(src文件夹下)文件自动添加到下面jsfile模块标签里面里-->
 	<!--删除标签，ide不会自动添加js文件，请谨慎操作-->
 	<!--jsfile--startTag-->
-	<script src="js/def/config.js"></script>
-	<script src="js/Frog.js"></script>
-	<script src="js/Pillar.js"></script>
+	<script src="js/utl/utl.js"></script>
+	<script src="js/def/Type.js"></script>
+	<script src="js/def/sourceConfig.js"></script>
+	<script src="js/def/GameConfig.js"></script>
+	<script src="js/ui/layaUI.max.all.js"></script>
+	<script src="js/ad/ADView.js"></script>
+	<script src="js/game/Frog.js"></script>
+	<script src="js/game/GameMain.js"></script>
+	<script src="js/game/Pillar.js"></script>
+	<script src="js/lobby/LobbyMain.js"></script>
 	<!--jsfile--endTag-->
 
 	<!--启动类添加到这里-->
