@@ -27,7 +27,6 @@ namespace game {
             super();
             this.pillarYPos = Laya.stage.height * 3 / 5;
             this.size(Laya.stage.width, Laya.stage.height);
-            // console.log("stage....width....", this.width, this.height);
             this.gameMode = gameMode;
             this.label_control.on(Event.CLICK, this, this.gameControl);
             this.init();
@@ -45,31 +44,37 @@ namespace game {
         }
         //鼠标弹起
         onMouseUp() {
-            if (this.gameStatus != 1) {
+            if (this.gameStatus != 1) { //游戏进行中
+                console.log("未进行，操作无效");
+                return;
+            }
+            if (this.frog.inJump) {  //未落地，操作无效
+                console.log("未落地，操作无效");
                 return;
             }
             let endTime = new Date().valueOf();
-            // console.log("mosue......", JSON.stringify(this.mousePos), endTime, this.mouseX, this.mouseY);
-            if (endTime - this.mousePos.time > 1200) {
+            if (endTime - this.mousePos.time > 1200) {  //操作时间过长，认为操作无效
                 return;
             }
             let difX = this.mouseX - this.mousePos.x;
             let difY = this.mouseY - this.mousePos.y;
             let angle = Math.atan2(difY, difX);
             if (angle < Math.PI / 6 && angle > 0 || angle >= -Math.PI / 6) {     //右滑
+                console.log("小跳....");
                 this.frog.jumpSmall();
-                // console.log("small jump.......");
             }
             if (angle < -Math.PI / 3 && angle > -Math.PI * 2 / 3) { //上滑动
+                console.log("大跳....");
                 this.frog.jumbBig();
-                // console.log("big jump.......");
             }
         }
         //游戏控制
         gameControl() {
             if (this.gameStatus == 0) {
+                this.label_control.changeText("继续");
                 this.pause();
             } else {
+                this.label_control.changeText("暂停");
                 this.continue();
             }
         }
@@ -193,11 +198,19 @@ namespace game {
 
         //游戏循环
         onLoop() {
-            this.frog.setSpeed();
-
+            if (this.frog.inJump) {
+                this.frog.setSpeed();
+                this.frog.y -= this.frog.speedY;
+            }
             this.frog.x -= GameConfig.SPEED - this.frog.speedX;
-            this.frog.y -= this.frog.speedY;
-
+            // console.log("inJump....", this.frog.inJump);
+            if (this.frog.y >= this.pillarYPos && this.frog.inJump) {
+                console.log("landing......");
+                this.frog.playAnimation(Frog.ACTIONS.landing);
+            }
+            if (1) {
+                return;
+            }
             if (this.frog.x - this.frog.width / 2 < 0 || this.frog.x + this.frog.width / 2 >= Laya.stage.width) { //撞墙
                 this.frogBlast();
                 return;

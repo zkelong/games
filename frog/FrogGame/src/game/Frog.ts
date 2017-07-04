@@ -25,9 +25,8 @@ namespace game {
         beginPos = { x: 0, y: 0 };       //开始的位置
         speedX: number = 0;      //速度X
         speedY: number = 0;      //速度Y
-        acceleratedY: number = 0; //y上的加速度
-        jumpHeight: number = 40;    //跳跃高度
-        jumpTime: number = 0; //跳跃时间
+        acceleratedY: number = 1; //y上的加速度
+        // jumpTime: number = 0; //跳跃时间
         inJump: boolean = false;    //是否正在跳跃
 
         actionBody: Laya.Animation; //动作
@@ -47,7 +46,7 @@ namespace game {
             }
             if (!this.actionBody) {
                 this.actionBody = new Laya.Animation();
-                this.actionBody.interval = 50;
+                this.actionBody.interval = 10;
                 this.actionBody.scale(2, 2);
                 this.addChild(this.actionBody);
                 //增加动画播放完成监听
@@ -66,7 +65,13 @@ namespace game {
                 this.inJump = true;
             } else if (this.actionName == Frog.ACTIONS.blast) { //爆炸
                 this.inJump = false;
+                this.speedY = 0;
+                this.acceleratedY = 0;
+                this.speedX = 0;
             } else if (this.actionName == Frog.ACTIONS.landing) {  //落地
+                this.speedY = 0;
+                this.acceleratedY = 0;
+                this.speedX = 0;
                 this.inJump = false;
             }
             console.log("action.....", this.actionName);
@@ -78,16 +83,16 @@ namespace game {
             let stop = false;
             if (this.actionName == Frog.ACTIONS.stand) {          //静止
                 stop = true;
-            } else if (this.actionName == Frog.ACTIONS.flyUp) {   //起跳
-
-            } else if (this.actionName == Frog.ACTIONS.jump) {        //起飞
+            } else if (this.actionName == Frog.ACTIONS.jump) {   //起跳
+                this.playAnimation(Frog.ACTIONS.flyUp);
+            } else if (this.actionName == Frog.ACTIONS.flyUp) {        //起飞
                 stop = true;
             } else if (this.actionName == Frog.ACTIONS.upToDown) {        //上升变下降
-                stop = true;
+                this.playAnimation(Frog.ACTIONS.flyDown);
             } else if (this.actionName == Frog.ACTIONS.flyDown) {  //下降
                 stop = true;
             } else if (this.actionName == Frog.ACTIONS.landing) {  //落地
-
+                stop = true;
             } else if (this.actionName == Frog.ACTIONS.blast) {  //爆炸
                 stop = true;
             }
@@ -103,42 +108,34 @@ namespace game {
             this.beginPos = { x: x, y: y };
         }
         //计算速度
+        havePlayUpToDown: boolean = false;
         setSpeed() {
-            if (this.inJump) {
-                if (this.speedY < 0) {   //开始下降
-                    this.speedY = 0;
-                    this.playAnimation(Frog.ACTIONS.upToDown);
-                    this.jumpTime = 0;
-                }
-                this.jumpTime++;
-                if (this.actionName == Frog.ACTIONS.jump) {
-                    this.speedY -= this.acceleratedY * this.jumpTime;
-                } else {
-                    this.speedY -= this.acceleratedY * this.jumpTime;
-                }
-            } else if (this.speedY != 0) {
-                this.speedY = 0;
-                this.speedX = 0;
-                this.y = this.beginPos.y;
+            if (this.speedY <= 0 && !this.havePlayUpToDown) { //开始下降
+                this.havePlayUpToDown = true;
+                console.log("开始下降");
+                this.playAnimation(Frog.ACTIONS.upToDown);
+                // this.speedY = 0;
+                // return;
             }
+            this.speedY -= this.acceleratedY;
+            console.log("acceleratedY.....", this.acceleratedY, this.speedY);
         }
         //小跳
         jumpSmall() {
             this.speedX = 10;
-            this.jumpHeight = 40;
-            this.jumpOperate(GameConfig.SMALLSTEP);
+            this.acceleratedY = 3;
+            this.jumpOperate(GameConfig.SMALLSTEP * 4);
         }
         //大跳
         jumbBig() {
             this.speedX = 20;
-            this.jumpHeight = 80;
-            this.jumpOperate(GameConfig.BIGSTEP);
+            this.acceleratedY = 3;
+            this.jumpOperate(GameConfig.BIGSTEP * 4);
         }
         //跳跃操作
         jumpOperate(setpWidth) {
-            this.jumpTime = 0;
-            this.acceleratedY = 8 * this.jumpHeight * this.speedX * this.speedX / (setpWidth * setpWidth);
-            this.speedY = 2 * this.acceleratedY * setpWidth / this.speedX;
+            this.havePlayUpToDown = false;
+            this.speedY = 0.5 * this.acceleratedY * setpWidth / this.speedX;
             this.playAnimation(Frog.ACTIONS.jump);
         }
     }

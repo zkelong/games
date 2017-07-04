@@ -31,7 +31,6 @@ var game;
             _this.mousePos = { time: 0, x: 0, y: 0 };
             _this.pillarYPos = Laya.stage.height * 3 / 5;
             _this.size(Laya.stage.width, Laya.stage.height);
-            // console.log("stage....width....", this.width, this.height);
             _this.gameMode = gameMode;
             _this.label_control.on(Event.CLICK, _this, _this.gameControl);
             _this.init();
@@ -49,10 +48,14 @@ var game;
         //鼠标弹起
         GameMain.prototype.onMouseUp = function () {
             if (this.gameStatus != 1) {
+                console.log("未进行，操作无效");
+                return;
+            }
+            if (this.frog.inJump) {
+                console.log("未落地，操作无效");
                 return;
             }
             var endTime = new Date().valueOf();
-            // console.log("mosue......", JSON.stringify(this.mousePos), endTime, this.mouseX, this.mouseY);
             if (endTime - this.mousePos.time > 1200) {
                 return;
             }
@@ -60,20 +63,22 @@ var game;
             var difY = this.mouseY - this.mousePos.y;
             var angle = Math.atan2(difY, difX);
             if (angle < Math.PI / 6 && angle > 0 || angle >= -Math.PI / 6) {
+                console.log("小跳....");
                 this.frog.jumpSmall();
-                // console.log("small jump.......");
             }
             if (angle < -Math.PI / 3 && angle > -Math.PI * 2 / 3) {
+                console.log("大跳....");
                 this.frog.jumbBig();
-                // console.log("big jump.......");
             }
         };
         //游戏控制
         GameMain.prototype.gameControl = function () {
             if (this.gameStatus == 0) {
+                this.label_control.changeText("继续");
                 this.pause();
             }
             else {
+                this.label_control.changeText("暂停");
                 this.continue();
             }
         };
@@ -191,9 +196,19 @@ var game;
         };
         //游戏循环
         GameMain.prototype.onLoop = function () {
-            this.frog.setSpeed();
+            if (this.frog.inJump) {
+                this.frog.setSpeed();
+                this.frog.y -= this.frog.speedY;
+            }
             this.frog.x -= GameConfig.SPEED - this.frog.speedX;
-            this.frog.y -= this.frog.speedY;
+            // console.log("inJump....", this.frog.inJump);
+            if (this.frog.y >= this.pillarYPos && this.frog.inJump) {
+                console.log("landing......");
+                this.frog.playAnimation(game.Frog.ACTIONS.landing);
+            }
+            if (1) {
+                return;
+            }
             if (this.frog.x - this.frog.width / 2 < 0 || this.frog.x + this.frog.width / 2 >= Laya.stage.width) {
                 this.frogBlast();
                 return;
