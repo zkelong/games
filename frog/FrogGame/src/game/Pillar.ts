@@ -29,6 +29,7 @@ namespace game {
         init(x, y, haveTrap) {
             this.pos(x, y);
             this.trap.visible = haveTrap;
+            this.haveTrap = haveTrap;
         }
     }
 }

@@ -21,12 +21,14 @@ var game;
          */
         function GameMain(gameMode) {
             var _this = _super.call(this) || this;
-            _this.BEGINXPOS = 30; //开始位置
+            _this.BEGINXPOS = 150; //开始位置
             _this.COUNTDOWNNUM = 3; //倒计时时间
             _this.gameStatus = 0; //游戏状态 0--暂停中，1--进行中
             _this.pillarArray = []; //柱子对象
             _this.lastStepBig = true; //上一次间隔是大间隔
             _this.lastHaveTrap = false; //上次有陷阱
+            ////////////////界面操作///////////////
+            _this.mousePos = { time: 0, x: 0, y: 0 };
             _this.pillarYPos = Laya.stage.height * 3 / 5;
             _this.size(Laya.stage.width, Laya.stage.height);
             // console.log("stage....width....", this.width, this.height);
@@ -34,9 +36,38 @@ var game;
             _this.label_control.on(Event.CLICK, _this, _this.gameControl);
             _this.init();
             _this.start();
+            _this.on(Laya.Event.MOUSE_DOWN, _this, _this.onMouseDown);
+            _this.on(Laya.Event.MOUSE_UP, _this, _this.onMouseUp);
             return _this;
         }
-        ////////////////界面操作///////////////
+        //鼠标按下
+        GameMain.prototype.onMouseDown = function () {
+            this.mousePos.x = this.mouseX;
+            this.mousePos.y = this.mouseY;
+            this.mousePos.time = new Date().valueOf();
+        };
+        //鼠标弹起
+        GameMain.prototype.onMouseUp = function () {
+            if (this.gameStatus != 1) {
+                return;
+            }
+            var endTime = new Date().valueOf();
+            // console.log("mosue......", JSON.stringify(this.mousePos), endTime, this.mouseX, this.mouseY);
+            if (endTime - this.mousePos.time > 1200) {
+                return;
+            }
+            var difX = this.mouseX - this.mousePos.x;
+            var difY = this.mouseY - this.mousePos.y;
+            var angle = Math.atan2(difY, difX);
+            if (angle < Math.PI / 6 && angle > 0 || angle >= -Math.PI / 6) {
+                this.frog.jumpSmall();
+                // console.log("small jump.......");
+            }
+            if (angle < -Math.PI / 3 && angle > -Math.PI * 2 / 3) {
+                this.frog.jumbBig();
+                // console.log("big jump.......");
+            }
+        };
         //游戏控制
         GameMain.prototype.gameControl = function () {
             if (this.gameStatus == 0) {
@@ -49,12 +80,12 @@ var game;
         //开始
         GameMain.prototype.start = function () {
             var _this = this;
-            this.gameStatus = 1;
             var countDown = this.COUNTDOWNNUM;
             this.label_time.changeText(countDown + "");
             this.label_time.visible = true;
             Laya.timer.loop(1000, this, function () {
                 if (countDown < 0) {
+                    _this.gameStatus = 1;
                     _this.label_time.visible = false;
                     Laya.timer.clearAll(_this);
                     Laya.timer.frameLoop(1, _this, _this.onLoop);
@@ -117,7 +148,7 @@ var game;
                 this.frog.on(this.frog.ACTIONEND, this, this.frogActionOver);
             }
             this.lastXpos = this.BEGINXPOS;
-            this.frog.pos(this.lastXpos, this.pillarYPos);
+            this.frog.initPos(this.lastXpos, this.pillarYPos);
             this.frog.playAnimation(game.Frog.ACTIONS.stand);
             this.gameMap.addChild(this.frog);
             this.addPillar(this.lastXpos);
@@ -160,19 +191,37 @@ var game;
         };
         //游戏循环
         GameMain.prototype.onLoop = function () {
+            this.frog.setSpeed();
             this.frog.x -= GameConfig.SPEED - this.frog.speedX;
-            this.frog.y += this.frog.speedY;
-            if (this.frog.x - this.frog.width / 2 < 0) {
+            this.frog.y -= this.frog.speedY;
+            if (this.frog.x - this.frog.width / 2 < 0 || this.frog.x + this.frog.width / 2 >= Laya.stage.width) {
                 this.frogBlast();
                 return;
             }
             if (this.pillarArray.length) {
                 for (var i = this.pillarArray.length - 1; i > -1; i--) {
-                    this.pillarArray[i].x -= GameConfig.SPEED;
+                    var p = this.pillarArray[i];
+                    p.x -= GameConfig.SPEED;
                     if (this.pillarArray[i].x < -GameConfig.PILLARWIDTH / 2) {
                         //回收
-                        Laya.Pool.recover(game.Pillar.PILLARTAG, this.pillarArray[i]);
+                        Laya.Pool.recover(game.Pillar.PILLARTAG, p);
                         this.pillarArray.shift();
+                    }
+                    //青蛙与柱子的碰撞 
+                    if (this.frog.inJump) {
+                        if (this.frog.y >= this.pillarYPos) {
+                            if (Math.abs(this.frog.x - p.x) < p.width / 2) {
+                                if (p.haveTrap) {
+                                    this.frogBlast();
+                                }
+                                else {
+                                    this.frog.playAnimation(game.Frog.ACTIONS.landing);
+                                }
+                            }
+                            else if (this.frog.y + this.frog.width / 2 >= this.pillarArray[i].x - this.pillarArray[i].width / 2) {
+                                this.frogBlast();
+                            }
+                        }
                     }
                 }
                 this.lastXpos = this.pillarArray[this.pillarArray.length - 1].x;

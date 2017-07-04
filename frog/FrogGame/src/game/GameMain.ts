@@ -7,7 +7,7 @@ namespace game {
 
 
     export class GameMain extends ui.game.GameMainUI {
-        BEGINXPOS = 30; //开始位置
+        BEGINXPOS = 150; //开始位置
         COUNTDOWNNUM = 3;   //倒计时时间
 
         frog: Frog;             //青蛙
@@ -32,8 +32,39 @@ namespace game {
             this.label_control.on(Event.CLICK, this, this.gameControl);
             this.init();
             this.start();
+            this.on(Laya.Event.MOUSE_DOWN, this, this.onMouseDown);
+            this.on(Laya.Event.MOUSE_UP, this, this.onMouseUp);
         }
         ////////////////界面操作///////////////
+        mousePos = { time: 0, x: 0, y: 0 };
+        //鼠标按下
+        onMouseDown() {
+            this.mousePos.x = this.mouseX;
+            this.mousePos.y = this.mouseY;
+            this.mousePos.time = new Date().valueOf();
+        }
+        //鼠标弹起
+        onMouseUp() {
+            if (this.gameStatus != 1) {
+                return;
+            }
+            let endTime = new Date().valueOf();
+            // console.log("mosue......", JSON.stringify(this.mousePos), endTime, this.mouseX, this.mouseY);
+            if (endTime - this.mousePos.time > 1200) {
+                return;
+            }
+            let difX = this.mouseX - this.mousePos.x;
+            let difY = this.mouseY - this.mousePos.y;
+            let angle = Math.atan2(difY, difX);
+            if (angle < Math.PI / 6 && angle > 0 || angle >= -Math.PI / 6) {     //右滑
+                this.frog.jumpSmall();
+                // console.log("small jump.......");
+            }
+            if (angle < -Math.PI / 3 && angle > -Math.PI * 2 / 3) { //上滑动
+                this.frog.jumbBig();
+                // console.log("big jump.......");
+            }
+        }
         //游戏控制
         gameControl() {
             if (this.gameStatus == 0) {
@@ -44,12 +75,12 @@ namespace game {
         }
         //开始
         start() {
-            this.gameStatus = 1;
             let countDown = this.COUNTDOWNNUM;
             this.label_time.changeText(countDown + "");
             this.label_time.visible = true;
             Laya.timer.loop(1000, this, () => {  //倒计时
                 if (countDown < 0) {
+                    this.gameStatus = 1;
                     this.label_time.visible = false;
                     Laya.timer.clearAll(this);
                     Laya.timer.frameLoop(1, this, this.onLoop);
@@ -119,7 +150,7 @@ namespace game {
 
             this.lastXpos = this.BEGINXPOS;
 
-            this.frog.pos(this.lastXpos, this.pillarYPos);
+            this.frog.initPos(this.lastXpos, this.pillarYPos);
             this.frog.playAnimation(Frog.ACTIONS.stand);
             this.gameMap.addChild(this.frog);
 
@@ -162,20 +193,38 @@ namespace game {
 
         //游戏循环
         onLoop() {
-            this.frog.x -= GameConfig.SPEED - this.frog.speedX;
-            this.frog.y += this.frog.speedY;
+            this.frog.setSpeed();
 
-            if (this.frog.x - this.frog.width / 2 < 0) { //撞墙
+            this.frog.x -= GameConfig.SPEED - this.frog.speedX;
+            this.frog.y -= this.frog.speedY;
+
+            if (this.frog.x - this.frog.width / 2 < 0 || this.frog.x + this.frog.width / 2 >= Laya.stage.width) { //撞墙
                 this.frogBlast();
                 return;
             }
             if (this.pillarArray.length) {
                 for (let i = this.pillarArray.length - 1; i > -1; i--) {
-                    this.pillarArray[i].x -= GameConfig.SPEED;
+                    let p = this.pillarArray[i];
+                    p.x -= GameConfig.SPEED;
                     if (this.pillarArray[i].x < -GameConfig.PILLARWIDTH / 2) {
                         //回收
-                        Laya.Pool.recover(Pillar.PILLARTAG, this.pillarArray[i]);
+                        Laya.Pool.recover(Pillar.PILLARTAG, p);
                         this.pillarArray.shift();
+                    }
+                    //青蛙与柱子的碰撞 
+                    if (this.frog.inJump) {
+                        if (this.frog.y >= this.pillarYPos) {   //等于或低于柱子
+                            if (Math.abs(this.frog.x - p.x) < p.width / 2) {    //落到柱子上了
+                                if (p.haveTrap) {    //扎刺了
+                                    this.frogBlast();
+                                } else {
+                                    this.frog.playAnimation(Frog.ACTIONS.landing);
+                                }
+                            } else if (this.frog.y + this.frog.width / 2 >= this.pillarArray[i].x - this.pillarArray[i].width / 2) {       //撞到柱子上了
+                                this.frogBlast();
+                            }
+                        }
+
                     }
                 }
                 this.lastXpos = this.pillarArray[this.pillarArray.length - 1].x;

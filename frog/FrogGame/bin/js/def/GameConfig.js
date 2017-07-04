@@ -5,10 +5,10 @@ var def;
         }
         return GameConfig;
     }());
-    GameConfig.SPEED = 1;
-    GameConfig.BIGSTEP = 100;
-    GameConfig.SMALLSTEP = 50;
-    GameConfig.PILLARWIDTH = 50;
+    GameConfig.SPEED = 0; //1;
+    GameConfig.BIGSTEP = 200;
+    GameConfig.SMALLSTEP = 100;
+    GameConfig.PILLARWIDTH = 100;
     def.GameConfig = GameConfig;
 })(def || (def = {}));
 //# sourceMappingURL=GameConfig.js.map

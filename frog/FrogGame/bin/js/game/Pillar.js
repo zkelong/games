@@ -36,6 +36,7 @@ var game;
         Pillar.prototype.init = function (x, y, haveTrap) {
             this.pos(x, y);
             this.trap.visible = haveTrap;
+            this.haveTrap = haveTrap;
         };
         return Pillar;
     }(Sprite));
