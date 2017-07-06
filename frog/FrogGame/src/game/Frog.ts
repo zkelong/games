@@ -55,12 +55,15 @@ namespace game {
         }
 
         //播放
+        haveSize: boolean = false;
         playAnimation(action) {
             this.actionName = action;
             this.actionBody.play(0, true, action);
-            var bound: Laya.Rectangle = this.getBounds();
-            this.size(bound.width, bound.height);
-            this.pivot(bound.width / 2, bound.height);
+            if (!this.haveSize && action == Frog.ACTIONS.stand) {
+                var bound: Laya.Rectangle = this.getBounds();
+                this.size(bound.width, bound.height);
+                this.pivot(bound.width / 2, bound.height);
+            }
             if (action == Frog.ACTIONS.jump) {  //起跳
                 this.inJump = true;
             } else if (this.actionName == Frog.ACTIONS.blast) { //爆炸
@@ -74,12 +77,11 @@ namespace game {
                 this.speedX = 0;
                 this.inJump = false;
             }
-            console.log("action.....", this.actionName);
+            // console.log("action.....", this.actionName);
         }
 
         //动画播放完成
         onPlayComplete() {
-            console.log("播放动画完成......", this.actionName);
             let stop = false;
             if (this.actionName == Frog.ACTIONS.stand) {          //静止
                 stop = true;
@@ -92,7 +94,7 @@ namespace game {
             } else if (this.actionName == Frog.ACTIONS.flyDown) {  //下降
                 stop = true;
             } else if (this.actionName == Frog.ACTIONS.landing) {  //落地
-                stop = true;
+                this.playAnimation(Frog.ACTIONS.stand);
             } else if (this.actionName == Frog.ACTIONS.blast) {  //爆炸
                 stop = true;
             }
@@ -112,25 +114,24 @@ namespace game {
         setSpeed() {
             if (this.speedY <= 0 && !this.havePlayUpToDown) { //开始下降
                 this.havePlayUpToDown = true;
-                console.log("开始下降");
                 this.playAnimation(Frog.ACTIONS.upToDown);
                 // this.speedY = 0;
                 // return;
             }
             this.speedY -= this.acceleratedY;
-            console.log("acceleratedY.....", this.acceleratedY, this.speedY);
+            // console.log("acceleratedY.....", this.acceleratedY, this.speedY);
         }
         //小跳
         jumpSmall() {
             this.speedX = 10;
-            this.acceleratedY = 3;
-            this.jumpOperate(GameConfig.SMALLSTEP * 4);
+            this.acceleratedY = 4;
+            this.jumpOperate(GameConfig.SMALLSTEP);
         }
         //大跳
         jumbBig() {
             this.speedX = 20;
-            this.acceleratedY = 3;
-            this.jumpOperate(GameConfig.BIGSTEP * 4);
+            this.acceleratedY = 8;
+            this.jumpOperate(GameConfig.BIGSTEP);
         }
         //跳跃操作
         jumpOperate(setpWidth) {
@@ -139,5 +140,4 @@ namespace game {
             this.playAnimation(Frog.ACTIONS.jump);
         }
     }
-
 }

@@ -5,7 +5,7 @@ var def;
         }
         return GameConfig;
     }());
-    GameConfig.SPEED = 0; //1;
+    GameConfig.SPEED = 2; //1;
     GameConfig.BIGSTEP = 200;
     GameConfig.SMALLSTEP = 100;
     GameConfig.PILLARWIDTH = 100;

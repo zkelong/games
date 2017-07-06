@@ -10,7 +10,7 @@
 			"useBuildInServer": true,
 			"sourceMaps": true,
 			"webRoot": "${workspaceRoot}",
-			"port": 9222
+			"port": 9223
 		},
 		{
 			"name": "chrome调试",
@@ -35,7 +35,7 @@
 			"name": "Attach with sourcemaps",
 			"type": "chrome",
 			"request": "attach",
-			"port": 9222,
+			"port": 9223,
 			"sourceMaps": true,
 			"webRoot": "${workspaceRoot}"
 		}

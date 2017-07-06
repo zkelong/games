@@ -62,12 +62,19 @@ var game;
             var difX = this.mouseX - this.mousePos.x;
             var difY = this.mouseY - this.mousePos.y;
             var angle = Math.atan2(difY, difX);
-            if (angle < Math.PI / 6 && angle > 0 || angle >= -Math.PI / 6) {
-                console.log("小跳....");
+            // console.log("xxxxxxxxxxxxxxxxx...鼠标操作........", difX, difY, angle);
+            if (angle < Math.PI / 6 && angle > 0 || angle >= -Math.PI / 6 && angle < 0) {
+                if (difX < 100) {
+                    return;
+                }
+                console.log("小跳..xxxxxxxxxxxxx..");
                 this.frog.jumpSmall();
             }
             if (angle < -Math.PI / 3 && angle > -Math.PI * 2 / 3) {
                 console.log("大跳....");
+                if (difY > -100) {
+                    return;
+                }
                 this.frog.jumbBig();
             }
         };
@@ -148,15 +155,20 @@ var game;
         ///////////游戏逻辑/////////////////
         //游戏初始化
         GameMain.prototype.init = function () {
-            if (!this.frog) {
-                this.frog = new game.Frog;
-                this.frog.on(this.frog.ACTIONEND, this, this.frogActionOver);
+            if (this.frog) {
+                this.frog.destroy();
             }
+            this.frog = new game.Frog;
+            this.frog.on(this.frog.ACTIONEND, this, this.frogActionOver);
+            this.gameMap.addChild(this.frog);
             this.lastXpos = this.BEGINXPOS;
             this.frog.initPos(this.lastXpos, this.pillarYPos);
             this.frog.playAnimation(game.Frog.ACTIONS.stand);
-            this.gameMap.addChild(this.frog);
+            this.frog.speedX = 0;
+            console.log("init......", this.frog.x, this.frog.speedX);
+            this.lastHaveTrap = false;
             this.addPillar(this.lastXpos);
+            console.log("init...p....", this.pillarArray[0].x, this.lastXpos);
             do {
                 this.addPillar();
             } while (this.lastXpos <= Laya.stage.width);
@@ -165,6 +177,7 @@ var game;
         GameMain.prototype.addPillar = function (xPos) {
             if (xPos) {
                 this.lastXpos = xPos;
+                console.log("......", this.lastXpos);
             }
             else {
                 var ran = Math.random();
@@ -197,18 +210,12 @@ var game;
         //游戏循环
         GameMain.prototype.onLoop = function () {
             if (this.frog.inJump) {
+                console.log("set..frog....");
                 this.frog.setSpeed();
                 this.frog.y -= this.frog.speedY;
             }
-            this.frog.x -= GameConfig.SPEED - this.frog.speedX;
-            // console.log("inJump....", this.frog.inJump);
-            if (this.frog.y >= this.pillarYPos && this.frog.inJump) {
-                console.log("landing......");
-                this.frog.playAnimation(game.Frog.ACTIONS.landing);
-            }
-            if (1) {
-                return;
-            }
+            var fSpeed = GameConfig.SPEED - this.frog.speedX;
+            this.frog.x -= fSpeed;
             if (this.frog.x - this.frog.width / 2 < 0 || this.frog.x + this.frog.width / 2 >= Laya.stage.width) {
                 this.frogBlast();
                 return;
@@ -224,12 +231,14 @@ var game;
                     }
                     //青蛙与柱子的碰撞 
                     if (this.frog.inJump) {
-                        if (this.frog.y >= this.pillarYPos) {
+                        if (this.frog.y >= this.pillarYPos && this.frog.x > p.x - p.width / 2 - this.frog.width / 2 && this.frog.x < p.x + p.width / 2) {
                             if (Math.abs(this.frog.x - p.x) < p.width / 2) {
                                 if (p.haveTrap) {
                                     this.frogBlast();
                                 }
                                 else {
+                                    this.frog.x -= GameConfig.SPEED - this.frog.speedX; //要漏以帧的速度
+                                    console.log("frog..xx...", GameConfig.SPEED - this.frog.speedX);
                                     this.frog.playAnimation(game.Frog.ACTIONS.landing);
                                 }
                             }
@@ -247,12 +256,13 @@ var game;
         };
         //青蛙爆炸
         GameMain.prototype.frogBlast = function () {
+            console.log("死了.......");
             this.pause();
             this.frog.playAnimation(game.Frog.ACTIONS.blast);
         };
         //青蛙动作结束
         GameMain.prototype.frogActionOver = function (actionName) {
-            console.log("监听动画结束。。。。。");
+            // console.log("监听动画结束。。。。。");
             if (actionName == game.Frog.ACTIONS.stand) {
             }
             else if (actionName == game.Frog.ACTIONS.flyUp) {
@@ -266,7 +276,6 @@ var game;
             else if (actionName == game.Frog.ACTIONS.landing) {
             }
             else if (actionName == game.Frog.ACTIONS.blast) {
-                console.log("爆炸后。。。。。");
                 this.gameOver();
             }
         };
