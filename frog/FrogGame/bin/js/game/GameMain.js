@@ -11,7 +11,6 @@ var __extends = (this && this.__extends) || (function () {
 //游戏主界面
 var game;
 (function (game) {
-    var Event = Laya.Event;
     var GameConfig = def.GameConfig;
     var AdView = ad.AdView;
     var GameMain = (function (_super) {
@@ -27,16 +26,17 @@ var game;
             _this.pillarArray = []; //柱子对象
             _this.lastStepBig = true; //上一次间隔是大间隔
             _this.lastHaveTrap = false; //上次有陷阱
+            _this.score = 0; //分数
             ////////////////界面操作///////////////
             _this.mousePos = { time: 0, x: 0, y: 0 };
             _this.pillarYPos = Laya.stage.height * 3 / 5;
             _this.size(Laya.stage.width, Laya.stage.height);
             _this.gameMode = gameMode;
-            _this.label_control.on(Event.CLICK, _this, _this.gameControl);
             _this.init();
             _this.start();
-            _this.on(Laya.Event.MOUSE_DOWN, _this, _this.onMouseDown);
-            _this.on(Laya.Event.MOUSE_UP, _this, _this.onMouseUp);
+            _this.img_bg.on(Laya.Event.MOUSE_DOWN, _this, _this.onMouseDown);
+            _this.img_bg.on(Laya.Event.MOUSE_UP, _this, _this.onMouseUp);
+            _this.label_control.on("click", _this, _this.gameControl);
             return _this;
         }
         //鼠标按下
@@ -67,11 +67,9 @@ var game;
                 if (difX < 100) {
                     return;
                 }
-                console.log("小跳..xxxxxxxxxxxxx..");
                 this.frog.jumpSmall();
             }
             if (angle < -Math.PI / 3 && angle > -Math.PI * 2 / 3) {
-                console.log("大跳....");
                 if (difY > -100) {
                     return;
                 }
@@ -80,7 +78,8 @@ var game;
         };
         //游戏控制
         GameMain.prototype.gameControl = function () {
-            if (this.gameStatus == 0) {
+            console.log("control...........", this.gameStatus);
+            if (this.gameStatus == 1) {
                 this.label_control.changeText("继续");
                 this.pause();
             }
@@ -139,9 +138,10 @@ var game;
         //清理游戏
         GameMain.prototype.clearGame = function () {
             //回收柱子
-            for (var i = 0; i < this.pillarArray.length; i++) {
+            for (var i = this.pillarArray.length - 1; i > -1; i--) {
                 this.pillarArray[i].removeSelf();
                 Laya.Pool.recover(game.Pillar.PILLARTAG, this.pillarArray[i]);
+                this.pillarArray.pop();
             }
         };
         //退出
@@ -162,13 +162,12 @@ var game;
             this.frog.on(this.frog.ACTIONEND, this, this.frogActionOver);
             this.gameMap.addChild(this.frog);
             this.lastXpos = this.BEGINXPOS;
+            this.score = 0;
             this.frog.initPos(this.lastXpos, this.pillarYPos);
             this.frog.playAnimation(game.Frog.ACTIONS.stand);
             this.frog.speedX = 0;
-            console.log("init......", this.frog.x, this.frog.speedX);
             this.lastHaveTrap = false;
             this.addPillar(this.lastXpos);
-            console.log("init...p....", this.pillarArray[0].x, this.lastXpos);
             do {
                 this.addPillar();
             } while (this.lastXpos <= Laya.stage.width);
@@ -177,7 +176,6 @@ var game;
         GameMain.prototype.addPillar = function (xPos) {
             if (xPos) {
                 this.lastXpos = xPos;
-                console.log("......", this.lastXpos);
             }
             else {
                 var ran = Math.random();
@@ -210,7 +208,6 @@ var game;
         //游戏循环
         GameMain.prototype.onLoop = function () {
             if (this.frog.inJump) {
-                console.log("set..frog....");
                 this.frog.setSpeed();
                 this.frog.y -= this.frog.speedY;
             }
@@ -237,8 +234,9 @@ var game;
                                     this.frogBlast();
                                 }
                                 else {
-                                    this.frog.x -= GameConfig.SPEED - this.frog.speedX; //要漏以帧的速度
-                                    console.log("frog..xx...", GameConfig.SPEED - this.frog.speedX);
+                                    this.frog.x = p.x; //要漏以帧的速度
+                                    this.score++;
+                                    this.label_score.changeText("分数：" + this.score);
                                     this.frog.playAnimation(game.Frog.ACTIONS.landing);
                                 }
                             }
@@ -262,7 +260,7 @@ var game;
         };
         //青蛙动作结束
         GameMain.prototype.frogActionOver = function (actionName) {
-            // console.log("监听动画结束。。。。。");
+            // console.log("监听动画结束。。。。。", actionName, Frog.ACTIONS.landing);
             if (actionName == game.Frog.ACTIONS.stand) {
             }
             else if (actionName == game.Frog.ACTIONS.flyUp) {

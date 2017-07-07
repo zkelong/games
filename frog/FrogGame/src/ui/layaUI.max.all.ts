@@ -20,11 +20,13 @@ module ui.ad {
 
 module ui.game {
     export class GameMainUI extends View {
+		public img_bg:Laya.Image;
 		public gameMap:Laya.Sprite;
 		public label_control:Laya.Label;
 		public label_time:Laya.Label;
+		public label_score:Laya.Label;
 
-        public static  uiView:any ={"type":"View","props":{"width":640,"height":1136},"child":[{"type":"Image","props":{"top":0,"skin":"frog/bg.png","right":0,"left":0,"bottom":0}},{"type":"Sprite","props":{"var":"gameMap"}},{"type":"Label","props":{"y":50,"x":60,"width":79,"visible":false,"var":"label_control","top":50,"text":"暂停","left":60,"height":40,"fontSize":36,"color":"#ffffff","bold":true}},{"type":"Label","props":{"visible":false,"var":"label_time","text":"3","fontSize":48,"color":"#ffffff","centerY":0,"centerX":0,"bold":true}}]};
+        public static  uiView:any ={"type":"View","props":{"width":640,"height":1136},"child":[{"type":"Image","props":{"var":"img_bg","top":0,"skin":"frog/bg.png","right":0,"left":0,"bottom":0}},{"type":"Sprite","props":{"var":"gameMap"}},{"type":"Label","props":{"y":50,"x":60,"width":92,"visible":false,"var":"label_control","top":50,"text":"暂停","left":60,"height":43,"fontSize":40,"color":"#ffffff","bold":true}},{"type":"Label","props":{"visible":false,"var":"label_time","text":"3","fontSize":48,"color":"#ffffff","centerY":0,"centerX":0,"bold":true}},{"type":"Label","props":{"y":50,"x":419,"width":161,"visible":true,"var":"label_score","top":50,"text":"分数：0","right":60,"height":40,"fontSize":40,"color":"#ffffff","bold":true,"align":"right"}}]};
         constructor(){ super()}
         createChildren():void {
         
