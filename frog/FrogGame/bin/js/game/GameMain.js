@@ -167,6 +167,9 @@ var game;
             this.frog.playAnimation(game.Frog.ACTIONS.stand);
             this.frog.speedX = 0;
             this.lastHaveTrap = false;
+            this.pillarShowArray = (game.Pillar.getPillarShowArray(true)).array;
+            console.log("pillar...array.....", JSON.stringify(this.pillarShowArray));
+            this.pillarIndex = 0;
             this.addPillar(this.lastXpos);
             do {
                 this.addPillar();
@@ -174,36 +177,59 @@ var game;
         };
         //增加柱子
         GameMain.prototype.addPillar = function (xPos) {
+            //没有柱子
+            if (this.pillarShowArray[this.pillarIndex] == 2) {
+                this.lastXpos += GameConfig.SMALLSTEP;
+                this.pillarIndex++;
+                console.log("return....++........", this.lastXpos);
+                return;
+            }
             if (xPos) {
                 this.lastXpos = xPos;
             }
             else {
-                var ran = Math.random();
-                if (this.lastHaveTrap) {
-                    this.lastXpos += GameConfig.SMALLSTEP;
-                    this.lastStepBig = false;
-                }
-                else {
-                    if (ran < 0.5) {
-                        this.lastXpos += GameConfig.SMALLSTEP;
-                        this.lastStepBig = false;
-                    }
-                    else {
-                        this.lastXpos += GameConfig.BIGSTEP;
-                        this.lastStepBig = true;
-                    }
-                }
-                if (!this.lastStepBig && !this.lastHaveTrap) {
-                    this.lastHaveTrap = Math.random() < 0.8 ? true : false;
-                }
-                else {
-                    this.lastHaveTrap = false;
-                }
+                this.lastXpos += GameConfig.SMALLSTEP;
+                console.log("后面的柱子.......", this.lastXpos);
             }
+            if (this.pillarArray == this.pillarShowArray.length) {
+                var ret = game.Pillar.getPillarShowArray(false, this.pillarArrayIndex);
+                this.pillarShowArray = ret.array;
+                this.pillarArrayIndex = ret.idx;
+                this.pillarIndex = 0;
+                console.log("pillar....array...", JSON.stringify(this.pillarArray));
+            }
+            var haveTrap = this.pillarShowArray[this.pillarIndex] == 3;
             var pillar = Laya.Pool.getItemByClass(game.Pillar.PILLARTAG, game.Pillar);
-            pillar.init(this.lastXpos, this.pillarYPos, this.lastHaveTrap);
+            pillar.init(this.lastXpos, this.pillarYPos, haveTrap);
             this.gameMap.addChild(pillar);
             this.pillarArray.push(pillar);
+            this.pillarIndex++;
+            // if (xPos) {
+            //     this.lastXpos = xPos;
+            // } else {
+            //     let ran = Math.random();
+            //     if (this.lastHaveTrap) {
+            //         this.lastXpos += GameConfig.SMALLSTEP;
+            //         this.lastStepBig = false;
+            //     } else {
+            //         if (ran < 0.5) {  //间距频率
+            //             this.lastXpos += GameConfig.SMALLSTEP;
+            //             this.lastStepBig = false;
+            //         } else {
+            //             this.lastXpos += GameConfig.BIGSTEP;
+            //             this.lastStepBig = true;
+            //         }
+            //     }
+            //     if (!this.lastStepBig && !this.lastHaveTrap) { //陷阱频率
+            //         this.lastHaveTrap = Math.random() < 0.8 ? true : false;
+            //     } else {
+            //         this.lastHaveTrap = false;
+            //     }
+            // }
+            // let pillar: Pillar = Laya.Pool.getItemByClass(Pillar.PILLARTAG, Pillar);
+            // pillar.init(this.lastXpos, this.pillarYPos, this.lastHaveTrap);
+            // this.gameMap.addChild(pillar);
+            // this.pillarArray.push(pillar);
         };
         //游戏循环
         GameMain.prototype.onLoop = function () {
@@ -246,10 +272,10 @@ var game;
                         }
                     }
                 }
-                this.lastXpos = this.pillarArray[this.pillarArray.length - 1].x;
-            }
-            if (this.lastXpos + GameConfig.SMALLSTEP <= Laya.stage.width + GameConfig.BIGSTEP) {
-                this.addPillar();
+                var lastXpos = this.pillarArray[this.pillarArray.length - 1].x;
+                if (lastXpos + GameConfig.SMALLSTEP <= Laya.stage.width + GameConfig.BIGSTEP) {
+                    this.addPillar();
+                }
             }
         };
         //青蛙爆炸

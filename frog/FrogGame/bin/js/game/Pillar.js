@@ -38,9 +38,38 @@ var game;
             this.trap.visible = haveTrap;
             this.haveTrap = haveTrap;
         };
+        /**
+         * 获取展示 array
+         * @param begin 游戏开始显示的数组
+         * @param idxO 柱子显示数组下标
+         */
+        Pillar.getPillarShowArray = function (begin, idxO) {
+            if (begin) {
+                return {
+                    array: Pillar.BEGINARRAY,
+                    idx: 0
+                };
+            }
+            else {
+                var idx = Math.floor(Math.random() * Pillar.NEXTARRAY.length);
+                if (idx == Pillar.NEXTARRAY.length) {
+                    idx--;
+                }
+                if (idx == idx) {
+                    idx = idx == Pillar.NEXTARRAY.length - 1 ? 0 : idx + 1;
+                }
+                return {
+                    array: Pillar.NEXTARRAY[idx],
+                    idx: idx
+                };
+            }
+        };
         return Pillar;
     }(Sprite));
     Pillar.PILLARTAG = "pillar";
+    //1-柱子，2-没有柱子，3-柱子上有刺
+    Pillar.BEGINARRAY = [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 3, 1, 1, 2];
+    Pillar.NEXTARRAY = [[1, 2, 1, 3, 1], [1, 3, 1, 1, 2], [1, 2, 1, 3, 2], [1, 1, 1, 2, 1]];
     game.Pillar = Pillar;
 })(game || (game = {}));
 //# sourceMappingURL=Pillar.js.map

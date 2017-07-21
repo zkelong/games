@@ -6,9 +6,9 @@ var def;
         return GameConfig;
     }());
     GameConfig.SPEED = 2; //1;
-    GameConfig.BIGSTEP = 200;
-    GameConfig.SMALLSTEP = 100;
-    GameConfig.PILLARWIDTH = 100;
+    GameConfig.BIGSTEP = 400;
+    GameConfig.SMALLSTEP = 200;
+    GameConfig.PILLARWIDTH = 200;
     def.GameConfig = GameConfig;
 })(def || (def = {}));
 //# sourceMappingURL=GameConfig.js.map

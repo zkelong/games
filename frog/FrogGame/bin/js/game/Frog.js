@@ -40,8 +40,8 @@ var game;
             }
             if (!_this.actionBody) {
                 _this.actionBody = new Laya.Animation();
-                _this.actionBody.interval = 10;
-                _this.actionBody.scale(2, 2);
+                _this.actionBody.interval = 20;
+                _this.actionBody.scale(4, 4);
                 _this.addChild(_this.actionBody);
                 //增加动画播放完成监听
                 _this.actionBody.on(Laya.Event.COMPLETE, _this, _this.onPlayComplete);

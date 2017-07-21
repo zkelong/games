@@ -8,6 +8,9 @@ namespace game {
      */
     export class Pillar extends Sprite {
         static PILLARTAG = "pillar";
+        //1-柱子，2-没有柱子，3-柱子上有刺
+        static BEGINARRAY = [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 3, 1, 1, 2];
+        static NEXTARRAY = [[1, 2, 1, 3, 1], [1, 3, 1, 1, 2], [1, 2, 1, 3, 2], [1, 1, 1, 2, 1]];
         haveTrap = false;
         trap; //陷阱
         constructor() {
@@ -26,10 +29,36 @@ namespace game {
             this.addChildren(this.trap);
         }
 
-        init(x, y, haveTrap) {
+        init(x, y, haveTrap?) {
             this.pos(x, y);
             this.trap.visible = haveTrap;
             this.haveTrap = haveTrap;
+        }
+
+        /**
+         * 获取展示 array
+         * @param begin 游戏开始显示的数组
+         * @param idxO 柱子显示数组下标
+         */
+        static getPillarShowArray(begin, idxO?) {
+            if (begin) {
+                return {
+                    array: Pillar.BEGINARRAY,
+                    idx: 0
+                };
+            } else {
+                let idx = Math.floor(Math.random() * Pillar.NEXTARRAY.length);
+                if (idx == Pillar.NEXTARRAY.length) {
+                    idx--;
+                }
+                if (idx == idx) {    //跟上一组一样了
+                    idx = idx == Pillar.NEXTARRAY.length - 1 ? 0 : idx + 1;
+                }
+                return {
+                    array: Pillar.NEXTARRAY[idx],
+                    idx: idx
+                }
+            }
         }
     }
 }
