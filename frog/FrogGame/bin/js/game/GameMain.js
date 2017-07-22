@@ -27,6 +27,8 @@ var game;
             _this.lastStepBig = true; //上一次间隔是大间隔
             _this.lastHaveTrap = false; //上次有陷阱
             _this.score = 0; //分数
+            _this.stepBig = false; //跳跃是否为大跳
+            _this.speedAddTag = 0; //游戏速度加速次数标记
             ////////////////界面操作///////////////
             _this.mousePos = { time: 0, x: 0, y: 0 };
             _this.pillarYPos = Laya.stage.height * 3 / 5;
@@ -67,12 +69,14 @@ var game;
                 if (difX < 100) {
                     return;
                 }
+                this.stepBig = false;
                 this.frog.jumpSmall();
             }
             if (angle < -Math.PI / 3 && angle > -Math.PI * 2 / 3) {
                 if (difY > -100) {
                     return;
                 }
+                this.stepBig = true;
                 this.frog.jumbBig();
             }
         };
@@ -92,9 +96,10 @@ var game;
         GameMain.prototype.start = function () {
             var _this = this;
             var countDown = this.COUNTDOWNNUM;
-            this.label_time.changeText(countDown + "");
+            this.changeTime(countDown + "");
             this.label_time.visible = true;
             Laya.timer.loop(1000, this, function () {
+                countDown--;
                 if (countDown < 0) {
                     _this.gameStatus = 1;
                     _this.label_time.visible = false;
@@ -103,9 +108,14 @@ var game;
                     _this.label_control.visible = true;
                     return;
                 }
-                _this.label_time.changeText(countDown + "");
-                countDown--;
+                _this.changeTime(countDown + "");
+                Laya.Tween.to(_this.label_score, { scaleX: 1, scaleY: 1 }, 500);
             });
+        };
+        GameMain.prototype.changeTime = function (str) {
+            this.label_time.scale(2, 2);
+            this.label_time.changeText(str);
+            Laya.Tween.to(this.label_time, { scaleX: 1, scaleY: 1 }, 500);
         };
         //暂停
         GameMain.prototype.pause = function () {
@@ -163,6 +173,8 @@ var game;
             this.gameMap.addChild(this.frog);
             this.lastXpos = this.BEGINXPOS;
             this.score = 0;
+            this.label_score.changeText("分数：" + this.score);
+            this.gameSpeed = GameConfig.SPEED;
             this.frog.initPos(this.lastXpos, this.pillarYPos);
             this.frog.playAnimation(game.Frog.ACTIONS.stand);
             this.frog.speedX = 0;
@@ -177,59 +189,28 @@ var game;
         };
         //增加柱子
         GameMain.prototype.addPillar = function (xPos) {
-            //没有柱子
-            if (this.pillarShowArray[this.pillarIndex] == 2) {
-                this.lastXpos += GameConfig.SMALLSTEP;
-                this.pillarIndex++;
-                console.log("return....++........", this.lastXpos);
-                return;
+            if (!xPos) {
+                this.lastXpos = this.haveNullBefore ? this.pillarArray[this.pillarArray.length - 1].x + GameConfig.SMALLSTEP * 2 : this.pillarArray[this.pillarArray.length - 1].x + GameConfig.SMALLSTEP;
             }
-            if (xPos) {
-                this.lastXpos = xPos;
-            }
-            else {
-                this.lastXpos += GameConfig.SMALLSTEP;
-                console.log("后面的柱子.......", this.lastXpos);
-            }
-            if (this.pillarArray == this.pillarShowArray.length) {
+            if (this.pillarIndex == this.pillarShowArray.length) {
                 var ret = game.Pillar.getPillarShowArray(false, this.pillarArrayIndex);
                 this.pillarShowArray = ret.array;
                 this.pillarArrayIndex = ret.idx;
                 this.pillarIndex = 0;
-                console.log("pillar....array...", JSON.stringify(this.pillarArray));
+                // console.log("next...pillar...array...", JSON.stringify(this.pillarShowArray));
             }
-            var haveTrap = this.pillarShowArray[this.pillarIndex] == 3;
-            var pillar = Laya.Pool.getItemByClass(game.Pillar.PILLARTAG, game.Pillar);
-            pillar.init(this.lastXpos, this.pillarYPos, haveTrap);
-            this.gameMap.addChild(pillar);
-            this.pillarArray.push(pillar);
+            if (this.pillarShowArray[this.pillarIndex] == 2) {
+                this.haveNullBefore = true;
+            }
+            else {
+                this.haveNullBefore = false;
+                var haveTrap = this.pillarShowArray[this.pillarIndex] == 3;
+                var pillar = Laya.Pool.getItemByClass(game.Pillar.PILLARTAG, game.Pillar);
+                pillar.init(this.lastXpos, this.pillarYPos, haveTrap);
+                this.gameMap.addChild(pillar);
+                this.pillarArray.push(pillar);
+            }
             this.pillarIndex++;
-            // if (xPos) {
-            //     this.lastXpos = xPos;
-            // } else {
-            //     let ran = Math.random();
-            //     if (this.lastHaveTrap) {
-            //         this.lastXpos += GameConfig.SMALLSTEP;
-            //         this.lastStepBig = false;
-            //     } else {
-            //         if (ran < 0.5) {  //间距频率
-            //             this.lastXpos += GameConfig.SMALLSTEP;
-            //             this.lastStepBig = false;
-            //         } else {
-            //             this.lastXpos += GameConfig.BIGSTEP;
-            //             this.lastStepBig = true;
-            //         }
-            //     }
-            //     if (!this.lastStepBig && !this.lastHaveTrap) { //陷阱频率
-            //         this.lastHaveTrap = Math.random() < 0.8 ? true : false;
-            //     } else {
-            //         this.lastHaveTrap = false;
-            //     }
-            // }
-            // let pillar: Pillar = Laya.Pool.getItemByClass(Pillar.PILLARTAG, Pillar);
-            // pillar.init(this.lastXpos, this.pillarYPos, this.lastHaveTrap);
-            // this.gameMap.addChild(pillar);
-            // this.pillarArray.push(pillar);
         };
         //游戏循环
         GameMain.prototype.onLoop = function () {
@@ -237,7 +218,7 @@ var game;
                 this.frog.setSpeed();
                 this.frog.y -= this.frog.speedY;
             }
-            var fSpeed = GameConfig.SPEED - this.frog.speedX;
+            var fSpeed = this.gameSpeed - this.frog.speedX;
             this.frog.x -= fSpeed;
             if (this.frog.x - this.frog.width / 2 < 0 || this.frog.x + this.frog.width / 2 >= Laya.stage.width) {
                 this.frogBlast();
@@ -246,7 +227,7 @@ var game;
             if (this.pillarArray.length) {
                 for (var i = this.pillarArray.length - 1; i > -1; i--) {
                     var p = this.pillarArray[i];
-                    p.x -= GameConfig.SPEED;
+                    p.x -= this.gameSpeed;
                     if (this.pillarArray[i].x < -GameConfig.PILLARWIDTH / 2) {
                         //回收
                         Laya.Pool.recover(game.Pillar.PILLARTAG, p);
@@ -260,10 +241,43 @@ var game;
                                     this.frogBlast();
                                 }
                                 else {
-                                    this.frog.x = p.x; //要漏以帧的速度
-                                    this.score++;
+                                    this.frog.x = p.x; //要漏一帧的速度
+                                    this.score += this.stepBig ? 2 : 1;
                                     this.label_score.changeText("分数：" + this.score);
                                     this.frog.playAnimation(game.Frog.ACTIONS.landing);
+                                    if (this.score > 10 && this.speedAddTag < 1) {
+                                        this.gameSpeed += 1;
+                                        this.speedAddTag++;
+                                        console.log("加速......10....");
+                                    }
+                                    if (this.score > 30 && this.speedAddTag < 2) {
+                                        this.gameSpeed += 1;
+                                        this.speedAddTag++;
+                                    }
+                                    if (this.score > 50 && this.speedAddTag < 3) {
+                                        this.gameSpeed += 2;
+                                        this.speedAddTag++;
+                                    }
+                                    if (this.score > 80 && this.speedAddTag < 4) {
+                                        this.gameSpeed += 2;
+                                        this.speedAddTag++;
+                                    }
+                                    if (this.score > 100 && this.speedAddTag < 5) {
+                                        this.gameSpeed += 1;
+                                        this.speedAddTag++;
+                                    }
+                                    if (this.score > 120 && this.speedAddTag < 6) {
+                                        this.gameSpeed += 1;
+                                        this.speedAddTag++;
+                                    }
+                                    if (this.score > 150 && this.speedAddTag < 7) {
+                                        this.gameSpeed += 1;
+                                        this.speedAddTag++;
+                                    }
+                                    if (this.score > 200 && this.speedAddTag < 8) {
+                                        this.gameSpeed += 2;
+                                        this.speedAddTag++;
+                                    }
                                 }
                             }
                             else if (this.frog.y + this.frog.width / 2 >= this.pillarArray[i].x - this.pillarArray[i].width / 2) {
@@ -273,7 +287,7 @@ var game;
                     }
                 }
                 var lastXpos = this.pillarArray[this.pillarArray.length - 1].x;
-                if (lastXpos + GameConfig.SMALLSTEP <= Laya.stage.width + GameConfig.BIGSTEP) {
+                if (lastXpos <= Laya.stage.width) {
                     this.addPillar();
                 }
             }

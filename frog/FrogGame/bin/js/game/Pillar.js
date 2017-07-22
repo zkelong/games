@@ -69,7 +69,7 @@ var game;
     Pillar.PILLARTAG = "pillar";
     //1-柱子，2-没有柱子，3-柱子上有刺
     Pillar.BEGINARRAY = [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 3, 1, 1, 2];
-    Pillar.NEXTARRAY = [[1, 2, 1, 3, 1], [1, 3, 1, 1, 2], [1, 2, 1, 3, 2], [1, 1, 1, 2, 1]];
+    Pillar.NEXTARRAY = [[1, 2, 1, 3, 1], [1, 3, 1, 1, 2], [1, 2, 1, 3, 1], [1, 3, 1, 2, 1]];
     game.Pillar = Pillar;
 })(game || (game = {}));
 //# sourceMappingURL=Pillar.js.map

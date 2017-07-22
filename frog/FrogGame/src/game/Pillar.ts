@@ -10,7 +10,7 @@ namespace game {
         static PILLARTAG = "pillar";
         //1-柱子，2-没有柱子，3-柱子上有刺
         static BEGINARRAY = [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 3, 1, 1, 2];
-        static NEXTARRAY = [[1, 2, 1, 3, 1], [1, 3, 1, 1, 2], [1, 2, 1, 3, 2], [1, 1, 1, 2, 1]];
+        static NEXTARRAY = [[1, 2, 1, 3, 1], [1, 3, 1, 1, 2], [1, 2, 1, 3, 1], [1, 3, 1, 2, 1]];
         haveTrap = false;
         trap; //陷阱
         constructor() {
