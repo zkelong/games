@@ -1,0 +1,32 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var lobby;
+(function (lobby) {
+    var GameMainView = game.GameMainView;
+    var LobbyMainView = /** @class */ (function (_super) {
+        __extends(LobbyMainView, _super);
+        function LobbyMainView() {
+            var _this = _super.call(this) || this;
+            _this.size(Laya.stage.width, Laya.stage.height);
+            // console.log("stage....width....", this.width, this.height);
+            _this.label_begin.on(Laya.Event.CLICK, _this, _this.beginGame);
+            return _this;
+        }
+        LobbyMainView.prototype.beginGame = function () {
+            var game = new GameMainView(def.GAMEMODE.MODE1);
+            Laya.stage.addChild(game);
+            this.destroy();
+        };
+        return LobbyMainView;
+    }(ui.lobby.LobbyMianUI));
+    lobby.LobbyMainView = LobbyMainView;
+})(lobby || (lobby = {}));
+//# sourceMappingURL=LobbyMainView.js.map
