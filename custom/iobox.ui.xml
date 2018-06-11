@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uiComp>
+	<BoxColor className="iobox.ui.BoxColor" inherit="Box" icon="Box" groups="公用,常用,宽高及位置" drag="3">
+		<prop name="color" tips="背景颜色" type="color" default="" group="常用" />
+	</BoxColor>
+
+	<ImageButton className="iobox.ui.ImageButton" inherit="Image" icon="Button" resName="ibtn" skinLabel="skin" groups="公用,常用,宽高及位置" drag="3">
+		<prop name="status" tips="状态" type="number" default="0" group="常用" />
+	</ImageButton>
+
+	<ViewColor className="iobox.ui.ViewColor" inherit="View" icon="View" groups="公用,常用,宽高及位置" drag="3">
+		<prop name="color" tips="背景颜色" type="color" default="" group="常用" />
+	</ViewColor>
+
+</uiComp>

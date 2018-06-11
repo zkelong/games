@@ -27,7 +27,7 @@ namespace game {
         pillarYPos;
         //场景
         //云层
-        cloudsView : CloudsView;
+        cloudsView: CloudsView;
         //水
         waterView: WaterView;
 
@@ -37,11 +37,11 @@ namespace game {
          */
         constructor(gameMode) {
             super();
-            this.pillarYPos = Laya.stage.height * 3 / 5;
+            this.pillarYPos = Laya.stage.height - 587;// * 2 / 5;
             this.size(Laya.stage.width, Laya.stage.height);
             this.gameMode = gameMode;
             this.init();
-            this.start();
+            // this.start();
             this.img_bg.on(Laya.Event.MOUSE_DOWN, this, this.onMouseDown);
             this.img_bg.on(Laya.Event.MOUSE_UP, this, this.onMouseUp);
             this.label_control.on("click", this, this.gameControl);
@@ -102,30 +102,31 @@ namespace game {
             }
         }
         //开始
-        start() {
-            let countDown = this.COUNTDOWNNUM;
-            this.changeTime(countDown + "");
-            this.label_time.visible = true;
-            Laya.timer.loop(1000, this, () => {  //倒计时
-                countDown--;
-                if (countDown < 0) {
-                    this.gameStatus = 1;
-                    this.label_time.visible = false;
-                    Laya.timer.clearAll(this);
-                    Laya.timer.frameLoop(1, this, this.onLoop);
-                    this.label_control.visible = true;
-                    return;
-                }
-                this.changeTime(countDown + "");
-                Laya.Tween.to(this.label_score, { scaleX: 1, scaleY: 1 }, 500);
-            });
-        }
+        // start() {
+        //     let countDown = this.COUNTDOWNNUM;
+        //     this.changeTime(countDown + "");
+        //     this.label_time.zOrder = 3;
+        //     this.label_time.visible = true;
+        //     Laya.timer.loop(1000, this, () => {  //倒计时
+        //         countDown--;
+        //         if (countDown < 0) {
+        //             this.gameStatus = 1;
+        //             this.label_time.visible = false;
+        //             Laya.timer.clearAll(this);
+        //             Laya.timer.frameLoop(1, this, this.onLoop);
+        //             this.label_control.visible = true;
+        //             return;
+        //         }
+        //         this.changeTime(countDown + "");
+        //         Laya.Tween.to(this.label_score, { scaleX: 1, scaleY: 1 }, 500);
+        //     });
+        // }
 
-        changeTime(str) {
-            this.label_time.scale(2, 2);
-            this.label_time.changeText(str);
-            Laya.Tween.to(this.label_time, { scaleX: 1, scaleY: 1 }, 500);
-        }
+        // changeTime(str) {
+        //     this.label_time.scale(2, 2);
+        //     this.label_time.changeText(str);
+        //     Laya.Tween.to(this.label_time, { scaleX: 1, scaleY: 1 }, 500);
+        // }
 
         //暂停
         pause() {
@@ -155,7 +156,7 @@ namespace game {
         playAgin() {
             this.clearGame();
             this.init();
-            this.start();
+            // this.start();
         }
 
         //清理游戏
@@ -184,9 +185,15 @@ namespace game {
         init() {
             //操作提示界面
             this.box_tips.visible = true;
-            this.sp_tips.graphics.drawRect(0,0, this.width, this.height, "#000000");
+            this.sp_tips.graphics.drawRect(0, 0, this.width, this.height, "#000000");
             this.box_tips.on(Laya.Event.CLICK, this, () => {
                 this.box_tips.visible = false;
+                this.ani_go.play(0, false);
+            });
+
+            this.ani_go.on(Laya.Event.COMPLETE, this, () => {
+                console.log("ddddddd", "ssssssssssssss");
+                Laya.timer.frameLoop(1, this, this.onLoop);
             });
 
             //云层
@@ -352,5 +359,5 @@ namespace game {
                 this.gameOver();
             }
         }
-    }    
+    }
 }

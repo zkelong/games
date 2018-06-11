@@ -12,6 +12,7 @@ var game;
 (function (game) {
     var GameConfig = def.GameConfig;
     var Sprite = Laya.Sprite;
+    var Image = Laya.Image;
     /**
      * 青蛙
      */
@@ -27,9 +28,8 @@ var game;
             // this.trap.size(GameConfig.PILLARWIDTH, ttH);
             // this.trap.pos(0, -ttH);
             // this.addChildren(this.trap);
-            _this.trap =
-                let;
-            t: Laya.Texture = Laya.loader.getRes("frog/zhuzi.png");
+            _this.trap = new Image("frog/xianjing.png");
+            var t = Laya.loader.getRes("frog/zhuzi.png");
             _this.graphics.drawTexture(t, 0, 0, GameConfig.PILLARWIDTH, Laya.stage.height / 2);
             _this.size(GameConfig.PILLARWIDTH, Laya.stage.height / 2);
             _this.pivot(_this.width / 2, 0);
@@ -57,7 +57,7 @@ var game;
                 if (idx == Pillar.NEXTARRAY.length) {
                     idx--;
                 }
-                if (idx == idx) { //跟上一组一样了
+                if (idx == idx) {
                     idx = idx == Pillar.NEXTARRAY.length - 1 ? 0 : idx + 1;
                 }
                 return {
