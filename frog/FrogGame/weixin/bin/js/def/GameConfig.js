@@ -4,9 +4,9 @@ var def;
         function GameConfig() {
         }
         GameConfig.SPEED = 3; //1;
-        GameConfig.BIGSTEP = 200;
-        GameConfig.SMALLSTEP = 100;
-        GameConfig.PILLARWIDTH = 100;
+        GameConfig.BIGSTEP = 352;
+        GameConfig.SMALLSTEP = 176;
+        GameConfig.PILLARWIDTH = 176;
         return GameConfig;
     }());
     def.GameConfig = GameConfig;

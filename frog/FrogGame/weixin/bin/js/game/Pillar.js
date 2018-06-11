@@ -20,17 +20,19 @@ var game;
         function Pillar() {
             var _this = _super.call(this) || this;
             _this.haveTrap = false;
-            var t = Laya.loader.getRes("frog/zhuzi.png");
+            // this.trap = new Sprite();
+            // let ttrap: Laya.Texture = Laya.loader.getRes("frog/xianjing.png");
+            // let ttH = GameConfig.PILLARWIDTH * 0.21;
+            // this.trap.graphics.drawTexture(ttrap, 0, 0, GameConfig.PILLARWIDTH, ttH);
+            // this.trap.size(GameConfig.PILLARWIDTH, ttH);
+            // this.trap.pos(0, -ttH);
+            // this.addChildren(this.trap);
+            _this.trap =
+                let;
+            t: Laya.Texture = Laya.loader.getRes("frog/zhuzi.png");
             _this.graphics.drawTexture(t, 0, 0, GameConfig.PILLARWIDTH, Laya.stage.height / 2);
             _this.size(GameConfig.PILLARWIDTH, Laya.stage.height / 2);
             _this.pivot(_this.width / 2, 0);
-            _this.trap = new Sprite();
-            var ttrap = Laya.loader.getRes("frog/xianjing.png");
-            var ttH = GameConfig.PILLARWIDTH * 0.21;
-            _this.trap.graphics.drawTexture(ttrap, 0, 0, GameConfig.PILLARWIDTH, ttH);
-            _this.trap.size(GameConfig.PILLARWIDTH, ttH);
-            _this.trap.pos(0, -ttH);
-            _this.addChildren(_this.trap);
             return _this;
         }
         Pillar.prototype.init = function (x, y, haveTrap) {

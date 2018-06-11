@@ -1,4 +1,5 @@
-var LobbyView = lobby.LobbyMainView;
+// import LobbyView = lobby.LobbyMainView;
+var GameMainView = game.GameMainView;
 var Stage = Laya.Stage;
 Laya.init(640, 960, Laya.WebGL);
 // 设置适配模式
@@ -11,7 +12,9 @@ Laya.stage.screenMode = Stage.SCREEN_VERTICAL;
 var asset = def.SourceConfig.lobbySource.concat(def.SourceConfig.gameSource);
 Laya.loader.load(asset, new Laya.Handler(this, function () {
     asset = null;
-    var lobby = new LobbyView;
-    Laya.stage.addChild(lobby);
+    // let lobby = new LobbyView;
+    // Laya.stage.addChild(lobby);
+    var game = new GameMainView(def.GAMEMODE.MODE1);
+    Laya.stage.addChild(game);
 }));
 //# sourceMappingURL=main.js.map

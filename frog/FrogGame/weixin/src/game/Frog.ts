@@ -47,7 +47,7 @@ namespace game {
             if (!this.actionBody) {
                 this.actionBody = new Laya.Animation();
                 this.actionBody.interval = 20;
-                this.actionBody.scale(1, 1);
+                this.actionBody.scale(1.5, 1.5);
                 this.addChild(this.actionBody);
                 //增加动画播放完成监听
                 this.actionBody.on(Laya.Event.COMPLETE, this, this.onPlayComplete);

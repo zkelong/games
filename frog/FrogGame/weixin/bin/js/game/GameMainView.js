@@ -12,7 +12,6 @@ var __extends = (this && this.__extends) || (function () {
 var game;
 (function (game) {
     var GameConfig = def.GameConfig;
-    var GameOverView = game.GameOverView;
     var Frog = game.Frog;
     var GameMainView = /** @class */ (function (_super) {
         __extends(GameMainView, _super);
@@ -41,6 +40,9 @@ var game;
             _this.img_bg.on(Laya.Event.MOUSE_UP, _this, _this.onMouseUp);
             _this.label_control.on("click", _this, _this.gameControl);
             return _this;
+            // this.on(Event.RESIZE, this, () => {
+            //     this.graphics.drawRect(0,0, this.width, this.height, this.color);
+            // });
         }
         //鼠标按下
         GameMainView.prototype.onMouseDown = function () {
@@ -130,7 +132,7 @@ var game;
         };
         //游戏结束
         GameMainView.prototype.gameOver = function () {
-            var oView = new GameOverView;
+            var oView = new game.GameOverView;
             // oView.on(oView.PLAYAGIN, this, () => {
             //     this.playAgin();
             // });
@@ -168,6 +170,21 @@ var game;
         ///////////游戏逻辑/////////////////
         //游戏初始化
         GameMainView.prototype.init = function () {
+            var _this = this;
+            //操作提示界面
+            this.box_tips.visible = true;
+            this.sp_tips.graphics.drawRect(0, 0, this.width, this.height, "#000000");
+            this.box_tips.on(Laya.Event.CLICK, this, function () {
+                _this.box_tips.visible = false;
+            });
+            //云层
+            this.cloudsView = new game.CloudsView;
+            this.sp_map.addChild(this.cloudsView);
+            //水
+            this.waterView = new game.WaterView;
+            this.waterView.y = Laya.stage.height - this.waterView.picHight;
+            this.waterView.zOrder = this.sp_map.zOrder + 1;
+            this.addChild(this.waterView);
             if (this.frog) {
                 this.frog.destroy();
             }
@@ -210,6 +227,7 @@ var game;
                 var haveTrap = this.pillarShowArray[this.pillarIndex] == 3;
                 var pillar = Laya.Pool.getItemByClass(game.Pillar.PILLARTAG, game.Pillar);
                 pillar.init(this.lastXpos, this.pillarYPos, haveTrap);
+                pillar.zOrder = 1;
                 this.sp_map.addChild(pillar);
                 this.pillarArray.push(pillar);
             }
@@ -221,11 +239,13 @@ var game;
                 this.frog.setSpeed();
                 this.frog.y -= this.frog.speedY;
             }
+            this.cloudsView.run(1);
+            this.waterView.run(1);
             var fSpeed = this.gameSpeed - this.frog.speedX;
             this.frog.x -= fSpeed;
             if (this.frog.x - this.frog.width / 2 < 0 || this.frog.x + this.frog.width / 2 >= Laya.stage.width) { //撞墙
-                this.frogBlast();
-                return;
+                // this.frogBlast();
+                // return;
             }
             if (this.pillarArray.length) {
                 for (var i = this.pillarArray.length - 1; i > -1; i--) {

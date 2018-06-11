@@ -18,7 +18,7 @@ var game;
             return _this;
         }
         return GameOverView;
-    }(ui.game.GameMainUI));
+    }(ui.game.GameOverUI));
     game.GameOverView = GameOverView;
 })(game || (game = {}));
 //# sourceMappingURL=GameOverView.js.map

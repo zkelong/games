@@ -41,7 +41,7 @@ var game;
             if (!_this.actionBody) {
                 _this.actionBody = new Laya.Animation();
                 _this.actionBody.interval = 20;
-                _this.actionBody.scale(1, 1);
+                _this.actionBody.scale(1.5, 1.5);
                 _this.addChild(_this.actionBody);
                 //增加动画播放完成监听
                 _this.actionBody.on(Laya.Event.COMPLETE, _this, _this.onPlayComplete);

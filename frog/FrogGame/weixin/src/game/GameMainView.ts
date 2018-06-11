@@ -3,7 +3,6 @@
 namespace game {
     import Event = Laya.Event;
     import GameConfig = def.GameConfig;
-    import GameOverView = game.GameOverView;
     import Frog = game.Frog;
 
     export class GameMainView extends ui.game.GameMainUI {
@@ -26,6 +25,11 @@ namespace game {
         gameSpeed;  //游戏速度
 
         pillarYPos;
+        //场景
+        //云层
+        cloudsView : CloudsView;
+        //水
+        waterView: WaterView;
 
         gameMode;   //游戏模式
         /**
@@ -41,6 +45,9 @@ namespace game {
             this.img_bg.on(Laya.Event.MOUSE_DOWN, this, this.onMouseDown);
             this.img_bg.on(Laya.Event.MOUSE_UP, this, this.onMouseUp);
             this.label_control.on("click", this, this.gameControl);
+            // this.on(Event.RESIZE, this, () => {
+            //     this.graphics.drawRect(0,0, this.width, this.height, this.color);
+            // });
         }
         ////////////////界面操作///////////////
         mousePos = { time: 0, x: 0, y: 0 };
@@ -175,6 +182,22 @@ namespace game {
         ///////////游戏逻辑/////////////////
         //游戏初始化
         init() {
+            //操作提示界面
+            this.box_tips.visible = true;
+            this.sp_tips.graphics.drawRect(0,0, this.width, this.height, "#000000");
+            this.box_tips.on(Laya.Event.CLICK, this, () => {
+                this.box_tips.visible = false;
+            });
+
+            //云层
+            this.cloudsView = new CloudsView;
+            this.sp_map.addChild(this.cloudsView);
+            //水
+            this.waterView = new WaterView;
+            this.waterView.y = Laya.stage.height - this.waterView.picHight;
+            this.waterView.zOrder = this.sp_map.zOrder + 1;
+            this.addChild(this.waterView);
+
             if (this.frog) {
                 this.frog.destroy();
             }
@@ -217,6 +240,7 @@ namespace game {
                 let haveTrap = this.pillarShowArray[this.pillarIndex] == 3;
                 let pillar: Pillar = Laya.Pool.getItemByClass(Pillar.PILLARTAG, Pillar);
                 pillar.init(this.lastXpos, this.pillarYPos, haveTrap);
+                pillar.zOrder = 1;
                 this.sp_map.addChild(pillar);
                 this.pillarArray.push(pillar);
             }
@@ -229,11 +253,13 @@ namespace game {
                 this.frog.setSpeed();
                 this.frog.y -= this.frog.speedY;
             }
+            this.cloudsView.run(1);
+            this.waterView.run(1);
             let fSpeed = this.gameSpeed - this.frog.speedX;
             this.frog.x -= fSpeed;
             if (this.frog.x - this.frog.width / 2 < 0 || this.frog.x + this.frog.width / 2 >= Laya.stage.width) { //撞墙
-                this.frogBlast();
-                return;
+                // this.frogBlast();
+                // return;
             }
             if (this.pillarArray.length) {
                 for (let i = this.pillarArray.length - 1; i > -1; i--) {
@@ -326,5 +352,5 @@ namespace game {
                 this.gameOver();
             }
         }
-    }
+    }    
 }
