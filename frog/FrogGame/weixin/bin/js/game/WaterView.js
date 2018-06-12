@@ -18,7 +18,7 @@ var game;
             var _this = _super.call(this) || this;
             _this.waters = [];
             _this.picWidth = 0;
-            _this.picHight = 0;
+            _this.picHeight = 0;
             _this.lastPic = null;
             _this.init();
             return _this;
@@ -30,7 +30,7 @@ var game;
             this.addChild(water1);
             this.waters.push(water1);
             this.picWidth = water1.width;
-            this.picHight = water1.height;
+            this.picHeight = water1.height;
             var num = Math.floor(Laya.stage.width / water1.width);
             for (var i = 0; i < num + 1; i++) {
                 var t = new Laya.Label;

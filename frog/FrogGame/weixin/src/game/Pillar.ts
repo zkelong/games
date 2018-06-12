@@ -13,24 +13,27 @@ namespace game {
         static BEGINARRAY = [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 3, 1, 1, 2];
         static NEXTARRAY = [[1, 2, 1, 3, 1], [1, 3, 1, 1, 2], [1, 2, 1, 3, 1], [1, 3, 1, 2, 1]];
         haveTrap = false;
-        trap: Laya.Image; //陷阱
+        trap;//: Laya.Image; //陷阱
         constructor() {
             super();
-            
-            // this.trap = new Sprite();
-            // let ttrap: Laya.Texture = Laya.loader.getRes("frog/xianjing.png");
-            // let ttH = GameConfig.PILLARWIDTH * 0.21;
-            // this.trap.graphics.drawTexture(ttrap, 0, 0, GameConfig.PILLARWIDTH, ttH);
-            // this.trap.size(GameConfig.PILLARWIDTH, ttH);
-            // this.trap.pos(0, -ttH);
-            // this.addChildren(this.trap);
-
-            this.trap = new Image("frog/xianjing.png")
-
-            let t: Laya.Texture = Laya.loader.getRes("frog/zhuzi.png");
-            this.graphics.drawTexture(t, 0, 0, GameConfig.PILLARWIDTH, Laya.stage.height / 2);
             this.size(GameConfig.PILLARWIDTH, Laya.stage.height / 2);
             this.pivot(this.width / 2, 0);
+
+            this.trap = new Sprite();
+            let ttrap: Laya.Texture = Laya.loader.getRes("frog/xianjing.png");
+            let trapWidth = GameConfig.PILLARWIDTH - 10
+            let ttH = trapWidth * 0.31;
+            this.trap.graphics.drawTexture(ttrap, 0, 0, trapWidth, ttH);
+            this.trap.size(GameConfig.PILLARWIDTH, ttH);
+            this.trap.pos(5, -ttH + 25);
+            this.addChildren(this.trap);
+
+            // this.trap = new Image("frog/xianjing.png")
+            let p = new Sprite;
+            let t: Laya.Texture = Laya.loader.getRes("frog/zhuzi.png");
+            p.graphics.drawTexture(t, 0, 0, GameConfig.PILLARWIDTH, Laya.stage.height / 2);
+            p.pos(0, 0);
+            this.addChild(p);
         }
 
         init(x, y, haveTrap?) {

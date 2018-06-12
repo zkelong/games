@@ -96,6 +96,10 @@ var game;
             }
         };
         //开始
+        GameMainView.prototype.start = function () {
+            this.gameStatus = 1;
+            Laya.timer.frameLoop(1, this, this.onLoop);
+        };
         // start() {
         //     let countDown = this.COUNTDOWNNUM;
         //     this.changeTime(countDown + "");
@@ -181,15 +185,21 @@ var game;
             this.ani_go.on(Laya.Event.COMPLETE, this, function () {
                 console.log("ddddddd", "ssssssssssssss");
                 Laya.timer.frameLoop(1, _this, _this.onLoop);
+                _this.start();
             });
             //云层
             this.cloudsView = new game.CloudsView;
             this.sp_map.addChild(this.cloudsView);
+            //远景
+            this.farView = new game.FarView;
+            this.sp_map.addChild(this.farView);
             //水
             this.waterView = new game.WaterView;
-            this.waterView.y = Laya.stage.height - this.waterView.picHight;
+            this.waterView.y = Laya.stage.height - this.waterView.picHeight;
             this.waterView.zOrder = this.sp_map.zOrder + 1;
+            this.box_tips.zOrder = this.waterView.zOrder + 1;
             this.addChild(this.waterView);
+            this.farView.y = this.waterView.y - 209; //this.farView.picHeight;
             if (this.frog) {
                 this.frog.destroy();
             }
@@ -245,6 +255,7 @@ var game;
                 this.frog.y -= this.frog.speedY;
             }
             this.cloudsView.run(1);
+            this.farView.run(1);
             this.waterView.run(1);
             var fSpeed = this.gameSpeed - this.frog.speedX;
             this.frog.x -= fSpeed;

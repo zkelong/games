@@ -6,7 +6,7 @@ namespace game {
 
         waters = [];
         picWidth = 0;
-        picHight = 0;
+        picHeight = 0;
         lastPic = null;
 
         constructor() {
@@ -22,7 +22,7 @@ namespace game {
             this.waters.push(water1);
             
             this.picWidth = water1.width;
-            this.picHight = water1.height;
+            this.picHeight = water1.height;
             
             let num = Math.floor(Laya.stage.width/water1.width);
             for(let i = 0; i < num + 1; i++) {

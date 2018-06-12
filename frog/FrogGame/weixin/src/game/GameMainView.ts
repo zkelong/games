@@ -28,6 +28,8 @@ namespace game {
         //场景
         //云层
         cloudsView: CloudsView;
+        //远景
+        farView: FarView;
         //水
         waterView: WaterView;
 
@@ -102,6 +104,10 @@ namespace game {
             }
         }
         //开始
+        start() {
+            this.gameStatus = 1;
+            Laya.timer.frameLoop(1, this, this.onLoop);
+        }
         // start() {
         //     let countDown = this.COUNTDOWNNUM;
         //     this.changeTime(countDown + "");
@@ -194,16 +200,22 @@ namespace game {
             this.ani_go.on(Laya.Event.COMPLETE, this, () => {
                 console.log("ddddddd", "ssssssssssssss");
                 Laya.timer.frameLoop(1, this, this.onLoop);
+                this.start();
             });
 
             //云层
             this.cloudsView = new CloudsView;
             this.sp_map.addChild(this.cloudsView);
+            //远景
+            this.farView = new FarView;
+            this.sp_map.addChild(this.farView);
             //水
             this.waterView = new WaterView;
-            this.waterView.y = Laya.stage.height - this.waterView.picHight;
+            this.waterView.y = Laya.stage.height - this.waterView.picHeight;
             this.waterView.zOrder = this.sp_map.zOrder + 1;
+            this.box_tips.zOrder = this.waterView.zOrder + 1;
             this.addChild(this.waterView);
+            this.farView.y = this.waterView.y - 209; //this.farView.picHeight;
 
             if (this.frog) {
                 this.frog.destroy();
@@ -261,6 +273,7 @@ namespace game {
                 this.frog.y -= this.frog.speedY;
             }
             this.cloudsView.run(1);
+            this.farView.run(1);
             this.waterView.run(1);
             let fSpeed = this.gameSpeed - this.frog.speedX;
             this.frog.x -= fSpeed;
