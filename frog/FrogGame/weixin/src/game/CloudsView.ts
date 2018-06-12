@@ -20,6 +20,7 @@ namespace game {
             this.img2.anchorX = 1;
             this.img2.scaleX = -1;
             this.addChild(this.img2);
+            this.img2.x = this.img1.x + this.img1.width;
 
             this.img1.on(Laya.Event.LOADED, this, () => {
                 this.img2.x = this.img1.x + this.img1.width;
@@ -27,15 +28,14 @@ namespace game {
         }
 
         run(rate) {
-            rate = rate | 1;
-            this.img1.x -= rate;
-            this.img2.x -= rate;
             if(this.img1.x + this.img1.width < -1) {
                 this.img1.x = this.img2.x + this.img2.width;
             }
             if(this.img2.x + this.img2.width < -1) {
                 this.img2.x = this.img1.x + this.img1.width;
             }
+            this.img1.x -= rate;
+            this.img2.x -= rate;
         }
     }
 }

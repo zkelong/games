@@ -4,7 +4,6 @@ namespace lobby {
         constructor() {
             super();
             this.size(Laya.stage.width, Laya.stage.height);
-            // console.log("stage....width....", this.width, this.height);
             this.label_begin.on(Laya.Event.CLICK, this, this.beginGame);
         }
 

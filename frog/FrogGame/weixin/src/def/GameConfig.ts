@@ -1,8 +1,8 @@
 namespace def {
     export class GameConfig {
-        static SPEED = 3;//1;
-        static BIGSTEP = 352;
-        static SMALLSTEP = 176;
-        static PILLARWIDTH = 176;
+        static SPEED = 3;
+        static BIGSTEP = 320;
+        static SMALLSTEP = 160;
+        static PILLARWIDTH = 160;
     }
 }

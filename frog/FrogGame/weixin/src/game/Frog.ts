@@ -47,7 +47,7 @@ namespace game {
             if (!this.actionBody) {
                 this.actionBody = new Laya.Animation();
                 this.actionBody.interval = 20;
-                this.actionBody.scale(1.5, 1.5);
+                this.actionBody.scale(2, 2);
                 this.addChild(this.actionBody);
                 //增加动画播放完成监听
                 this.actionBody.on(Laya.Event.COMPLETE, this, this.onPlayComplete);
@@ -77,7 +77,6 @@ namespace game {
                 this.speedX = 0;
                 this.inJump = false;
             }
-            // console.log("action.....", this.actionName);
         }
 
         //动画播放完成
@@ -115,11 +114,8 @@ namespace game {
             if (this.speedY <= 0 && !this.havePlayUpToDown) { //开始下降
                 this.havePlayUpToDown = true;
                 this.playAnimation(Frog.ACTIONS.upToDown);
-                // this.speedY = 0;
-                // return;
             }
             this.speedY -= this.acceleratedY;
-            // console.log("acceleratedY.....", this.acceleratedY, this.speedY);
         }
         //小跳
         jumpSmall() {

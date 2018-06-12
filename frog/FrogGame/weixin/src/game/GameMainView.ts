@@ -6,7 +6,7 @@ namespace game {
     import Frog = game.Frog;
 
     export class GameMainView extends ui.game.GameMainUI {
-        BEGINXPOS = 100; //开始位置
+        BEGINXPOS = 180; //开始位置
         COUNTDOWNNUM = 3;   //倒计时时间
 
         frog: Frog;             //青蛙
@@ -46,7 +46,7 @@ namespace game {
             // this.start();
             this.img_bg.on(Laya.Event.MOUSE_DOWN, this, this.onMouseDown);
             this.img_bg.on(Laya.Event.MOUSE_UP, this, this.onMouseUp);
-            this.label_control.on("click", this, this.gameControl);
+            // this.label_control.on("click", this, this.gameControl);
             // this.on(Event.RESIZE, this, () => {
             //     this.graphics.drawRect(0,0, this.width, this.height, this.color);
             // });
@@ -62,11 +62,11 @@ namespace game {
         //鼠标弹起
         onMouseUp() {
             if (this.gameStatus != 1) { //游戏进行中
-                console.log("未进行，操作无效");
+                // console.log("未进行，操作无效");
                 return;
             }
             if (this.frog.inJump) {  //未落地，操作无效
-                console.log("未落地，操作无效");
+                // console.log("未落地，操作无效");
                 return;
             }
             let endTime = new Date().valueOf();
@@ -93,16 +93,16 @@ namespace game {
             }
         }
         //游戏控制
-        gameControl() {
-            console.log("control...........", this.gameStatus);
-            if (this.gameStatus == 1) {
-                this.label_control.changeText("继续");
-                this.pause();
-            } else {
-                this.label_control.changeText("暂停");
-                this.continue();
-            }
-        }
+        // gameControl() {
+        //     console.log("control...........", this.gameStatus);
+        //     if (this.gameStatus == 1) {
+        //         this.label_control.changeText("继续");
+        //         this.pause();
+        //     } else {
+        //         this.label_control.changeText("暂停");
+        //         this.continue();
+        //     }
+        // }
         //开始
         start() {
             this.gameStatus = 1;
@@ -148,21 +148,26 @@ namespace game {
 
         //游戏结束
         gameOver() {
-            let oView = new GameOverView;
-            // oView.on(oView.PLAYAGIN, this, () => {
-            //     this.playAgin();
-            // });
-            // oView.on(oView.BACK, this, () => {
-            //     this.quit();
-            // });
-            Laya.stage.addChild(oView);
+            this.label_score.text  = "";
+            let oView = new GameOverView(this.score);
+            oView.zOrder = 100;
+            this.addChild(oView);
+            //再来一把
+            oView.on(oView.AGIN, this, () => {
+                this.score = 0;
+                this.playAgin();
+            });
+            //继续
+            oView.on(oView.ADEND, this, () => {
+                this.playAgin();
+            });
         }
 
         //再来一局
         playAgin() {
             this.clearGame();
-            this.init();
-            // this.start();
+            this.initGoods();
+            this.start();
         }
 
         //清理游戏
@@ -189,8 +194,6 @@ namespace game {
         ///////////游戏逻辑/////////////////
         //游戏初始化
         init() {
-            //操作提示界面
-            this.box_tips.visible = true;
             this.sp_tips.graphics.drawRect(0, 0, this.width, this.height, "#000000");
             this.box_tips.on(Laya.Event.CLICK, this, () => {
                 this.box_tips.visible = false;
@@ -198,7 +201,6 @@ namespace game {
             });
 
             this.ani_go.on(Laya.Event.COMPLETE, this, () => {
-                console.log("ddddddd", "ssssssssssssss");
                 Laya.timer.frameLoop(1, this, this.onLoop);
                 this.start();
             });
@@ -215,8 +217,12 @@ namespace game {
             this.waterView.zOrder = this.sp_map.zOrder + 1;
             this.box_tips.zOrder = this.waterView.zOrder + 1;
             this.addChild(this.waterView);
-            this.farView.y = this.waterView.y - 209; //this.farView.picHeight;
+            this.farView.y = this.waterView.y - 209;
 
+            this.initGoods();
+        }
+
+        initGoods() {
             if (this.frog) {
                 this.frog.destroy();
             }
@@ -224,7 +230,6 @@ namespace game {
             this.frog.on(this.frog.ACTIONEND, this, this.frogActionOver);
             this.sp_map.addChild(this.frog);
             this.lastXpos = this.BEGINXPOS;
-            this.score = 0;
             this.label_score.changeText("分数：" + this.score);
             this.gameSpeed = GameConfig.SPEED;
             this.frog.initPos(this.lastXpos, this.pillarYPos);
@@ -232,7 +237,6 @@ namespace game {
             this.frog.speedX = 0;
             this.lastHaveTrap = false;
             this.pillarShowArray = (Pillar.getPillarShowArray(true)).array;
-            console.log("pillar...array.....", JSON.stringify(this.pillarShowArray));
             this.pillarIndex = 0;
             this.addPillar(this.lastXpos);
             do {
@@ -250,7 +254,6 @@ namespace game {
                 this.pillarShowArray = ret.array;
                 this.pillarArrayIndex = ret.idx;
                 this.pillarIndex = 0;
-                // console.log("next...pillar...array...", JSON.stringify(this.pillarShowArray));
             }
             if (this.pillarShowArray[this.pillarIndex] == 2) {   //无柱子
                 this.haveNullBefore = true;
@@ -272,14 +275,14 @@ namespace game {
                 this.frog.setSpeed();
                 this.frog.y -= this.frog.speedY;
             }
-            this.cloudsView.run(1);
-            this.farView.run(1);
-            this.waterView.run(1);
+            this.cloudsView.run(this.gameSpeed);
+            this.farView.run(this.gameSpeed - 1.5);
+            this.waterView.run(this.gameSpeed);
             let fSpeed = this.gameSpeed - this.frog.speedX;
             this.frog.x -= fSpeed;
             if (this.frog.x - this.frog.width / 2 < 0 || this.frog.x + this.frog.width / 2 >= Laya.stage.width) { //撞墙
-                // this.frogBlast();
-                // return;
+                this.frogBlast();
+                return;
             }
             if (this.pillarArray.length) {
                 for (let i = this.pillarArray.length - 1; i > -1; i--) {
@@ -298,13 +301,12 @@ namespace game {
                                     this.frogBlast();
                                 } else {
                                     this.frog.x = p.x; //要漏一帧的速度
-                                    this.score += this.stepBig ? 2 : 1;
+                                    this.score += 1; //this.stepBig ? 2 : 1;
                                     this.label_score.changeText("分数：" + this.score);
                                     this.frog.playAnimation(Frog.ACTIONS.landing);
                                     if (this.score > 10 && this.speedAddTag < 1) {   //第一次加速
                                         this.gameSpeed += 1;
                                         this.speedAddTag++;
-                                        console.log("加速......10....");
                                     }
                                     if (this.score > 30 && this.speedAddTag < 2) { //第三次加速
                                         this.gameSpeed += 1;
@@ -349,13 +351,11 @@ namespace game {
         }
         //青蛙爆炸
         frogBlast() {
-            console.log("死了.......");
             this.pause();
             this.frog.playAnimation(Frog.ACTIONS.blast);
         }
         //青蛙动作结束
         frogActionOver(actionName) {
-            // console.log("监听动画结束。。。。。", actionName, Frog.ACTIONS.landing);
             if (actionName == Frog.ACTIONS.stand) {          //静止
 
             } else if (actionName == Frog.ACTIONS.flyUp) {   //起跳
@@ -369,6 +369,7 @@ namespace game {
             } else if (actionName == Frog.ACTIONS.landing) {  //落地
 
             } else if (actionName == Frog.ACTIONS.blast) {  //爆炸
+                this.frog.visible = false;
                 this.gameOver();
             }
         }

@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":13,
+    "selecteID":18,
     "props":{"y":0,"sceneWidth":640,"sceneHeight":960,"sceneColor":"#000000","centerY":0,"centerX":0},
     "nodeParent":-1,
     "label":"View",
@@ -14,10 +14,24 @@
     "child":[
         {
             "x":15,
-            "type":"Image",
-            "props":{"y":10,"x":10,"skin":"frog/score.png","left":20,"centerY":-240},
+            "type":"Sprite",
+            "props":{"var":"sp_bg","alpha":0.5},
             "nodeParent":1,
-            "label":"Image",
+            "label":"Sprite(sp_bg)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "compId":17,
+            "child":[
+                ],
+            "$LOCKED":true
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":10,"x":10,"var":"img_score","skin":"frog/score.png","left":20,"centerY":-240},
+            "nodeParent":1,
+            "label":"Image(img_score)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -25,143 +39,107 @@
             "child":[
                 ],
             "$LOCKED":true,
-            "$HIDDEN":true
+            "$HIDDEN":false
         },
         {
             "x":15,
-            "type":"ImageButton",
-            "props":{"y":10,"x":10,"var":"btn_ad","skin":"frog/ibtn_ad.png","centerY":-80,"centerX":0},
+            "type":"Label",
+            "props":{"var":"label_score","text":"0","left":360,"fontSize":100,"color":"#ffffff","centerY":-240},
             "nodeParent":1,
-            "label":"ImageButton(btn_ad)",
+            "label":"Label(label_score)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
-            "compId":5,
+            "compId":18,
             "child":[
-                ],
-            "$LOCKED":true,
-            "$HIDDEN":true
+                ]
         },
         {
             "x":15,
-            "type":"ImageButton",
-            "props":{"y":10,"x":10,"var":"btn_rank","skin":"frog/ibtn_rank.png","centerY":40,"centerX":0},
+            "type":"Box",
+            "props":{"visible":false,"var":"box_list","top":0,"right":0,"left":0,"bottom":0},
             "nodeParent":1,
-            "label":"ImageButton(btn_rank)",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "compId":6,
-            "child":[
-                ],
-            "$LOCKED":true,
-            "$HIDDEN":true
-        },
-        {
-            "x":15,
-            "type":"ImageButton",
-            "props":{"y":10,"x":10,"var":"btn_agin","skin":"frog/ibtn_agin.png","centerY":160,"centerX":0},
-            "nodeParent":1,
-            "label":"ImageButton(btn_agin)",
-            "isOpen":true,
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "compId":7,
-            "child":[
-                ],
-            "$LOCKED":true,
-            "$HIDDEN":true
-        },
-        {
-            "x":15,
-            "type":"List",
-            "props":{"width":500,"visible":false,"var":"list","spaceY":20,"height":800,"centerY":0,"centerX":0},
-            "nodeParent":1,
-            "label":"List(list)",
+            "label":"Box(box_list)",
             "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
-            "compId":13,
+            "compId":19,
             "child":[
                 {
                     "x":30,
-                    "type":"Box",
-                    "props":{"y":0,"x":0,"width":500,"renderType":"render","height":80},
-                    "nodeParent":13,
-                    "label":"Box",
-                    "isOpen":true,
+                    "type":"List",
+                    "props":{"x":70,"width":500,"visible":true,"var":"list","spaceY":20,"height":800,"centerY":-10,"centerX":0},
+                    "nodeParent":19,
+                    "label":"List(list)",
+                    "isOpen":false,
                     "isDirectory":true,
-                    "isAniNode":false,
+                    "isAniNode":true,
                     "hasChild":true,
-                    "compId":12,
+                    "compId":13,
                     "child":[
                         {
-                            "x":45,
-                            "type":"Sprite",
-                            "props":{"y":0,"x":0,"name":"sp_bg"},
-                            "nodeParent":12,
-                            "label":"Sprite(sp_bg)",
-                            "isDirectory":false,
+                            "type":"Box",
+                            "props":{"y":0,"x":0,"width":500,"renderType":"render","height":80},
+                            "nodeParent":13,
+                            "label":"Box",
+                            "isOpen":true,
+                            "isDirectory":true,
                             "isAniNode":false,
-                            "hasChild":false,
-                            "compId":14,
+                            "hasChild":true,
+                            "compId":12,
                             "child":[
-                                ]
-                        },
-                        {
-                            "x":45,
-                            "type":"Label",
-                            "props":{"text":"1","name":"label_rank","left":10,"fontSize":40,"color":"#ffffff","centerY":0},
-                            "nodeParent":12,
-                            "label":"Label(label_rank)",
-                            "isDirectory":false,
-                            "isAniNode":false,
-                            "hasChild":false,
-                            "compId":8,
-                            "child":[
-                                ]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "props":{"width":70,"skin":"frog/zha_01.png","name":"img_head","left":50,"height":70,"centerY":0},
-                            "nodeParent":12,
-                            "label":"Image(img_head)",
-                            "isDirectory":false,
-                            "isAniNode":false,
-                            "hasChild":false,
-                            "compId":9,
-                            "child":[
-                                ]
-                        },
-                        {
-                            "x":45,
-                            "type":"Label",
-                            "props":{"text":"label","name":"label_name","left":140,"fontSize":40,"color":"#ffffff","centerY":0},
-                            "nodeParent":12,
-                            "label":"Label(label_name)",
-                            "isDirectory":false,
-                            "isAniNode":false,
-                            "hasChild":false,
-                            "compId":10,
-                            "child":[
-                                ]
-                        },
-                        {
-                            "x":45,
-                            "type":"Label",
-                            "props":{"text":"100","right":40,"name":"label_score","fontSize":40,"color":"#ffffff","centerY":0},
-                            "nodeParent":12,
-                            "label":"Label(label_score)",
-                            "isDirectory":false,
-                            "isAniNode":false,
-                            "hasChild":false,
-                            "compId":11,
-                            "child":[
-                                ]
-                        }]
+                                {
+                                    "type":"Label",
+                                    "props":{"text":"1","name":"label_rank","left":10,"fontSize":40,"color":"#ffffff","centerY":0},
+                                    "nodeParent":12,
+                                    "label":"Label(label_rank)",
+                                    "isDirectory":false,
+                                    "isAniNode":false,
+                                    "hasChild":false,
+                                    "compId":8,
+                                    "child":[
+                                        ]
+                                },
+                                {
+                                    "type":"Image",
+                                    "props":{"width":70,"skin":"frog/zha_01.png","name":"img_head","left":50,"height":70,"centerY":0},
+                                    "nodeParent":12,
+                                    "label":"Image(img_head)",
+                                    "isDirectory":false,
+                                    "isAniNode":false,
+                                    "hasChild":false,
+                                    "compId":9,
+                                    "child":[
+                                        ]
+                                },
+                                {
+                                    "type":"Label",
+                                    "props":{"text":"label","name":"label_name","left":140,"fontSize":40,"color":"#ffffff","centerY":0},
+                                    "nodeParent":12,
+                                    "label":"Label(label_name)",
+                                    "isDirectory":false,
+                                    "isAniNode":false,
+                                    "hasChild":false,
+                                    "compId":10,
+                                    "child":[
+                                        ]
+                                },
+                                {
+                                    "type":"Label",
+                                    "props":{"text":"100","right":40,"name":"label_score","fontSize":40,"color":"#ffffff","centerY":0},
+                                    "nodeParent":12,
+                                    "label":"Label(label_score)",
+                                    "isDirectory":false,
+                                    "isAniNode":false,
+                                    "hasChild":false,
+                                    "compId":11,
+                                    "child":[
+                                        ]
+                                }]
+                        }],
+                    "$LOCKED":true,
+                    "$HIDDEN":false
                 }]
         }],
     "animations":[

@@ -26,14 +26,8 @@ namespace game {
             
             let num = Math.floor(Laya.stage.width/water1.width);
             for(let i = 0; i < num + 1; i++) {
-                let t = new Laya.Label
-                t.fontSize = 40;
-                t.text = i + "";
-                t.centerX = 0;
-                t.centerY = 0;
                 let water = new Image("frog/shui.png");
                 water.x = this.picWidth * (i + 1);
-                water.addChild(t);
                 this.addChild(water);
                 this.waters.push(water);
             }
