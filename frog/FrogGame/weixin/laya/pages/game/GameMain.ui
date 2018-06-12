@@ -1,8 +1,7 @@
 {
-    "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":6,
+    "selecteID":25,
     "props":{"sceneWidth":640,"sceneHeight":960,"sceneColor":"#000000"},
     "nodeParent":-1,
     "label":"View",
@@ -13,7 +12,6 @@
     "compId":1,
     "child":[
         {
-            "x":15,
             "type":"Image",
             "props":{"var":"img_bg","top":0,"skin":"frog/bg.png","right":0,"left":0,"bottom":0},
             "nodeParent":1,
@@ -27,7 +25,6 @@
             "$LOCKED":true
         },
         {
-            "x":15,
             "type":"Sprite",
             "props":{"var":"sp_map"},
             "nodeParent":1,
@@ -41,7 +38,18 @@
             "$LOCKED":true
         },
         {
-            "x":15,
+            "type":"Image",
+            "props":{"skin":"frog/yun.png"},
+            "nodeParent":1,
+            "label":"Image",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "compId":19,
+            "child":[
+                ]
+        },
+        {
             "type":"Sprite",
             "props":{"y":0,"x":0,"var":"sp_water"},
             "nodeParent":1,
@@ -54,7 +62,6 @@
                 ]
         },
         {
-            "x":15,
             "type":"Label",
             "props":{"visible":false,"var":"label_control","top":50,"text":"暂停","left":60,"fontSize":46,"color":"#ffffff","bold":true},
             "nodeParent":1,
@@ -68,7 +75,6 @@
             "$LOCKED":true
         },
         {
-            "x":15,
             "type":"Label",
             "props":{"visible":false,"var":"label_time","top":200,"text":"3","fontSize":50,"color":"#ffffff","centerX":0,"bold":true},
             "nodeParent":1,
@@ -83,9 +89,8 @@
             "$HIDDEN":false
         },
         {
-            "x":15,
             "type":"Label",
-            "props":{"width":280,"var":"label_score","top":50,"text":"分数：0","right":60,"fontSize":46,"color":"#c1deda","bold":true,"align":"right"},
+            "props":{"var":"label_score","top":50,"text":"分数：0","left":60,"fontSize":46,"color":"#3370ff","bold":true,"align":"left"},
             "nodeParent":1,
             "label":"Label(label_score)",
             "isDirectory":false,
@@ -97,7 +102,6 @@
             "$LOCKED":true
         },
         {
-            "x":15,
             "type":"Box",
             "props":{"var":"box_tips","top":0,"right":0,"left":0,"bottom":0},
             "nodeParent":1,
@@ -109,11 +113,11 @@
             "compId":9,
             "child":[
                 {
-                    "x":30,
                     "type":"Sprite",
                     "props":{"var":"sp_tips","alpha":0.5},
                     "nodeParent":9,
                     "label":"Sprite(sp_tips)",
+                    "isOpen":true,
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -122,138 +126,154 @@
                         ]
                 },
                 {
-                    "x":30,
-                    "type":"Label",
-                    "props":{"text":"滑动操作","fontSize":50,"color":"#ffffff","centerY":-200,"centerX":0,"bold":true},
+                    "type":"Sprite",
+                    "props":{"y":0,"x":0,"var":"sp_white","alpha":0},
                     "nodeParent":9,
-                    "label":"Label",
-                    "isDirectory":false,
+                    "label":"Sprite(sp_white)",
+                    "isOpen":true,
+                    "isDirectory":true,
                     "isAniNode":true,
-                    "hasChild":false,
-                    "compId":11,
+                    "hasChild":true,
+                    "compId":24,
                     "child":[
-                        ],
-                    "$LOCKED":true
+                        {
+                            "type":"Rect",
+                            "props":{"y":0,"x":0,"width":642,"lineWidth":1,"height":961,"fillColor":"#ffffff"},
+                            "nodeParent":24,
+                            "label":"Rect",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":25,
+                            "child":[
+                                ]
+                        }]
                 },
                 {
-                    "x":30,
-                    "type":"Label",
-                    "props":{"text":"向右小跳","fontSize":50,"color":"#ffffff","centerY":-100,"centerX":0,"bold":true},
+                    "type":"Box",
+                    "props":{"var":"box_labels","top":0,"right":0,"left":0,"bottom":0},
                     "nodeParent":9,
-                    "label":"Label",
-                    "isDirectory":false,
+                    "label":"Box(box_labels)",
+                    "isOpen":true,
+                    "isDirectory":true,
                     "isAniNode":true,
-                    "hasChild":false,
-                    "compId":12,
+                    "hasChild":true,
+                    "compId":23,
                     "child":[
-                        ],
-                    "$LOCKED":true
-                },
-                {
-                    "x":30,
-                    "type":"Label",
-                    "props":{"text":"向上大跳","fontSize":50,"color":"#ffffff","centerY":0,"centerX":0,"bold":true},
-                    "nodeParent":9,
-                    "label":"Label",
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "compId":14,
-                    "child":[
-                        ],
-                    "$LOCKED":true
-                },
-                {
-                    "x":30,
-                    "type":"Label",
-                    "props":{"text":"非常简单","fontSize":50,"color":"#ffffff","centerY":100,"centerX":0,"bold":true},
-                    "nodeParent":9,
-                    "label":"Label",
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "compId":15,
-                    "child":[
-                        ],
-                    "$LOCKED":true
-                },
-                {
-                    "x":30,
-                    "type":"Label",
-                    "props":{"text":"点击屏幕开始游戏","fontSize":42,"color":"#ffffff","centerX":0,"bottom":140},
-                    "nodeParent":9,
-                    "label":"Label",
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "compId":16,
-                    "child":[
-                        ],
-                    "$LOCKED":true
+                        {
+                            "type":"Label",
+                            "props":{"y":-115,"x":-76,"text":"滑动操作","fontSize":50,"color":"#ffffff","centerY":-200,"centerX":0,"bold":true},
+                            "nodeParent":23,
+                            "label":"Label",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":11,
+                            "child":[
+                                ],
+                            "$LOCKED":true
+                        },
+                        {
+                            "type":"Label",
+                            "props":{"y":-115,"x":-76,"text":"向右小跳","fontSize":50,"color":"#ffffff","centerY":-100,"centerX":0,"bold":true},
+                            "nodeParent":23,
+                            "label":"Label",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":12,
+                            "child":[
+                                ],
+                            "$LOCKED":true
+                        },
+                        {
+                            "type":"Label",
+                            "props":{"y":-115,"x":-76,"text":"向上大跳","fontSize":50,"color":"#ffffff","centerY":0,"centerX":0,"bold":true},
+                            "nodeParent":23,
+                            "label":"Label",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":14,
+                            "child":[
+                                ],
+                            "$LOCKED":true
+                        },
+                        {
+                            "type":"Label",
+                            "props":{"y":-115,"x":-76,"text":"非常简单","fontSize":50,"color":"#ffffff","centerY":100,"centerX":0,"bold":true},
+                            "nodeParent":23,
+                            "label":"Label",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":15,
+                            "child":[
+                                ],
+                            "$LOCKED":true
+                        },
+                        {
+                            "type":"Label",
+                            "props":{"y":-115,"x":-76,"text":"点击屏幕开始游戏","fontSize":42,"color":"#ffffff","centerX":0,"bottom":140},
+                            "nodeParent":23,
+                            "label":"Label",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":16,
+                            "child":[
+                                ],
+                            "$LOCKED":true
+                        }]
                 }],
-            "$LOCKED":true
-        },
-        {
-            "x":15,
-            "type":"Image",
-            "props":{"visible":false,"skin":"frog/go2.png","centerY":-80,"centerX":0},
-            "nodeParent":1,
-            "label":"Image",
-            "isDirectory":false,
-            "isAniNode":true,
-            "hasChild":false,
-            "compId":17,
-            "child":[
-                ],
             "$LOCKED":true
         }],
     "animations":[
         {
             "nodes":[
                 {
-                    "target":17,
+                    "target":24,
                     "keyframes":{
-                        "visible":[
+                        "alpha":[
                             {
-                                "value":true,
+                                "value":0.5,
                                 "tweenMethod":"linearNone",
-                                "tween":false,
-                                "target":17,
-                                "key":"visible",
+                                "tween":true,
+                                "target":24,
+                                "key":"alpha",
                                 "index":0
                             },
                             {
-                                "value":false,
+                                "value":0.7,
                                 "tweenMethod":"linearNone",
-                                "tween":false,
-                                "target":17,
-                                "key":"visible",
-                                "index":9
-                            }],
-                        "skin":[
-                            {
-                                "value":"frog/go2.png",
-                                "tweenMethod":"linearNone",
-                                "tween":false,
-                                "target":17,
-                                "key":"skin",
-                                "index":0
+                                "tween":true,
+                                "target":24,
+                                "key":"alpha",
+                                "index":1
                             },
                             {
-                                "value":"frog/go1.png",
+                                "value":0.2,
                                 "tweenMethod":"linearNone",
-                                "tween":false,
-                                "target":17,
-                                "key":"skin",
+                                "tween":true,
+                                "target":24,
+                                "key":"alpha",
+                                "index":2
+                            },
+                            {
+                                "value":0.6,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":24,
+                                "key":"alpha",
+                                "index":3
+                            },
+                            {
+                                "value":0,
+                                "tweenMethod":"linearNone",
+                                "tween":true,
+                                "target":24,
+                                "key":"alpha",
                                 "index":4
-                            },
-                            {
-                                "value":"frog/go2.png",
-                                "tweenMethod":"linearNone",
-                                "tween":false,
-                                "target":17,
-                                "key":"skin",
-                                "index":8
                             }]
                     }
                 }],

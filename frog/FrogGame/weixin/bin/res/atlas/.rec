@@ -1,12 +1,8 @@
 D .
 D frog
-R 18580FC0 bg.png
-P 460D68EC bt_ad.png
-P E4A8CB05 bt_agin.png
-P E4A8CB05 bt_rank.png
+R 44FC8EB2 bg.png
 P B967B265 go1.png
 P 32FBFA42 go2.png
-P 1C0B106B score.png
 P B8341896 shui.png
 P A99865F5 tiao_01.png
 P F0D1714C tiao_02.png

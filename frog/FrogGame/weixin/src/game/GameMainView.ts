@@ -4,6 +4,7 @@ namespace game {
     import Event = Laya.Event;
     import GameConfig = def.GameConfig;
     import Frog = game.Frog;
+    import ButtonGo = kelong.ui.KButtonGO;
 
     export class GameMainView extends ui.game.GameMainUI {
         BEGINXPOS = 180; //开始位置
@@ -27,11 +28,13 @@ namespace game {
         pillarYPos;
         //场景
         //云层
-        cloudsView: CloudsView;
+        // cloudsView: CloudsView;
         //远景
         farView: FarView;
         //水
         waterView: WaterView;
+
+        buttonGo: ButtonGo;
 
         gameMode;   //游戏模式
         /**
@@ -41,7 +44,7 @@ namespace game {
             super();
             this.pillarYPos = Laya.stage.height - 587;// * 2 / 5;
             this.size(Laya.stage.width, Laya.stage.height);
-            this.gameMode = gameMode;
+            this.gameMode = gameMode;            
             this.init();
             // this.start();
             this.img_bg.on(Laya.Event.MOUSE_DOWN, this, this.onMouseDown);
@@ -156,10 +159,12 @@ namespace game {
             oView.on(oView.AGIN, this, () => {
                 this.score = 0;
                 this.playAgin();
+                this.box_tips.visible = true;
             });
             //继续
             oView.on(oView.ADEND, this, () => {
                 this.playAgin();
+                this.box_tips.visible = true;
             });
         }
 
@@ -167,7 +172,6 @@ namespace game {
         playAgin() {
             this.clearGame();
             this.initGoods();
-            this.start();
         }
 
         //清理游戏
@@ -195,19 +199,31 @@ namespace game {
         //游戏初始化
         init() {
             this.sp_tips.graphics.drawRect(0, 0, this.width, this.height, "#000000");
-            this.box_tips.on(Laya.Event.CLICK, this, () => {
-                this.box_tips.visible = false;
+            this.sp_white.graphics.drawRect(0, 0, this.width, this.height, "#ffffff");
+
+            this.buttonGo = new ButtonGo("GO");
+            this.buttonGo.centerX = 0;
+            this.buttonGo.centerY = -80;
+            this.buttonGo.visible = false;
+            this.buttonGo.on(Laya.Event.CLICK, this, () => {
                 this.ani_go.play(0, false);
+                this.buttonGo.visible = false;
+            });
+            this.box_tips.addChild(this.buttonGo);
+
+            this.box_tips.on(Laya.Event.CLICK, this, () => {
+                this.box_labels.visible = false;
+                this.buttonGo.visible = true;
             });
 
             this.ani_go.on(Laya.Event.COMPLETE, this, () => {
-                Laya.timer.frameLoop(1, this, this.onLoop);
+                this.box_tips.visible = false;
                 this.start();
             });
 
             //云层
-            this.cloudsView = new CloudsView;
-            this.sp_map.addChild(this.cloudsView);
+            // this.cloudsView = new CloudsView;
+            // this.sp_map.addChild(this.cloudsView);
             //远景
             this.farView = new FarView;
             this.sp_map.addChild(this.farView);
@@ -275,7 +291,7 @@ namespace game {
                 this.frog.setSpeed();
                 this.frog.y -= this.frog.speedY;
             }
-            this.cloudsView.run(this.gameSpeed);
+            // this.cloudsView.run(this.gameSpeed);
             this.farView.run(this.gameSpeed - 1.5);
             this.waterView.run(this.gameSpeed);
             let fSpeed = this.gameSpeed - this.frog.speedX;

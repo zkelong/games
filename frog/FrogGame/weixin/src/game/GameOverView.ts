@@ -2,13 +2,13 @@ namespace game {
     import Event = Laya.Event;
     import GameConfig = def.GameConfig;
     import Sprite = Laya.Sprite;
-    import KButton = kelong.ui.KButton;
     import KLabelButton = kelong.ui.KLabelButton;
+    import KColorButton = kelong.ui.KColorButton;
 
     export class GameOverView extends ui.game.GameOverUI {
-        btn_ad: KButton;
-        btn_rank: KButton;
-        btn_agin: KButton;
+        btn_ad: KColorButton;
+        btn_rank: KColorButton;
+        btn_agin: KColorButton;
 
         //event
         AGIN = "playAgin";
@@ -29,7 +29,7 @@ namespace game {
             this.box_list.addChild(ok);
             ok.on(Laya.Event.CLICK, this, () => {
                 this.box_list.visible = false;
-                this.img_score.visible = true;
+                this.label_get.visible = true;
                 this.label_score.visible = true;
                 this.btn_ad.visible = true;
                 this.btn_rank.visible = true;
@@ -37,29 +37,29 @@ namespace game {
             });
 
             //广告
-            this.btn_ad = new KButton("frog/bt_ad.png");
+            this.btn_ad = new KColorButton("广告续命");
             this.btn_ad.centerX = 0;
             this.btn_ad.centerY = -80;
             this.addChild(this.btn_ad);
-            this.btn_ad.on("click", this, () => {  //广告
+            this.btn_ad.on("click", this, () => {
                 this.adOperator();
             });
 
             //排行
-            this.btn_rank = new KButton("frog/bt_rank.png");
+            this.btn_rank = new KColorButton("排行总榜");
             this.btn_rank.centerX = 0;
             this.btn_rank.centerY = 40;
             this.addChild(this.btn_rank);
-            this.btn_rank.on("click", this, () => {  //广告
+            this.btn_rank.on("click", this, () => {
                 this.showRank();
             });
 
             //再来一把
-            this.btn_agin = new KButton("frog/bt_rank.png");
+            this.btn_agin = new KColorButton("再来一盘");
             this.btn_agin.centerX = 0;
             this.btn_agin.centerY = 160;
             this.addChild(this.btn_agin);
-            this.btn_agin.on("click", this, () => {  //广告
+            this.btn_agin.on("click", this, () => {
                 this.event(this.AGIN);
                 this.removeSelf();
                 this.destroy();
@@ -75,7 +75,7 @@ namespace game {
 
         //排行榜
         showRank() {
-            this.img_score.visible = false;
+            this.label_get.visible = false;
             this.label_score.visible = false;
             this.btn_ad.visible = false;
             this.btn_rank.visible = false;

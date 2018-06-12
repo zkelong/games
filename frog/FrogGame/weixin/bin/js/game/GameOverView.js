@@ -11,8 +11,8 @@ var __extends = (this && this.__extends) || (function () {
 var game;
 (function (game) {
     var Sprite = Laya.Sprite;
-    var KButton = kelong.ui.KButton;
     var KLabelButton = kelong.ui.KLabelButton;
+    var KColorButton = kelong.ui.KColorButton;
     var GameOverView = /** @class */ (function (_super) {
         __extends(GameOverView, _super);
         function GameOverView(socre) {
@@ -32,14 +32,14 @@ var game;
             _this.box_list.addChild(ok);
             ok.on(Laya.Event.CLICK, _this, function () {
                 _this.box_list.visible = false;
-                _this.img_score.visible = true;
+                _this.label_get.visible = true;
                 _this.label_score.visible = true;
                 _this.btn_ad.visible = true;
                 _this.btn_rank.visible = true;
                 _this.btn_agin.visible = true;
             });
             //广告
-            _this.btn_ad = new KButton("frog/bt_ad.png");
+            _this.btn_ad = new KColorButton("广告续命");
             _this.btn_ad.centerX = 0;
             _this.btn_ad.centerY = -80;
             _this.addChild(_this.btn_ad);
@@ -47,7 +47,7 @@ var game;
                 _this.adOperator();
             });
             //排行
-            _this.btn_rank = new KButton("frog/bt_rank.png");
+            _this.btn_rank = new KColorButton("排行总榜");
             _this.btn_rank.centerX = 0;
             _this.btn_rank.centerY = 40;
             _this.addChild(_this.btn_rank);
@@ -55,7 +55,7 @@ var game;
                 _this.showRank();
             });
             //再来一把
-            _this.btn_agin = new KButton("frog/bt_rank.png");
+            _this.btn_agin = new KColorButton("再来一盘");
             _this.btn_agin.centerX = 0;
             _this.btn_agin.centerY = 160;
             _this.addChild(_this.btn_agin);
@@ -74,7 +74,7 @@ var game;
         };
         //排行榜
         GameOverView.prototype.showRank = function () {
-            this.img_score.visible = false;
+            this.label_get.visible = false;
             this.label_score.visible = false;
             this.btn_ad.visible = false;
             this.btn_rank.visible = false;

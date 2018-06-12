@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":1,
-    "selecteID":18,
+    "selectedBox":12,
+    "selecteID":9,
     "props":{"y":0,"sceneWidth":640,"sceneHeight":960,"sceneColor":"#000000","centerY":0,"centerX":0},
     "nodeParent":-1,
     "label":"View",
@@ -28,23 +28,21 @@
         },
         {
             "x":15,
-            "type":"Image",
-            "props":{"y":10,"x":10,"var":"img_score","skin":"frog/score.png","left":20,"centerY":-240},
+            "type":"Label",
+            "props":{"var":"label_get","text":"得分：","left":28,"fontSize":110,"color":"#ffffff","centerY":-240,"bold":true},
             "nodeParent":1,
-            "label":"Image(img_score)",
+            "label":"Label(label_get)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
-            "compId":4,
+            "compId":20,
             "child":[
-                ],
-            "$LOCKED":true,
-            "$HIDDEN":false
+                ]
         },
         {
             "x":15,
             "type":"Label",
-            "props":{"var":"label_score","text":"0","left":360,"fontSize":100,"color":"#ffffff","centerY":-240},
+            "props":{"width":157,"var":"label_score","text":"0","left":350,"height":100,"fontSize":100,"color":"#ffffff","centerY":-240,"align":"left"},
             "nodeParent":1,
             "label":"Label(label_score)",
             "isDirectory":false,
@@ -72,13 +70,14 @@
                     "props":{"x":70,"width":500,"visible":true,"var":"list","spaceY":20,"height":800,"centerY":-10,"centerX":0},
                     "nodeParent":19,
                     "label":"List(list)",
-                    "isOpen":false,
+                    "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":13,
                     "child":[
                         {
+                            "x":45,
                             "type":"Box",
                             "props":{"y":0,"x":0,"width":500,"renderType":"render","height":80},
                             "nodeParent":13,
@@ -90,6 +89,7 @@
                             "compId":12,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Label",
                                     "props":{"text":"1","name":"label_rank","left":10,"fontSize":40,"color":"#ffffff","centerY":0},
                                     "nodeParent":12,
@@ -102,8 +102,9 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Image",
-                                    "props":{"width":70,"skin":"frog/zha_01.png","name":"img_head","left":50,"height":70,"centerY":0},
+                                    "props":{"width":70,"skin":"frog/tiao_01.png","name":"img_head","left":50,"height":70,"centerY":0},
                                     "nodeParent":12,
                                     "label":"Image(img_head)",
                                     "isDirectory":false,
@@ -114,6 +115,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Label",
                                     "props":{"text":"label","name":"label_name","left":140,"fontSize":40,"color":"#ffffff","centerY":0},
                                     "nodeParent":12,
@@ -126,6 +128,7 @@
                                         ]
                                 },
                                 {
+                                    "x":60,
                                     "type":"Label",
                                     "props":{"text":"100","right":40,"name":"label_score","fontSize":40,"color":"#ffffff","centerY":0},
                                     "nodeParent":12,

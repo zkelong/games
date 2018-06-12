@@ -56,16 +56,16 @@ var game;
                 this.size(bound.width, bound.height);
                 this.pivot(bound.width / 2, bound.height);
             }
-            if (action == Frog.ACTIONS.jump) { //起跳
+            if (action == Frog.ACTIONS.jump) {
                 this.inJump = true;
             }
-            else if (this.actionName == Frog.ACTIONS.blast) { //爆炸
+            else if (this.actionName == Frog.ACTIONS.blast) {
                 this.inJump = false;
                 this.speedY = 0;
                 this.acceleratedY = 0;
                 this.speedX = 0;
             }
-            else if (this.actionName == Frog.ACTIONS.landing) { //落地
+            else if (this.actionName == Frog.ACTIONS.landing) {
                 this.speedY = 0;
                 this.acceleratedY = 0;
                 this.speedX = 0;
@@ -75,25 +75,25 @@ var game;
         //动画播放完成
         Frog.prototype.onPlayComplete = function () {
             var stop = false;
-            if (this.actionName == Frog.ACTIONS.stand) { //静止
+            if (this.actionName == Frog.ACTIONS.stand) {
                 stop = true;
             }
-            else if (this.actionName == Frog.ACTIONS.jump) { //起跳
+            else if (this.actionName == Frog.ACTIONS.jump) {
                 this.playAnimation(Frog.ACTIONS.flyUp);
             }
-            else if (this.actionName == Frog.ACTIONS.flyUp) { //起飞
+            else if (this.actionName == Frog.ACTIONS.flyUp) {
                 stop = true;
             }
-            else if (this.actionName == Frog.ACTIONS.upToDown) { //上升变下降
+            else if (this.actionName == Frog.ACTIONS.upToDown) {
                 this.playAnimation(Frog.ACTIONS.flyDown);
             }
-            else if (this.actionName == Frog.ACTIONS.flyDown) { //下降
+            else if (this.actionName == Frog.ACTIONS.flyDown) {
                 stop = true;
             }
-            else if (this.actionName == Frog.ACTIONS.landing) { //落地
+            else if (this.actionName == Frog.ACTIONS.landing) {
                 this.playAnimation(Frog.ACTIONS.stand);
             }
-            else if (this.actionName == Frog.ACTIONS.blast) { //爆炸
+            else if (this.actionName == Frog.ACTIONS.blast) {
                 stop = true;
             }
             this.event(this.ACTIONEND, this.actionName);
@@ -107,7 +107,7 @@ var game;
             this.beginPos = { x: x, y: y };
         };
         Frog.prototype.setSpeed = function () {
-            if (this.speedY <= 0 && !this.havePlayUpToDown) { //开始下降
+            if (this.speedY <= 0 && !this.havePlayUpToDown) {
                 this.havePlayUpToDown = true;
                 this.playAnimation(Frog.ACTIONS.upToDown);
             }
