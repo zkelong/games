@@ -1,23 +1,22 @@
 D .
 D frog
-R 44FC8EB2 bg.png
-P B967B265 go1.png
-P 32FBFA42 go2.png
-P B8341896 shui.png
-P A99865F5 tiao_01.png
-P F0D1714C tiao_02.png
-P EF82F08E tiao_03.png
-P 3A35CE76 tiao_04.png
-P 1ABF500D tiao_05.png
-P 9327DC6C tiao_06.png
-P 322DD292 tiao_07.png
-P A6EAE8C0 tiao_08.png
-P A15EA7D9 tiao_09.png
-P B9D0B8BC xianjing.png
-R E7803F6C yuanjingcen.png
-R 4197596F yun.png
-P 759FCEC3 zha_01.png
-P 074DE29D zha_02.png
-P 40ED1EE0 zha_03.png
-P 0D4C1E0F zha_04.png
-R A77E934D zhuzi.png
+R 44FC8EB2 bg - 副本.png
+R 91222E2C bg.png
+P 7F4CE201 shui.png
+P DC302661 tiao_01.png
+P 6569F317 tiao_02.png
+P 81C3615C tiao_03.png
+P F3945A84 tiao_04.png
+P 24F9062A tiao_05.png
+P C0743274 tiao_06.png
+P CB00AFE9 tiao_07.png
+P 1C3EFA9D tiao_08.png
+P 80BF1AAE tiao_09.png
+P ED97B728 xianjing.png
+R 881D74A1 yuanjingcen.png
+R 7CB8F176 yun.png
+P A72C157C zha_01.png
+P 6E54F3CA zha_02.png
+P 3CA162BE zha_03.png
+P 28050AED zha_04.png
+P 404627DA zhuzi.png

@@ -202,8 +202,8 @@ var game;
                 _this.start();
             });
             //云层
-            this.cloudsView = new game.CloudsView;
-            this.sp_map.addChild(this.cloudsView);
+            // this.cloudsView = new CloudsView;
+            // this.sp_map.addChild(this.cloudsView);
             //远景
             this.farView = new game.FarView;
             this.sp_map.addChild(this.farView);
@@ -268,7 +268,7 @@ var game;
                 this.frog.setSpeed();
                 this.frog.y -= this.frog.speedY;
             }
-            this.cloudsView.run(this.gameSpeed);
+            // this.cloudsView.run(this.gameSpeed);
             this.farView.run(this.gameSpeed - 1.5);
             this.waterView.run(this.gameSpeed);
             var fSpeed = this.gameSpeed - this.frog.speedX;
