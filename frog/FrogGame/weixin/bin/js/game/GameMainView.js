@@ -37,8 +37,8 @@ var game;
             _this.gameMode = gameMode;
             _this.init();
             // this.start();
-            _this.img_bg.on(Laya.Event.MOUSE_DOWN, _this, _this.onMouseDown);
-            _this.img_bg.on(Laya.Event.MOUSE_UP, _this, _this.onMouseUp);
+            _this.box_control.on(Laya.Event.MOUSE_DOWN, _this, _this.onMouseDown);
+            _this.box_control.on(Laya.Event.MOUSE_UP, _this, _this.onMouseUp);
             return _this;
             // this.label_control.on("click", this, this.gameControl);
             // this.on(Event.RESIZE, this, () => {
@@ -182,6 +182,22 @@ var game;
         //游戏初始化
         GameMainView.prototype.init = function () {
             var _this = this;
+            this.graphics.drawRect(0, 0, this.width, this.height, "#3584fb");
+            //滚动背景
+            this.bgView = new game.RepeatImageView("frog/bg.png");
+            this.bgView.pos(0, this.height - this.bgView.contentHeight);
+            this.bgView.zOrder = -99;
+            this.addChild(this.bgView);
+            //建筑景物
+            this.buildingView = new game.RepeatImageView("frog/yuanjingcen.png");
+            this.sp_map.addChild(this.buildingView);
+            //水
+            this.waterView = new game.WaterView;
+            this.waterView.y = Laya.stage.height - this.waterView.picHeight;
+            this.waterView.zOrder = this.sp_map.zOrder + 1;
+            this.box_tips.zOrder = this.waterView.zOrder + 1;
+            this.addChild(this.waterView);
+            this.buildingView.y = this.waterView.y - 209;
             this.sp_tips.graphics.drawRect(0, 0, this.width, this.height, "#000000");
             this.sp_white.graphics.drawRect(0, 0, this.width, this.height, "#ffffff");
             this.buttonGo = new ButtonGo("GO");
@@ -201,19 +217,6 @@ var game;
                 _this.box_tips.visible = false;
                 _this.start();
             });
-            //云层
-            // this.cloudsView = new CloudsView;
-            // this.sp_map.addChild(this.cloudsView);
-            //远景
-            this.farView = new game.FarView;
-            this.sp_map.addChild(this.farView);
-            //水
-            this.waterView = new game.WaterView;
-            this.waterView.y = Laya.stage.height - this.waterView.picHeight;
-            this.waterView.zOrder = this.sp_map.zOrder + 1;
-            this.box_tips.zOrder = this.waterView.zOrder + 1;
-            this.addChild(this.waterView);
-            this.farView.y = this.waterView.y - 209;
             this.initGoods();
         };
         GameMainView.prototype.initGoods = function () {
@@ -268,9 +271,10 @@ var game;
                 this.frog.setSpeed();
                 this.frog.y -= this.frog.speedY;
             }
-            // this.cloudsView.run(this.gameSpeed);
-            this.farView.run(this.gameSpeed - 1.5);
-            this.waterView.run(this.gameSpeed);
+            //布景移动
+            this.waterView.run(this.gameSpeed + 0.1);
+            this.buildingView.run(this.gameSpeed - 1);
+            this.bgView.run(this.gameSpeed - 1.5);
             var fSpeed = this.gameSpeed - this.frog.speedX;
             this.frog.x -= fSpeed;
             if (this.frog.x - this.frog.width / 2 < 0 || this.frog.x + this.frog.width / 2 >= Laya.stage.width) {

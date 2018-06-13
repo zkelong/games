@@ -27,10 +27,12 @@ namespace game {
 
         pillarYPos;
         //场景
+        //背景
+        bgView: RepeatImageView;
+        //远景
+        buildingView: RepeatImageView;
         //云层
         // cloudsView: CloudsView;
-        //远景
-        farView: FarView;
         //水
         waterView: WaterView;
 
@@ -47,8 +49,8 @@ namespace game {
             this.gameMode = gameMode;            
             this.init();
             // this.start();
-            this.img_bg.on(Laya.Event.MOUSE_DOWN, this, this.onMouseDown);
-            this.img_bg.on(Laya.Event.MOUSE_UP, this, this.onMouseUp);
+            this.box_control.on(Laya.Event.MOUSE_DOWN, this, this.onMouseDown);
+            this.box_control.on(Laya.Event.MOUSE_UP, this, this.onMouseUp);
             // this.label_control.on("click", this, this.gameControl);
             // this.on(Event.RESIZE, this, () => {
             //     this.graphics.drawRect(0,0, this.width, this.height, this.color);
@@ -198,6 +200,24 @@ namespace game {
         ///////////游戏逻辑/////////////////
         //游戏初始化
         init() {
+            this.graphics.drawRect(0, 0, this.width, this.height, "#3584fb");
+            //滚动背景
+            this.bgView = new RepeatImageView("frog/bg.png");
+            this.bgView.pos(0, this.height - this.bgView.contentHeight);
+            this.bgView.zOrder = -99;
+            this.addChild(this.bgView);
+            //建筑景物
+            this.buildingView = new RepeatImageView("frog/yuanjingcen.png");
+            this.sp_map.addChild(this.buildingView);
+            //水
+            this.waterView = new WaterView;
+            this.waterView.y = Laya.stage.height - this.waterView.picHeight;
+            this.waterView.zOrder = this.sp_map.zOrder + 1;
+            this.box_tips.zOrder = this.waterView.zOrder + 1;
+            this.addChild(this.waterView);
+            this.buildingView.y = this.waterView.y - 209;
+
+
             this.sp_tips.graphics.drawRect(0, 0, this.width, this.height, "#000000");
             this.sp_white.graphics.drawRect(0, 0, this.width, this.height, "#ffffff");
 
@@ -221,19 +241,7 @@ namespace game {
                 this.start();
             });
 
-            //云层
-            // this.cloudsView = new CloudsView;
-            // this.sp_map.addChild(this.cloudsView);
-            //远景
-            this.farView = new FarView;
-            this.sp_map.addChild(this.farView);
-            //水
-            this.waterView = new WaterView;
-            this.waterView.y = Laya.stage.height - this.waterView.picHeight;
-            this.waterView.zOrder = this.sp_map.zOrder + 1;
-            this.box_tips.zOrder = this.waterView.zOrder + 1;
-            this.addChild(this.waterView);
-            this.farView.y = this.waterView.y - 209;
+            
 
             this.initGoods();
         }
@@ -291,9 +299,11 @@ namespace game {
                 this.frog.setSpeed();
                 this.frog.y -= this.frog.speedY;
             }
-            // this.cloudsView.run(this.gameSpeed);
-            this.farView.run(this.gameSpeed - 1.5);
-            this.waterView.run(this.gameSpeed);
+            //布景移动
+            this.waterView.run(this.gameSpeed + 0.1);
+            this.buildingView.run(this.gameSpeed - 1);
+            this.bgView.run(this.gameSpeed - 1.5);
+
             let fSpeed = this.gameSpeed - this.frog.speedX;
             this.frog.x -= fSpeed;
             if (this.frog.x - this.frog.width / 2 < 0 || this.frog.x + this.frog.width / 2 >= Laya.stage.width) { //撞墙

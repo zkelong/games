@@ -19,6 +19,7 @@ namespace game {
             flyDown: "flyDown",  //下降
             landing: "landing",  //落地
             blast: "blast",        //爆炸
+            all:"all"
         }
 
         private static cached: boolean = false;
@@ -43,15 +44,17 @@ namespace game {
                 Laya.Animation.createFrames(["frog/tiao_07.png"], Frog.ACTIONS.flyDown);
                 Laya.Animation.createFrames(["frog/tiao_07.png", "frog/tiao_08.png", "frog/tiao_09.png"], Frog.ACTIONS.landing);
                 Laya.Animation.createFrames(["frog/tiao_01.png", "frog/zha_01.png", "frog/zha_02.png", "frog/zha_03.png", "frog/zha_04.png"], Frog.ACTIONS.blast);
+                Laya.Animation.createFrames(["frog/tiao_01.png", "frog/tiao_02.png", "frog/tiao_03.png", "frog/tiao_04.png", "frog/tiao_06.png", "frog/tiao_07.png", "frog/tiao_08.png", "frog/tiao_09.png"], Frog.ACTIONS.all);
             }
             if (!this.actionBody) {
                 this.actionBody = new Laya.Animation();
-                this.actionBody.interval = 20;
+                this.actionBody.interval = 180;
                 this.actionBody.scale(2, 2);
                 this.addChild(this.actionBody);
                 //增加动画播放完成监听
-                this.actionBody.on(Laya.Event.COMPLETE, this, this.onPlayComplete);
+                // this.actionBody.on(Laya.Event.COMPLETE, this, this.onPlayComplete);
             }
+            this.size(52, 56);
         }
 
         //播放
@@ -59,24 +62,24 @@ namespace game {
         playAnimation(action) {
             this.actionName = action;
             this.actionBody.play(0, true, action);
-            if (!this.haveSize && action == Frog.ACTIONS.stand) {
-                var bound: Laya.Rectangle = this.getBounds();
-                this.size(bound.width, bound.height);
-                this.pivot(bound.width / 2, bound.height);
-            }
-            if (action == Frog.ACTIONS.jump) {  //起跳
-                this.inJump = true;
-            } else if (this.actionName == Frog.ACTIONS.blast) { //爆炸
-                this.inJump = false;
-                this.speedY = 0;
-                this.acceleratedY = 0;
-                this.speedX = 0;
-            } else if (this.actionName == Frog.ACTIONS.landing) {  //落地
-                this.speedY = 0;
-                this.acceleratedY = 0;
-                this.speedX = 0;
-                this.inJump = false;
-            }
+            // if (!this.haveSize && action == Frog.ACTIONS.stand) {
+            //     var bound: Laya.Rectangle = this.getBounds();
+            //     this.size(bound.width, bound.height);
+            //     this.pivot(bound.width / 2, bound.height);
+            // }
+            // if (action == Frog.ACTIONS.jump) {  //起跳
+            //     this.inJump = true;
+            // } else if (this.actionName == Frog.ACTIONS.blast) { //爆炸
+            //     this.inJump = false;
+            //     this.speedY = 0;
+            //     this.acceleratedY = 0;
+            //     this.speedX = 0;
+            // } else if (this.actionName == Frog.ACTIONS.landing) {  //落地
+            //     this.speedY = 0;
+            //     this.acceleratedY = 0;
+            //     this.speedX = 0;
+            //     this.inJump = false;
+            // }
         }
 
         //动画播放完成
