@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 var lobby;
 (function (lobby) {
     var GameMainView = game.GameMainView;
+    var FrogJumpView = game.FrogJumpView;
     var LobbyMainView = /** @class */ (function (_super) {
         __extends(LobbyMainView, _super);
         function LobbyMainView() {
@@ -18,43 +19,43 @@ var lobby;
             _this.index = 0;
             _this.size(Laya.stage.width, Laya.stage.height);
             _this.label_begin.on(Laya.Event.CLICK, _this, _this.beginGame);
-            var frog1 = new game.Frog;
+            var frog1 = new game.FrogJumpView;
             _this.addChild(frog1);
             frog1.x = 200;
             frog1.y = 200;
-            frog1.playAnimation(game.Frog.ACTIONS.all);
+            frog1.playAction(FrogJumpView.ACTIONS.stand);
             var b = new Laya.Box;
             b.size(Laya.stage.width, Laya.stage.height);
             _this.addChild(b);
+            // ACTIONS.stand: "stand",
+            // jump_small: "jump_small",
+            // jump_big: "jump_big",
+            // jump_small_blast: "jump_small_blast",
+            // jump_small_fall: "jump_small_fall",
+            // jump_big_blast: "jump_big_blast",
             b.on(Laya.Event.CLICK, _this, function () {
                 console.log("mmmmmmm", "yyyyyyyyyyyy" + _this.index);
                 _this.index++;
                 switch (_this.index) {
                     case 0:
-                        frog1.playAnimation(game.Frog.ACTIONS.stand);
+                        frog1.playAction(FrogJumpView.ACTIONS.stand);
                         break;
                     case 1:
-                        frog1.playAnimation(game.Frog.ACTIONS.jump);
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_small);
                         break;
                     case 2:
-                        frog1.playAnimation(game.Frog.ACTIONS.flyUp);
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_big);
                         break;
                     case 3:
-                        frog1.playAnimation(game.Frog.ACTIONS.upToDown);
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_small_blast);
                         break;
                     case 4:
-                        frog1.playAnimation(game.Frog.ACTIONS.flyDown);
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_small_fall);
                         break;
                     case 5:
-                        frog1.playAnimation(game.Frog.ACTIONS.landing);
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_big_blast);
                         break;
                     case 6:
-                        frog1.playAnimation(game.Frog.ACTIONS.blast);
-                        break;
-                    case 7:
-                        frog1.playAnimation(game.Frog.ACTIONS.all);
-                        break;
-                    case 8:
                         _this.index = 0;
                         break;
                 }

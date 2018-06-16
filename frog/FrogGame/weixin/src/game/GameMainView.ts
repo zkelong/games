@@ -3,7 +3,7 @@
 namespace game {
     import Event = Laya.Event;
     import GameConfig = def.GameConfig;
-    import Frog = game.Frog;
+    import Frog = game.FrogJumpView;
     import ButtonGo = kelong.ui.KButtonGO;
 
     export class GameMainView extends ui.game.GameMainUI {
@@ -11,6 +11,7 @@ namespace game {
         COUNTDOWNNUM = 3;   //倒计时时间
 
         frog: Frog;             //青蛙
+        standPillarIndex = 0;
         gameStatus = 0;         //游戏状态 0--暂停中，1--进行中
         lastXpos;               //柱子位置记录
         pillarArray = [];       //柱子对象
@@ -87,16 +88,27 @@ namespace game {
                     return;
                 }
                 this.stepBig = false;
-                this.frog.jumpSmall();
+                // this.frog.jumpSmall();
+                this.jumpSmall();
             }
             if (angle < -Math.PI / 3 && angle > -Math.PI * 2 / 3) { //上滑动
                 if (difY > -100) {
                     return;
                 }
                 this.stepBig = true;
-                this.frog.jumbBig();
+                // this.frog.jumbBig();
+                this.jumbBig();
             }
         }
+
+        jumpSmall() {
+            
+        }
+
+        jumbBig() {
+
+        }
+
         //游戏控制
         // gameControl() {
         //     console.log("control...........", this.gameStatus);
@@ -251,14 +263,14 @@ namespace game {
                 this.frog.destroy();
             }
             this.frog = new Frog;
-            this.frog.on(this.frog.ACTIONEND, this, this.frogActionOver);
+            this.standPillarIndex = 0;
+            this.frog.on(FrogJumpView.ACTIONEND, this, this.frogActionOver);
             this.sp_map.addChild(this.frog);
             this.lastXpos = this.BEGINXPOS;
             this.label_score.changeText("分数：" + this.score);
             this.gameSpeed = GameConfig.SPEED;
             this.frog.initPos(this.lastXpos, this.pillarYPos);
-            this.frog.playAnimation(Frog.ACTIONS.stand);
-            this.frog.speedX = 0;
+            this.frog.playAction(FrogJumpView.ACTIONS.stand);
             this.lastHaveTrap = false;
             this.pillarShowArray = (Pillar.getPillarShowArray(true)).array;
             this.pillarIndex = 0;

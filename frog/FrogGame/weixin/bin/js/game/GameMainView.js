@@ -12,7 +12,8 @@ var __extends = (this && this.__extends) || (function () {
 var game;
 (function (game) {
     var GameConfig = def.GameConfig;
-    var Frog = game.Frog;
+    var Frog = game.FrogView;
+    // import Frog = game.Frog;
     var ButtonGo = kelong.ui.KButtonGO;
     var GameMainView = /** @class */ (function (_super) {
         __extends(GameMainView, _super);
@@ -21,7 +22,7 @@ var game;
          */
         function GameMainView(gameMode) {
             var _this = _super.call(this) || this;
-            _this.BEGINXPOS = 180; //开始位置
+            _this.BEGINXPOS = 380; //开始位置
             _this.COUNTDOWNNUM = 3; //倒计时时间
             _this.gameStatus = 0; //游戏状态 0--暂停中，1--进行中
             _this.pillarArray = []; //柱子对象
@@ -68,7 +69,6 @@ var game;
             var difX = this.mouseX - this.mousePos.x;
             var difY = this.mouseY - this.mousePos.y;
             var angle = Math.atan2(difY, difX);
-            // console.log("xxxxxxxxxxxxxxxxx...鼠标操作........", difX, difY, angle);
             if (angle < Math.PI / 6 && angle > 0 || angle >= -Math.PI / 6 && angle < 0) {
                 if (difX < 100) {
                     return;
@@ -81,7 +81,7 @@ var game;
                     return;
                 }
                 this.stepBig = true;
-                this.frog.jumbBig();
+                this.frog.jumpBig();
             }
         };
         //游戏控制
@@ -267,7 +267,7 @@ var game;
         };
         //游戏循环
         GameMainView.prototype.onLoop = function () {
-            if (this.frog.inJump) {
+            if (this.frog.flying) {
                 this.frog.setSpeed();
                 this.frog.y -= this.frog.speedY;
             }
@@ -291,7 +291,10 @@ var game;
                         this.pillarArray.shift();
                     }
                     //青蛙与柱子的碰撞 
-                    if (this.frog.inJump) {
+                    if (this.frog.flying) {
+                        // if(this.frog.speedY < 0 && this.frog.y >= this.pillarYPos - 20 && this.frog.x + this.frog.width > p.x && this.frog.x + this.frog.width < p.x + p.width) {
+                        //     this.frog.playAnimation(Frog.ACTIONS.landing);
+                        // }
                         if (this.frog.y >= this.pillarYPos && this.frog.x > p.x - p.width / 2 - this.frog.width / 2 && this.frog.x < p.x + p.width / 2) {
                             if (Math.abs(this.frog.x - p.x) < p.width / 2) {
                                 if (p.haveTrap) {
@@ -301,7 +304,8 @@ var game;
                                     this.frog.x = p.x; //要漏一帧的速度
                                     this.score += 1; //this.stepBig ? 2 : 1;
                                     this.label_score.changeText("分数：" + this.score);
-                                    this.frog.playAnimation(Frog.ACTIONS.landing);
+                                    // this.frog.playAnimation(Frog.ACTIONS.landing);
+                                    this.frog.stop();
                                     if (this.score > 10 && this.speedAddTag < 1) {
                                         this.gameSpeed += 1;
                                         this.speedAddTag++;
@@ -357,13 +361,9 @@ var game;
         GameMainView.prototype.frogActionOver = function (actionName) {
             if (actionName == Frog.ACTIONS.stand) {
             }
-            else if (actionName == Frog.ACTIONS.flyUp) {
-            }
             else if (actionName == Frog.ACTIONS.jump) {
             }
             else if (actionName == Frog.ACTIONS.upToDown) {
-            }
-            else if (actionName == Frog.ACTIONS.flyDown) {
             }
             else if (actionName == Frog.ACTIONS.landing) {
             }

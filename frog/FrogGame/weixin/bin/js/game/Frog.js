@@ -31,13 +31,12 @@ var game;
             if (!Frog.cached) {
                 Frog.cached = true;
                 Laya.Animation.createFrames(["frog/tiao_01.png"], Frog.ACTIONS.stand);
-                Laya.Animation.createFrames(["frog/tiao_01.png", "frog/tiao_02.png", "frog/tiao_03.png"], Frog.ACTIONS.jump);
-                Laya.Animation.createFrames(["frog/tiao_04.png"], Frog.ACTIONS.flyUp);
-                Laya.Animation.createFrames(["frog/tiao_04.png", "frog/tiao_05.png", "frog/tiao_06.png"], Frog.ACTIONS.upToDown);
+                Laya.Animation.createFrames(["frog/tiao_01.png", "frog/tiao_02.png", "frog/tiao_03.png", "frog/tiao_04.png"], Frog.ACTIONS.jump);
+                Laya.Animation.createFrames(["frog/tiao_05.png"], Frog.ACTIONS.flyUp);
+                Laya.Animation.createFrames(["frog/tiao_05.png", "frog/tiao_06.png", "frog/tiao_07.png"], Frog.ACTIONS.upToDown);
                 Laya.Animation.createFrames(["frog/tiao_07.png"], Frog.ACTIONS.flyDown);
-                Laya.Animation.createFrames(["frog/tiao_07.png", "frog/tiao_08.png", "frog/tiao_09.png"], Frog.ACTIONS.landing);
-                Laya.Animation.createFrames(["frog/tiao_01.png", "frog/zha_01.png", "frog/zha_02.png", "frog/zha_03.png", "frog/zha_04.png"], Frog.ACTIONS.blast);
-                Laya.Animation.createFrames(["frog/tiao_01.png", "frog/tiao_02.png", "frog/tiao_03.png", "frog/tiao_04.png", "frog/tiao_06.png", "frog/tiao_07.png", "frog/tiao_08.png", "frog/tiao_09.png"], Frog.ACTIONS.all);
+                Laya.Animation.createFrames(["frog/tiao_08.png", "frog/tiao_09.png", "frog/tiao_02.png"], Frog.ACTIONS.landing);
+                Laya.Animation.createFrames(["frog/zha_01.png", "frog/zha_02.png", "frog/zha_03.png", "frog/zha_04.png"], Frog.ACTIONS.blast);
             }
             if (!_this.actionBody) {
                 _this.actionBody = new Laya.Animation();
@@ -45,7 +44,7 @@ var game;
                 _this.actionBody.scale(2, 2);
                 _this.addChild(_this.actionBody);
                 //增加动画播放完成监听
-                // this.actionBody.on(Laya.Event.COMPLETE, this, this.onPlayComplete);
+                _this.actionBody.on(Laya.Event.COMPLETE, _this, _this.onPlayComplete);
             }
             _this.size(52, 56);
             return _this;
@@ -53,24 +52,27 @@ var game;
         Frog.prototype.playAnimation = function (action) {
             this.actionName = action;
             this.actionBody.play(0, true, action);
-            // if (!this.haveSize && action == Frog.ACTIONS.stand) {
-            //     var bound: Laya.Rectangle = this.getBounds();
-            //     this.size(bound.width, bound.height);
-            //     this.pivot(bound.width / 2, bound.height);
-            // }
-            // if (action == Frog.ACTIONS.jump) {  //起跳
-            //     this.inJump = true;
-            // } else if (this.actionName == Frog.ACTIONS.blast) { //爆炸
-            //     this.inJump = false;
-            //     this.speedY = 0;
-            //     this.acceleratedY = 0;
-            //     this.speedX = 0;
-            // } else if (this.actionName == Frog.ACTIONS.landing) {  //落地
-            //     this.speedY = 0;
-            //     this.acceleratedY = 0;
-            //     this.speedX = 0;
-            //     this.inJump = false;
-            // }
+            if (!this.haveSize && action == Frog.ACTIONS.stand) {
+                var bound = this.getBounds();
+                this.size(bound.width, bound.height);
+                this.pivot(bound.width / 2, bound.height);
+            }
+            if (action == Frog.ACTIONS.jump) {
+                this.inJump = true;
+            }
+            else if (this.actionName == Frog.ACTIONS.blast) {
+                this.inJump = false;
+                this.speedY = 0;
+                this.acceleratedY = 0;
+                this.speedX = 0;
+            }
+            else if (this.actionName == Frog.ACTIONS.landing) {
+                this.speedY = 0;
+                this.acceleratedY = 0;
+                this.speedX = 0;
+                this.inJump = false;
+            }
+            console.log("frg.action", action);
         };
         //动画播放完成
         Frog.prototype.onPlayComplete = function () {
