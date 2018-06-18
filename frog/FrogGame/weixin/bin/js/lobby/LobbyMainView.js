@@ -27,12 +27,6 @@ var lobby;
             var b = new Laya.Box;
             b.size(Laya.stage.width, Laya.stage.height);
             _this.addChild(b);
-            // ACTIONS.stand: "stand",
-            // jump_small: "jump_small",
-            // jump_big: "jump_big",
-            // jump_small_blast: "jump_small_blast",
-            // jump_small_fall: "jump_small_fall",
-            // jump_big_blast: "jump_big_blast",
             b.on(Laya.Event.CLICK, _this, function () {
                 console.log("mmmmmmm", "yyyyyyyyyyyy" + _this.index);
                 _this.index++;
