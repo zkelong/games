@@ -55,7 +55,6 @@ var game;
             return this.y + this.img_frog.y - this.height;
         };
         FrogJumpView.prototype.playAction = function (actionName) {
-            console.log("action....", actionName);
             this.inJump = true;
             if (actionName == FrogJumpView.ACTIONS.stand) {
                 this.jump_stand.play(0, false);

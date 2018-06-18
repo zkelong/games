@@ -324,7 +324,6 @@ namespace game {
                         let frogY = this.frog.getRealPosY();
                         this.pause();
                         this.frog.initPos(frogX, frogY);
-                        console.log("frog.....", this.frog.x, this.frog.y, this.width)
                         this.frog.playAction(FrogJumpView.ACTIONS.stand_blast);
                     }
                 }

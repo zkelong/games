@@ -14,24 +14,6 @@ var ui;
 (function (ui) {
     var game;
     (function (game) {
-        var FrogUI = /** @class */ (function (_super) {
-            __extends(FrogUI, _super);
-            function FrogUI() {
-                return _super.call(this) || this;
-            }
-            FrogUI.prototype.createChildren = function () {
-                _super.prototype.createChildren.call(this);
-                this.createView(ui.game.FrogUI.uiView);
-            };
-            FrogUI.uiView = { "type": "View", "props": { "width": 52, "height": 52 }, "child": [{ "type": "Image", "props": { "var": "img1", "centerX": 0, "bottom": 0 }, "compId": 2 }, { "type": "Image", "props": { "x": 10, "centerY": 0, "centerX": 0 }, "compId": 3 }], "animations": [{ "nodes": [{ "target": 2, "keyframes": { "skin": [{ "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }] } }], "name": "ani_stand", "id": 1, "frameRate": 24, "action": 0 }, { "nodes": [{ "target": 2, "keyframes": { "skin": [{ "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }, { "value": "frog/tiao_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 3 }, { "value": "frog/tiao_03.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 6 }, { "value": "frog/tiao_04.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 9 }] } }], "name": "ani_jump", "id": 2, "frameRate": 24, "action": 0 }, { "nodes": [{ "target": 2, "keyframes": { "skin": [{ "value": "frog/tiao_05.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }] } }], "name": "ani_flyup", "id": 3, "frameRate": 24, "action": 0 }, { "nodes": [{ "target": 2, "keyframes": { "skin": [{ "value": "frog/tiao_05.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }, { "value": "frog/tiao_06.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 3 }, { "value": "frog/tiao_07.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 6 }, { "value": "frog/tiao_07.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 9 }, { "value": "frog/tiao_08.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 12 }, { "value": "frog/tiao_09.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 15 }, { "value": "frog/tiao_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 18 }, { "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 21 }] } }], "name": "ani_uptodown", "id": 4, "frameRate": 24, "action": 0 }, { "nodes": [{ "target": 2, "keyframes": { "skin": [{ "value": "frog/tiao_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }, { "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 3 }] } }], "name": "ani_land", "id": 6, "frameRate": 24, "action": 0 }, { "nodes": [{ "target": 3, "keyframes": { "skin": [{ "value": "frog/tiao_08.png", "tweenMethod": "linearNone", "tween": false, "target": 3, "key": "skin", "index": 0 }, { "value": "frog/zha_01.png", "tweenMethod": "linearNone", "tween": false, "target": 3, "key": "skin", "index": 3 }, { "value": "frog/zha_02.png", "tweenMethod": "linearNone", "tween": false, "target": 3, "key": "skin", "index": 6 }, { "value": "frog/zha_03.png", "tweenMethod": "linearNone", "tween": false, "target": 3, "key": "skin", "index": 9 }, { "value": "frog/zha_04.png", "tweenMethod": "linearNone", "tween": false, "target": 3, "key": "skin", "index": 12 }, { "value": "", "tweenMethod": "linearNone", "tween": false, "target": 3, "key": "skin", "index": 15 }] } }], "name": "ani_blast", "id": 7, "frameRate": 24, "action": 0 }] };
-            return FrogUI;
-        }(View));
-        game.FrogUI = FrogUI;
-    })(game = ui.game || (ui.game = {}));
-})(ui || (ui = {}));
-(function (ui) {
-    var game;
-    (function (game) {
         var FrogViewUI = /** @class */ (function (_super) {
             __extends(FrogViewUI, _super);
             function FrogViewUI() {
@@ -95,7 +77,7 @@ var ui;
                 _super.prototype.createChildren.call(this);
                 this.createView(ui.lobby.LobbyMianUI.uiView);
             };
-            LobbyMianUI.uiView = { "type": "View", "props": {}, "child": [{ "type": "Image", "props": { "top": 0, "skin": "frog/bg.png", "right": 0, "left": 0, "bottom": 0 } }, { "type": "Label", "props": { "width": 130, "var": "label_begin", "text": "开始", "fontSize": 42, "color": "#ffffff", "centerY": 0, "centerX": 0, "bold": true, "align": "center" } }] };
+            LobbyMianUI.uiView = { "type": "View", "props": {}, "child": [{ "type": "Label", "props": { "width": 130, "var": "label_begin", "text": "开始", "fontSize": 42, "color": "#ffffff", "centerY": 0, "centerX": 0, "bold": true, "align": "center" } }] };
             return LobbyMianUI;
         }(View));
         lobby.LobbyMianUI = LobbyMianUI;

@@ -52,4 +52,4 @@ var kelong;
         ui.KButtonGO = KButtonGO;
     })(ui = kelong.ui || (kelong.ui = {}));
 })(kelong || (kelong = {}));
-//# sourceMappingURL=KButtonGo.js.map
+//# sourceMappingURL=KButtonGO.js.map

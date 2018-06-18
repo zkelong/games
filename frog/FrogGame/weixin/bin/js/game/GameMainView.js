@@ -297,7 +297,6 @@ var game;
                         var frogY = this.frog.getRealPosY();
                         this.pause();
                         this.frog.initPos(frogX, frogY);
-                        console.log("frog.....", this.frog.x, this.frog.y, this.width);
                         this.frog.playAction(game.FrogJumpView.ACTIONS.stand_blast);
                     }
                 }

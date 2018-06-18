@@ -69,7 +69,6 @@ namespace game {
         }
 
         playAction(actionName) {
-            console.log("action....", actionName)
             this.inJump = true;
             if (actionName == FrogJumpView.ACTIONS.stand) {
                 this.jump_stand.play(0, false);
