@@ -11,12 +11,49 @@ var __extends = (this && this.__extends) || (function () {
 var lobby;
 (function (lobby) {
     var GameMainView = game.GameMainView;
+    var FrogJumpView = game.FrogJumpView;
     var LobbyMainView = /** @class */ (function (_super) {
         __extends(LobbyMainView, _super);
         function LobbyMainView() {
             var _this = _super.call(this) || this;
+            _this.index = 0;
             _this.size(Laya.stage.width, Laya.stage.height);
             _this.label_begin.on(Laya.Event.CLICK, _this, _this.beginGame);
+            var frog1 = new game.FrogJumpView;
+            _this.addChild(frog1);
+            frog1.x = 200;
+            frog1.y = 200;
+            frog1.playAction(FrogJumpView.ACTIONS.stand);
+            var b = new Laya.Box;
+            b.size(Laya.stage.width, Laya.stage.height);
+            _this.addChild(b);
+            b.on(Laya.Event.CLICK, _this, function () {
+                console.log("mmmmmmm", "yyyyyyyyyyyy" + _this.index);
+                _this.index++;
+                switch (_this.index) {
+                    case 0:
+                        frog1.playAction(FrogJumpView.ACTIONS.stand);
+                        break;
+                    case 1:
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_small);
+                        break;
+                    case 2:
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_big);
+                        break;
+                    case 3:
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_small_blast);
+                        break;
+                    case 4:
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_small_fall);
+                        break;
+                    case 5:
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_big_blast);
+                        break;
+                    case 6:
+                        _this.index = 0;
+                        break;
+                }
+            });
             return _this;
         }
         LobbyMainView.prototype.beginGame = function () {

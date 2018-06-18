@@ -54494,6 +54494,8 @@ var lobby;
 // import LobbyView = lobby.LobbyMainView;
 var GameMainView = game.GameMainView;
 var Stage = Laya.Stage;
+//初始化微信小游戏
+Laya.MiniAdpter.init();
 Laya.init(640, 960, Laya.WebGL);
 // 设置适配模式
 Laya.stage.scaleMode = Stage.SCALE_FIXED_WIDTH;
