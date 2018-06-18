@@ -10,15 +10,25 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var game;
 (function (game) {
+    var GameConfig = def.GameConfig;
     var FrogJumpView = /** @class */ (function (_super) {
         __extends(FrogJumpView, _super);
         function FrogJumpView() {
             var _this = _super.call(this) || this;
+            _this.inJump = false;
+            _this.pivot(0, _this.height);
             _this.jump_small.on(Laya.Event.COMPLETE, _this, function () {
                 _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_STOP);
+                _this.playAction(FrogJumpView.ACTIONS.stand);
+                _this.x += GameConfig.SMALLSTEP;
             });
             _this.jump_big.on(Laya.Event.COMPLETE, _this, function () {
                 _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_STOP);
+                _this.playAction(FrogJumpView.ACTIONS.stand);
+                _this.x += GameConfig.BIGSTEP;
+            });
+            _this.stand_blast.on(Laya.Event.COMPLETE, _this, function () {
+                _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_DIE);
             });
             _this.jump_small_blast.on(Laya.Event.COMPLETE, _this, function () {
                 _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_DIE);
@@ -29,18 +39,36 @@ var game;
             _this.jump_big_blast.on(Laya.Event.COMPLETE, _this, function () {
                 _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_DIE);
             });
+            _this.jump_big_fall.on(Laya.Event.COMPLETE, _this, function () {
+                _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_DIE);
+            });
             return _this;
         }
+        //设置初始位置
+        FrogJumpView.prototype.initPos = function (x, y) {
+            this.pos(x, y);
+        };
+        FrogJumpView.prototype.getRealPosX = function () {
+            return this.x + this.img_frog.x;
+        };
+        FrogJumpView.prototype.getRealPosY = function () {
+            return this.y + this.img_frog.y - this.height;
+        };
         FrogJumpView.prototype.playAction = function (actionName) {
             console.log("action....", actionName);
+            this.inJump = true;
             if (actionName == FrogJumpView.ACTIONS.stand) {
                 this.jump_stand.play(0, false);
+                this.inJump = false;
             }
             else if (actionName == FrogJumpView.ACTIONS.jump_small) {
                 this.jump_small.play(0, false);
             }
             else if (actionName == FrogJumpView.ACTIONS.jump_big) {
                 this.jump_big.play(0, false);
+            }
+            else if (actionName == FrogJumpView.ACTIONS.stand_blast) {
+                this.stand_blast.play(0, false);
             }
             else if (actionName == FrogJumpView.ACTIONS.jump_small_blast) {
                 this.jump_small_blast.play(0, false);
@@ -51,6 +79,9 @@ var game;
             else if (actionName == FrogJumpView.ACTIONS.jump_big_blast) {
                 this.jump_big_blast.play(0, false);
             }
+            else if (actionName == FrogJumpView.ACTIONS.jump_big_fall) {
+                this.jump_big_fall.play(0, false);
+            }
         };
         //event
         FrogJumpView.ACTIONEND = "actionEnd";
@@ -60,9 +91,11 @@ var game;
             stand: "stand",
             jump_small: "jump_small",
             jump_big: "jump_big",
+            stand_blast: "stand_blast",
             jump_small_blast: "jump_small_blast",
             jump_small_fall: "jump_small_fall",
             jump_big_blast: "jump_big_blast",
+            jump_big_fall: "jump_big_fall"
         };
         return FrogJumpView;
     }(ui.game.FrogViewUI));
