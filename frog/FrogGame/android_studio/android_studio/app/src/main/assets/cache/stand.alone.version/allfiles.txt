@@ -9,6 +9,8 @@
 /js/components/ui/BoxColor.js
 /js/components/ui/ImageButton.js
 /js/components/ui/KButton.js
+/js/components/ui/KButtonGo.js
+/js/components/ui/KColorButton.js
 /js/components/ui/KLabelButton.js
 /js/def/GameConfig.js
 /js/def/SourceConfig.js
@@ -16,10 +18,13 @@
 /js/game/CloudsView.js
 /js/game/FarView.js
 /js/game/Frog.js
+/js/game/FrogJumpView.js
+/js/game/FrogView.js
 /js/game/GameMain.js
 /js/game/GameMainView.js
 /js/game/GameOverView.js
 /js/game/Pillar.js
+/js/game/RepeatImageView.js
 /js/game/WaterView.js
 /js/LayaUISample.js
 /js/lobby/LobbyMainView.js

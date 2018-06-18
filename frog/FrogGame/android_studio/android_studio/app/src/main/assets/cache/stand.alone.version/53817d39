@@ -1,4 +1,4 @@
-// import LobbyView = lobby.LobbyMainView;
+var LobbyView = lobby.LobbyMainView;
 var GameMainView = game.GameMainView;
 var Stage = Laya.Stage;
 //初始化微信小游戏
