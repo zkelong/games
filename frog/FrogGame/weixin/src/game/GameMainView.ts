@@ -13,6 +13,8 @@ namespace game {
         frog: Frog;             //青蛙
         roadIndex = 0;  //青蛙再路上位置
         roadArray = [];  //0-没有柱子，1-正常柱子，2-有刺柱子
+        jumpToBlast: boolean = false; //要爆
+        havePlayBlast: boolean = false;
 
         gameStatus = 0;         //游戏状态 0--暂停中，1--进行中
         lastXpos;               //柱子位置记录
@@ -91,6 +93,7 @@ namespace game {
                 }
                 this.stepBig = false;
                 this.score++;
+                this.label_score.changeText("分数：" + this.score);
                 this.jumpSmall();
             }
             if (angle < -Math.PI / 3 && angle > -Math.PI * 2 / 3) { //上滑动
@@ -100,17 +103,20 @@ namespace game {
                 this.stepBig = true;
                 this.jumbBig();
                 this.score++;
+                this.label_score.changeText("分数：" + this.score);
             }
         }
 
         jumpSmall() {
             this.roadIndex += 1
             //0-没有柱子，1-正常柱子，2-有刺柱子
-            if(this.roadArray[this.roadIndex] == 0) {
+            if (this.roadArray[this.roadIndex] == 0) {
+                this.jumpToBlast = true;
                 this.frog.playAction(FrogJumpView.ACTIONS.jump_small_fall);
-            } else if(this.roadArray[this.roadIndex] == 1){
+            } else if (this.roadArray[this.roadIndex] == 1) {
                 this.frog.playAction(FrogJumpView.ACTIONS.jump_small);
-            } else {                
+            } else {
+                this.jumpToBlast = true;
                 this.frog.playAction(FrogJumpView.ACTIONS.jump_small_blast);
             }
         }
@@ -118,15 +124,17 @@ namespace game {
         jumbBig() {
             this.roadIndex += 2
             //0-没有柱子，1-正常柱子，2-有刺柱子
-            if(this.roadArray[this.roadIndex] == 0) {
+            if (this.roadArray[this.roadIndex] == 0) {
+                this.jumpToBlast = true;
                 this.frog.playAction(FrogJumpView.ACTIONS.jump_big_fall);
-            } else if(this.roadArray[this.roadIndex] == 1){
+            } else if (this.roadArray[this.roadIndex] == 1) {
                 this.frog.playAction(FrogJumpView.ACTIONS.jump_big);
-            } else {                
+            } else {
+                this.jumpToBlast = true;
                 this.frog.playAction(FrogJumpView.ACTIONS.jump_big_blast);
             }
         }
-        
+
         //开始
         start() {
             this.gameStatus = 1;
@@ -135,6 +143,7 @@ namespace game {
 
         //暂停
         pause() {
+            utl.MusicSoundTool.stopMusic();
             this.gameStatus = 0;
             Laya.timer.clearAll(this);
         }
@@ -173,6 +182,8 @@ namespace game {
 
         //清理游戏
         clearGame() {
+            this.jumpToBlast = false; //要爆
+            this.havePlayBlast = false;
             //回收柱子
             for (let i = this.pillarArray.length - 1; i > -1; i--) {
                 this.pillarArray[i].removeSelf();
@@ -212,7 +223,6 @@ namespace game {
             this.addChild(this.waterView);
             this.buildingView.y = this.waterView.y - 209;
 
-
             this.sp_tips.graphics.drawRect(0, 0, this.width, this.height, "#000000");
             this.sp_white.graphics.drawRect(0, 0, this.width, this.height, "#ffffff");
 
@@ -221,6 +231,7 @@ namespace game {
             this.buttonGo.centerY = -80;
             this.buttonGo.visible = false;
             this.buttonGo.on(Laya.Event.CLICK, this, () => {
+                utl.MusicSoundTool.playMusic(def.MusicConfig.CommonMusic.game_bg);
                 this.ani_go.play(0, false);
                 this.buttonGo.visible = false;
             });
@@ -235,9 +246,7 @@ namespace game {
                 this.box_tips.visible = false;
                 this.start();
             });
-
-
-
+            
             this.initGoods();
         }
 
@@ -304,6 +313,28 @@ namespace game {
 
             this.frog.x -= this.gameSpeed;
 
+            let frogX = this.frog.getRealPosX();
+            //青蛙与墙壁碰撞
+            if (frogX <= 0 || frogX > this.width) {
+                if (frogX <= 0) {
+                    frogX = + 27;
+                } else {
+                    frogX = this.width - 27;
+                }
+                let frogY = this.frog.getRealPosY();
+                this.pause();
+                this.frog.initPos(frogX, frogY);
+                this.frog.playAction(FrogJumpView.ACTIONS.stand_blast);
+            }
+            //要爆
+            if (this.jumpToBlast) {
+                let frogY = this.frog.getRealPosY();
+                if (frogY <= this.pillarYPos - 4 && !this.havePlayBlast) {
+                    this.havePlayBlast = true;
+                    utl.MusicSoundTool.playSound(def.MusicConfig.CommonSound.blast);
+                }
+            }
+
             if (this.pillarArray.length) {
                 for (let i = this.pillarArray.length - 1; i > -1; i--) {
                     let p = this.pillarArray[i];
@@ -312,19 +343,6 @@ namespace game {
                         //回收
                         Laya.Pool.recover(Pillar.PILLARTAG, p);
                         this.pillarArray.shift();
-                    }
-                    let frogX = this.frog.getRealPosX();
-                    //青蛙与墙壁碰撞
-                    if(frogX <= 0 || frogX > this.width) {
-                        if(frogX <= 0) {
-                            frogX =  + 27;
-                        } else {
-                            frogX = this.width - 27;
-                        }
-                        let frogY = this.frog.getRealPosY();
-                        this.pause();
-                        this.frog.initPos(frogX, frogY);
-                        this.frog.playAction(FrogJumpView.ACTIONS.stand_blast);
                     }
                 }
                 let lastXpos = this.pillarArray[this.pillarArray.length - 1].x;
@@ -335,9 +353,9 @@ namespace game {
         }
         //青蛙动作结束
         frogActionOver(eventName) {
-            if(eventName == FrogJumpView.EVENT_STOP) {
+            if (eventName == FrogJumpView.EVENT_STOP) {
 
-            } else if(eventName == FrogJumpView.EVENT_DIE) {
+            } else if (eventName == FrogJumpView.EVENT_DIE) {
                 this.frog.visible = false;
                 this.gameOver();
             }

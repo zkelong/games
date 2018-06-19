@@ -61,12 +61,15 @@ var game;
                 this.inJump = false;
             }
             else if (actionName == FrogJumpView.ACTIONS.jump_small) {
+                utl.MusicSoundTool.playSound(def.MusicConfig.CommonSound.jump);
                 this.jump_small.play(0, false);
             }
             else if (actionName == FrogJumpView.ACTIONS.jump_big) {
+                utl.MusicSoundTool.playSound(def.MusicConfig.CommonSound.jump);
                 this.jump_big.play(0, false);
             }
             else if (actionName == FrogJumpView.ACTIONS.stand_blast) {
+                utl.MusicSoundTool.playSound(def.MusicConfig.CommonSound.blast);
                 this.stand_blast.play(0, false);
             }
             else if (actionName == FrogJumpView.ACTIONS.jump_small_blast) {
