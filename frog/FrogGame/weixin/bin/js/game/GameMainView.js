@@ -57,23 +57,23 @@ var game;
         };
         //鼠标弹起
         GameMainView.prototype.onMouseUp = function () {
-            if (this.gameStatus != 1) {
+            if (this.gameStatus != 1) { //游戏进行中
                 // console.log("未进行，操作无效");
                 return;
             }
-            if (this.frog.inJump) {
+            if (this.frog.inJump) { //未落地，操作无效
                 // console.log("未落地，操作无效");
                 return;
             }
             var endTime = new Date().valueOf();
-            if (endTime - this.mousePos.time > 1200) {
+            if (endTime - this.mousePos.time > 1200) { //操作时间过长，认为操作无效
                 return;
             }
             var difX = this.mouseX - this.mousePos.x;
             var difY = this.mouseY - this.mousePos.y;
             var angle = Math.atan2(difY, difX);
             // console.log("xxxxxxxxxxxxxxxxx...鼠标操作........", difX, difY, angle);
-            if (angle < Math.PI / 6 && angle > 0 || angle >= -Math.PI / 6 && angle < 0) {
+            if (angle < Math.PI / 6 && angle > 0 || angle >= -Math.PI / 6 && angle < 0) { //右滑
                 if (difX < 100) {
                     return;
                 }
@@ -82,7 +82,7 @@ var game;
                 this.label_score.changeText("分数：" + this.score);
                 this.jumpSmall();
             }
-            if (angle < -Math.PI / 3 && angle > -Math.PI * 2 / 3) {
+            if (angle < -Math.PI / 3 && angle > -Math.PI * 2 / 3) { //上滑动
                 if (difY > -100) {
                     return;
                 }
@@ -260,7 +260,7 @@ var game;
                 this.pillarArrayIndex = ret.idx;
                 this.pillarIndex = 0;
             }
-            if (this.pillarShowArray[this.pillarIndex] == 2) {
+            if (this.pillarShowArray[this.pillarIndex] == 2) { //无柱子
                 this.haveNullBefore = true;
                 this.roadArray.push(0);
             }

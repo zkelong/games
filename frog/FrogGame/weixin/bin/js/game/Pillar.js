@@ -60,7 +60,7 @@ var game;
                 if (idx == Pillar.NEXTARRAY.length) {
                     idx--;
                 }
-                if (idx == idx) {
+                if (idx == idx) { //跟上一组一样了
                     idx = idx == Pillar.NEXTARRAY.length - 1 ? 0 : idx + 1;
                 }
                 return {
