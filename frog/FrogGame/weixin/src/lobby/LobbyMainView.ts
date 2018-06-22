@@ -9,6 +9,19 @@ namespace lobby {
             this.size(Laya.stage.width, Laya.stage.height);
             this.label_begin.on(Laya.Event.CLICK, this, this.beginGame);
 
+
+            if(wx) {
+            var bodyConfig: BodyConfig = new BodyConfig();
+            // bodyConfig.appId = "gh_0e3372b7e621";
+            // bodyConfig.debug = true;
+            /// ... 其他的配置属性赋值
+            /// 通过config接口注入权限验证配置
+                wx.config(bodyConfig);
+                wx.ready(function() {
+                /// 在这里调用微信相关功能的 API
+                });
+            }
+
             let frog1 = new game.FrogJumpView;
             this.addChild(frog1);
             frog1.x = 200;

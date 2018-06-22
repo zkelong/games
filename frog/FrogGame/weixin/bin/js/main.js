@@ -14,9 +14,9 @@ Laya.stage.screenMode = Stage.SCREEN_VERTICAL;
 var asset = def.SourceConfig.lobbySource.concat(def.SourceConfig.gameSource);
 Laya.loader.load(asset, new Laya.Handler(this, function () {
     asset = null;
-    // let lobby = new LobbyView;
-    // Laya.stage.addChild(lobby);
-    var game = new GameMainView(def.GAMEMODE.MODE1);
-    Laya.stage.addChild(game);
+    var lobby = new LobbyView;
+    Laya.stage.addChild(lobby);
+    // let game = new GameMainView(def.GAMEMODE.MODE1);
+    // Laya.stage.addChild(game);
 }));
 //# sourceMappingURL=main.js.map
