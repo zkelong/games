@@ -1,1 +1,4 @@
-﻿
+﻿http://developer.egret.com/cn/github/egret-docs/platform/weixin/weixin/index.html
+
+
+https://github.com/egret-labs/egret-game-library/tree/master/weixinapi/libsrc/src
