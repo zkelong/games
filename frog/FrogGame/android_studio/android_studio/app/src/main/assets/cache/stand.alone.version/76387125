@@ -10,8 +10,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var game;
 (function (game) {
-    var Sprite = Laya.Sprite;
-    var KLabelButton = kelong.ui.KLabelButton;
     var KColorButton = kelong.ui.KColorButton;
     var GameOverView = /** @class */ (function (_super) {
         __extends(GameOverView, _super);
@@ -21,14 +19,18 @@ var game;
             _this.AGIN = "playAgin";
             _this.ADEND = "adEnd";
             _this.size(Laya.stage.width, Laya.stage.height);
-            _this.sp_bg.graphics.drawRect(0, 0, _this.width, _this.height, "#000000");
+            _this.sp_bg.graphics.drawRect(0, 0, _this.width, _this.height, "#3485fb");
             _this.list.renderHandler = new Laya.Handler(_this, _this.renderItem);
+            _this.box_title.graphics.drawRect(0, 0, _this.box_title.width, _this.box_title.height, "#78cbbb");
+            _this.box_listBg.graphics.drawRect(0, 0, _this.box_listBg.width, _this.box_listBg.height, "#cdffe3");
+            _this.sp_rect.graphics.drawLines(0, 0, [2, 2, _this.box_list.width - 4, 2, _this.box_list.width - 4, _this.box_list.height - 4, 2, _this.box_list.height - 4, 2, 2], "#010303", 4);
+            _this.sp_rect.graphics.drawLines(0, 0, [0, 0, _this.box_list.width, 0, _this.box_list.width, _this.box_list.height, 0, _this.box_list.height, 0, 0], "#ffffff", 2);
+            _this.list.vScrollBarSkin = "";
             _this.label_score.text = socre;
-            var ok = new KLabelButton("OK");
-            ok.fontSize = 80;
-            ok.color = "#ffffff";
-            ok.bottom = 30;
-            ok.centerX = 0;
+            var ok = new KColorButton("x");
+            ok.top = -30;
+            ok.right = -30;
+            ok.size(60, 60);
             _this.box_list.addChild(ok);
             ok.on(Laya.Event.CLICK, _this, function () {
                 _this.box_list.visible = false;
@@ -101,11 +103,10 @@ var game;
          * @param idx
          */
         GameOverView.prototype.renderItem = function (cell, idx) {
-            var sp = new Sprite;
-            sp.graphics.drawRect(0, 0, cell.width, cell.height, "#000000");
-            sp.alpha = 0.5;
-            sp.zOrder = -1;
-            cell.addChild(sp);
+            // cell.graphics.clear();
+            cell.graphics.drawCircle(20, cell.height - 20, 20, "#8dc9a5");
+            cell.graphics.drawCircle(cell.width - 20, cell.height - 20, 20, "#8dc9a5");
+            cell.graphics.drawRect(20, cell.height - 40, cell.width - 40, 40, "#8dc9a5");
         };
         return GameOverView;
     }(ui.game.GameOverUI));

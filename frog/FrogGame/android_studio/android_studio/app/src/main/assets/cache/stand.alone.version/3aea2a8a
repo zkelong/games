@@ -55,19 +55,21 @@ var game;
             return this.y + this.img_frog.y - this.height;
         };
         FrogJumpView.prototype.playAction = function (actionName) {
-            console.log("action....", actionName);
             this.inJump = true;
             if (actionName == FrogJumpView.ACTIONS.stand) {
                 this.jump_stand.play(0, false);
                 this.inJump = false;
             }
             else if (actionName == FrogJumpView.ACTIONS.jump_small) {
+                utl.MusicSoundTool.playSound(def.MusicConfig.CommonSound.jump);
                 this.jump_small.play(0, false);
             }
             else if (actionName == FrogJumpView.ACTIONS.jump_big) {
+                utl.MusicSoundTool.playSound(def.MusicConfig.CommonSound.jump);
                 this.jump_big.play(0, false);
             }
             else if (actionName == FrogJumpView.ACTIONS.stand_blast) {
+                utl.MusicSoundTool.playSound(def.MusicConfig.CommonSound.blast);
                 this.stand_blast.play(0, false);
             }
             else if (actionName == FrogJumpView.ACTIONS.jump_small_blast) {

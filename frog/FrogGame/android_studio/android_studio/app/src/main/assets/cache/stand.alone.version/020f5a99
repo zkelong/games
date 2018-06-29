@@ -53408,7 +53408,86 @@ if (typeof define === 'function' && define.amd){
         }
     });
 }
+var utl;
+(function (utl) {
+    //wxe7a6611e12287db5
+    var Browser = Laya.Browser;
+    var WeiXin = /** @class */ (function () {
+        function WeiXin() {
+        }
+        WeiXin.login = function () {
+            console.log("login...begin");
+            if (Browser.onWeiXin) {
+              wx.authorize({
+  scope: 'scope.record'
+})
+                wx.login({
+                    success: function () {
+                        wx.getUserInfo({
+                            openIdList: ['selfOpenId'],
+                            lang: 'zh_CN',
+                            success: (res) => {
+                                console.log('success', res.data)
+                            },
+                            fail: (res) => {
+                                // reject(res)
+                            }
+                        });
+                        console.log("login...success");
+                    }
+                });
+            }
+        };
+        return WeiXin;
+    }());
+    utl.WeiXin = WeiXin;
+})(utl || (utl = {}));
+//# sourceMappingURL=WeiXin.js.map
 //# sourceMappingURL=utl.js.map
+var utl;
+(function (utl) {
+    var SoundManager = Laya.SoundManager;
+    var MusicSoundTool = /** @class */ (function () {
+        function MusicSoundTool() {
+        }
+        //播放音乐
+        MusicSoundTool.playMusic = function (url) {
+            if (MusicSoundTool.musicUrl) {
+                //MusicSoundTool.destroySound([MusicSoundTool.musicUrl]);
+            }
+            MusicSoundTool.musicUrl = url;
+            SoundManager.playMusic(url, 0);
+        };
+        //停止音乐
+        MusicSoundTool.stopMusic = function () {
+            SoundManager.stopMusic();
+        };
+        //设置背景音乐音量
+        MusicSoundTool.setMusicVolume = function (vol) {
+            SoundManager.setMusicVolume(vol);
+        };
+        //播放音效
+        MusicSoundTool.playSound = function (url, volume, loop, cb) {
+            loop = loop || 1;
+            var chanel = SoundManager.playSound(url, loop, cb);
+            if (volume && chanel)
+                chanel.volume = volume;
+        };
+        //关闭所有声音
+        MusicSoundTool.stopAll = function () {
+            SoundManager.stopAll();
+        };
+        //释放声音资源
+        MusicSoundTool.destroySound = function (urls) {
+            for (var i = 0; i < urls.length; i++) {
+                SoundManager.destroySound(urls[i]);
+            }
+        };
+        return MusicSoundTool;
+    }());
+    utl.MusicSoundTool = MusicSoundTool;
+})(utl || (utl = {}));
+//# sourceMappingURL=MusicSoundTool.js.map
 var def;
 (function (def) {
     var GAMEMODE;
@@ -53432,13 +53511,27 @@ var def;
             { url: "res/atlas/frog.atlas", type: Laya.Loader.ATLAS },
             { url: "frog/yuanjingcen.png", type: Laya.Loader.IMAGE },
             { url: "frog/yun.png", type: Laya.Loader.IMAGE },
-            { url: "frog/zhuzi.png", type: Laya.Loader.IMAGE },
         ];
         return SourceConfig;
     }());
     def.SourceConfig = SourceConfig;
 })(def || (def = {}));
 //# sourceMappingURL=SourceConfig.js.map
+var def;
+(function (def) {
+    var MusicConfig;
+    (function (MusicConfig) {
+        //通用音效url
+        MusicConfig.CommonMusic = {
+            game_bg: "music/beijin.mp3"
+        };
+        MusicConfig.CommonSound = {
+            blast: "music/did.mp3",
+            jump: "music/jump.mp3" //跳
+        };
+    })(MusicConfig = def.MusicConfig || (def.MusicConfig = {}));
+})(def || (def = {}));
+//# sourceMappingURL=MusicConfig.js.map
 var def;
 (function (def) {
     var GameConfig = /** @class */ (function () {
@@ -53467,13 +53560,84 @@ var kelong;
 (function (kelong) {
     var ui;
     (function (ui) {
-        var Image = Laya.Image;
+        var Label = Laya.Label;
         var Event = Laya.Event;
-        var KButton = /** @class */ (function (_super) {
-            __extends(KButton, _super);
-            function KButton(skin) {
+        var Box = Laya.Box;
+        var KButtonGO = /** @class */ (function (_super) {
+            __extends(KButtonGO, _super);
+            function KButtonGO(txt) {
                 var _this = _super.call(this) || this;
-                _this.skin = skin;
+                _this.size(366, 300);
+                var label1 = new Label(txt);
+                label1.fontSize = 300;
+                label1.color = "#888888";
+                label1.font = "SimHei";
+                label1.bold = true;
+                label1.centerX = 10;
+                label1.centerY = 0;
+                _this.addChild(label1);
+                var label2 = new Label(txt);
+                label2.fontSize = 300;
+                label2.color = "#ffffff";
+                label2.font = "SimHei";
+                label2.bold = true;
+                label2.centerX = 0;
+                label2.centerY = 0;
+                _this.addChild(label2);
+                _this.on(Event.MOUSE_OUT, _this, function () {
+                    label2.centerX = 0;
+                });
+                _this.on(Event.MOUSE_DOWN, _this, function () {
+                    label2.centerX = 10;
+                });
+                _this.on(Event.MOUSE_UP, _this, function () {
+                    label2.centerX = 0;
+                });
+                return _this;
+            }
+            return KButtonGO;
+        }(Box));
+        ui.KButtonGO = KButtonGO;
+    })(ui = kelong.ui || (kelong.ui = {}));
+})(kelong || (kelong = {}));
+//# sourceMappingURL=KButtonGo.js.map
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var kelong;
+(function (kelong) {
+    var ui;
+    (function (ui) {
+        var Label = Laya.Label;
+        var Event = Laya.Event;
+        var Box = Laya.Box;
+        var Sprite = Laya.Sprite;
+        var KColorButton = /** @class */ (function (_super) {
+            __extends(KColorButton, _super);
+            function KColorButton(txt) {
+                var _this = _super.call(this) || this;
+                _this.size(240, 67);
+                var sp_bg = new Sprite;
+                sp_bg.graphics.drawRect(0, 0, _this.width, _this.height, "#000000");
+                sp_bg.alpha = 0.1;
+                _this.addChild(sp_bg);
+                var sp_line = new Sprite;
+                sp_line.graphics.drawLines(0, 0, [0, 0, _this.width, 0, _this.width, _this.height, 0, _this.height, 0, 0], "#ffffff", 2);
+                _this.addChild(sp_line);
+                var label = new Label(txt);
+                label.color = "#ffffff";
+                label.fontSize = 48;
+                label.bold = true;
+                label.centerX = 0;
+                label.centerY = 0;
+                _this.addChild(label);
                 _this.on(Event.MOUSE_OUT, _this, function () {
                     _this.scale(1, 1);
                 });
@@ -53485,12 +53649,12 @@ var kelong;
                 });
                 return _this;
             }
-            return KButton;
-        }(Image));
-        ui.KButton = KButton;
+            return KColorButton;
+        }(Box));
+        ui.KColorButton = KColorButton;
     })(ui = kelong.ui || (kelong.ui = {}));
 })(kelong || (kelong = {}));
-//# sourceMappingURL=KButton.js.map
+//# sourceMappingURL=KColorButton.js.map
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -53539,246 +53703,48 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var game;
-(function (game) {
-    var Sprite = Laya.Sprite;
-    var Image = Laya.Image;
-    var CloudsView = /** @class */ (function (_super) {
-        __extends(CloudsView, _super);
-        function CloudsView() {
-            var _this = _super.call(this) || this;
-            _this.init();
-            return _this;
-        }
-        CloudsView.prototype.init = function () {
-            var _this = this;
-            this.img1 = new Image("frog/yun.png");
-            this.img1.x = 0;
-            this.addChild(this.img1);
-            this.img2 = new Image("frog/yun.png");
-            this.img2.anchorX = 1;
-            this.img2.scaleX = -1;
-            this.addChild(this.img2);
-            this.img2.x = this.img1.x + this.img1.width;
-            this.img1.on(Laya.Event.LOADED, this, function () {
-                _this.img2.x = _this.img1.x + _this.img1.width;
-            });
-        };
-        CloudsView.prototype.run = function (rate) {
-            if (this.img1.x + this.img1.width < -1) {
-                this.img1.x = this.img2.x + this.img2.width;
+var kelong;
+(function (kelong) {
+    var ui;
+    (function (ui) {
+        var Event = Laya.Event;
+        // import Box = laya.editerUI.View;
+        var View = laya.ui.View;
+        var ViewColor = /** @class */ (function (_super) {
+            __extends(ViewColor, _super);
+            function ViewColor() {
+                var _this = _super.call(this) || this;
+                _this.left = _this.right = _this.top = _this.bottom = 0;
+                //this.width = Laya.stage.width;
+                //this.height = Laya.stage.height;
+                // if (Laya.Browser.onPC) {
+                //     Laya.stage.on(Laya.Event.RESIZE, this, () => {
+                //         let w = Browser.clientWidth * Browser.pixelRatio;
+                //         let h = Browser.clientHeight * Browser.pixelRatio;
+                //         Laya.stage.desginWidth = w;
+                //         Laya.stage.desginHeight = h;
+                //         setTimeout(() => {
+                //             Laya.stage.setScreenSize(w, h);
+                //             try {
+                //                 this.width = w;
+                //                 this.height = h;
+                //             } catch (e) { }
+                //         }, 10);
+                //     });
+                // }
+                _this.on(Event.RESIZE, _this, function () {
+                    if (_this.color) {
+                        _this.graphics.drawRect(0, 0, _this.width, _this.height, _this.color);
+                    }
+                });
+                return _this;
             }
-            if (this.img2.x + this.img2.width < -1) {
-                this.img2.x = this.img1.x + this.img1.width;
-            }
-            this.img1.x -= rate;
-            this.img2.x -= rate;
-        };
-        return CloudsView;
-    }(Sprite));
-    game.CloudsView = CloudsView;
-})(game || (game = {}));
-//# sourceMappingURL=CloudsView.js.map
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var game;
-(function (game) {
-    var Sprite = Laya.Sprite;
-    var Image = Laya.Image;
-    var FarView = /** @class */ (function (_super) {
-        __extends(FarView, _super);
-        function FarView() {
-            var _this = _super.call(this) || this;
-            _this.picHeight = 0;
-            _this.init();
-            return _this;
-        }
-        FarView.prototype.init = function () {
-            var _this = this;
-            this.img1 = new Image("frog/yuanjingcen.png");
-            this.img1.x = 0;
-            this.addChild(this.img1);
-            this.img2 = new Image("frog/yuanjingcen.png");
-            this.img2.anchorX = 1;
-            this.img2.scaleX = -1;
-            this.addChild(this.img2);
-            this.img1.on(Laya.Event.LOADED, this, function () {
-                _this.picHeight = _this.img1.height;
-                _this.img2.x = _this.img1.x + _this.img1.width;
-            });
-        };
-        FarView.prototype.run = function (rate) {
-            rate = rate | 1;
-            this.img1.x -= rate;
-            this.img2.x -= rate;
-            if (this.img1.x + this.img1.width < -1) {
-                this.img1.x = this.img2.x + this.img2.width;
-            }
-            if (this.img2.x + this.img2.width < -1) {
-                this.img2.x = this.img1.x + this.img1.width;
-            }
-        };
-        return FarView;
-    }(Sprite));
-    game.FarView = FarView;
-})(game || (game = {}));
-//# sourceMappingURL=FarView.js.map
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var game;
-(function (game) {
-    var GameConfig = def.GameConfig;
-    var Frog = /** @class */ (function (_super) {
-        __extends(Frog, _super);
-        function Frog() {
-            var _this = _super.call(this) || this;
-            //event
-            _this.ACTIONEND = "actionEnd";
-            _this.beginPos = { x: 0, y: 0 }; //开始的位置
-            _this.speedX = 0; //速度X
-            _this.speedY = 0; //速度Y
-            _this.acceleratedY = 1; //y上的加速度
-            // jumpTime: number = 0; //跳跃时间
-            _this.inJump = false; //是否正在跳跃
-            //播放
-            _this.haveSize = false;
-            //计算速度
-            _this.havePlayUpToDown = false;
-            //动画播放时间间隔
-            if (!Frog.cached) {
-                Frog.cached = true;
-                Laya.Animation.createFrames(["frog/tiao_01.png"], Frog.ACTIONS.stand);
-                Laya.Animation.createFrames(["frog/tiao_01.png", "frog/tiao_02.png", "frog/tiao_03.png"], Frog.ACTIONS.jump);
-                Laya.Animation.createFrames(["frog/tiao_04.png"], Frog.ACTIONS.flyUp);
-                Laya.Animation.createFrames(["frog/tiao_04.png", "frog/tiao_05.png", "frog/tiao_06.png"], Frog.ACTIONS.upToDown);
-                Laya.Animation.createFrames(["frog/tiao_07.png"], Frog.ACTIONS.flyDown);
-                Laya.Animation.createFrames(["frog/tiao_07.png", "frog/tiao_08.png", "frog/tiao_09.png"], Frog.ACTIONS.landing);
-                Laya.Animation.createFrames(["frog/tiao_01.png", "frog/zha_01.png", "frog/zha_02.png", "frog/zha_03.png", "frog/zha_04.png"], Frog.ACTIONS.blast);
-            }
-            if (!_this.actionBody) {
-                _this.actionBody = new Laya.Animation();
-                _this.actionBody.interval = 20;
-                _this.actionBody.scale(2, 2);
-                _this.addChild(_this.actionBody);
-                //增加动画播放完成监听
-                _this.actionBody.on(Laya.Event.COMPLETE, _this, _this.onPlayComplete);
-            }
-            return _this;
-        }
-        Frog.prototype.playAnimation = function (action) {
-            this.actionName = action;
-            this.actionBody.play(0, true, action);
-            if (!this.haveSize && action == Frog.ACTIONS.stand) {
-                var bound = this.getBounds();
-                this.size(bound.width, bound.height);
-                this.pivot(bound.width / 2, bound.height);
-            }
-            if (action == Frog.ACTIONS.jump) { //起跳
-                this.inJump = true;
-            }
-            else if (this.actionName == Frog.ACTIONS.blast) { //爆炸
-                this.inJump = false;
-                this.speedY = 0;
-                this.acceleratedY = 0;
-                this.speedX = 0;
-            }
-            else if (this.actionName == Frog.ACTIONS.landing) { //落地
-                this.speedY = 0;
-                this.acceleratedY = 0;
-                this.speedX = 0;
-                this.inJump = false;
-            }
-        };
-        //动画播放完成
-        Frog.prototype.onPlayComplete = function () {
-            var stop = false;
-            if (this.actionName == Frog.ACTIONS.stand) { //静止
-                stop = true;
-            }
-            else if (this.actionName == Frog.ACTIONS.jump) { //起跳
-                this.playAnimation(Frog.ACTIONS.flyUp);
-            }
-            else if (this.actionName == Frog.ACTIONS.flyUp) { //起飞
-                stop = true;
-            }
-            else if (this.actionName == Frog.ACTIONS.upToDown) { //上升变下降
-                this.playAnimation(Frog.ACTIONS.flyDown);
-            }
-            else if (this.actionName == Frog.ACTIONS.flyDown) { //下降
-                stop = true;
-            }
-            else if (this.actionName == Frog.ACTIONS.landing) { //落地
-                this.playAnimation(Frog.ACTIONS.stand);
-            }
-            else if (this.actionName == Frog.ACTIONS.blast) { //爆炸
-                stop = true;
-            }
-            this.event(this.ACTIONEND, this.actionName);
-            if (stop) {
-                this.actionBody.stop();
-            }
-        };
-        //设置初始位置
-        Frog.prototype.initPos = function (x, y) {
-            this.pos(x, y);
-            this.beginPos = { x: x, y: y };
-        };
-        Frog.prototype.setSpeed = function () {
-            if (this.speedY <= 0 && !this.havePlayUpToDown) { //开始下降
-                this.havePlayUpToDown = true;
-                this.playAnimation(Frog.ACTIONS.upToDown);
-            }
-            this.speedY -= this.acceleratedY;
-        };
-        //小跳
-        Frog.prototype.jumpSmall = function () {
-            this.speedX = 10;
-            this.acceleratedY = 4;
-            this.jumpOperate(GameConfig.SMALLSTEP);
-        };
-        //大跳
-        Frog.prototype.jumbBig = function () {
-            this.speedX = 20;
-            this.acceleratedY = 8;
-            this.jumpOperate(GameConfig.BIGSTEP);
-        };
-        //跳跃操作
-        Frog.prototype.jumpOperate = function (setpWidth) {
-            this.havePlayUpToDown = false;
-            this.speedY = 0.5 * this.acceleratedY * setpWidth / this.speedX;
-            this.playAnimation(Frog.ACTIONS.jump);
-        };
-        Frog.ACTIONS = {
-            stand: "stand",
-            jump: "jump",
-            flyUp: "flyUp",
-            upToDown: "upToDown",
-            flyDown: "flyDown",
-            landing: "landing",
-            blast: "blast",
-        };
-        Frog.cached = false;
-        return Frog;
-    }(Laya.Sprite));
-    game.Frog = Frog;
-})(game || (game = {}));
-//# sourceMappingURL=Frog.js.map
+            return ViewColor;
+        }(View));
+        ui.ViewColor = ViewColor;
+    })(ui = kelong.ui || (kelong.ui = {}));
+})(kelong || (kelong = {}));
+//# sourceMappingURL=ViewColor.js.map
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -53795,6 +53761,24 @@ var ui;
 (function (ui) {
     var game;
     (function (game) {
+        var FrogViewUI = /** @class */ (function (_super) {
+            __extends(FrogViewUI, _super);
+            function FrogViewUI() {
+                return _super.call(this) || this;
+            }
+            FrogViewUI.prototype.createChildren = function () {
+                _super.prototype.createChildren.call(this);
+                this.createView(ui.game.FrogViewUI.uiView);
+            };
+            FrogViewUI.uiView = { "type": "View", "props": { "width": 320, "height": 140 }, "child": [{ "type": "Image", "props": { "y": 150, "x": 0, "var": "img_frog", "skin": "", "scaleY": 2, "scaleX": 2, "anchorY": 1, "anchorX": 0.5 }, "compId": 2 }, { "type": "Image", "props": { "y": 140, "x": -80, "width": 160, "visible": false, "skin": "frog/zhuzi.png" } }, { "type": "Image", "props": { "y": 140, "x": 80, "width": 160, "visible": false, "skin": "frog/zhuzi.png" }, "child": [{ "type": "Line", "props": { "y": -200, "x": 80, "toY": 200, "toX": 0, "lineWidth": 1, "lineColor": "#ff0000" } }, { "type": "Line", "props": { "y": -200, "x": 0, "toY": 200, "toX": 0, "lineWidth": 1, "lineColor": "#ff0000" } }, { "type": "Line", "props": { "y": -200, "x": 160, "toY": 200, "toX": 0, "lineWidth": 1, "lineColor": "#ff0000" } }, { "type": "Line", "props": { "y": -200, "x": 240, "toY": 200, "toX": 0, "lineWidth": 1, "lineColor": "#ff0000" } }, { "type": "Image", "props": { "y": -17, "x": -1, "skin": "frog/xianjing.png" } }] }, { "type": "Image", "props": { "y": 140, "x": 240, "width": 160, "visible": false, "skin": "frog/zhuzi.png" }, "child": [{ "type": "Image", "props": { "y": -19, "x": 0, "skin": "frog/xianjing.png" } }] }, { "type": "Image", "props": { "y": 140, "x": 400, "width": 160, "visible": false, "skin": "frog/zhuzi.png" }, "child": [{ "type": "Image", "props": { "y": -19, "x": 0, "skin": "frog/xianjing.png" } }] }], "animations": [{ "nodes": [{ "target": 2, "keyframes": { "y": [{ "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 0 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 3 }, { "value": 126, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 4 }, { "value": 80, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 5 }, { "value": 60, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 6 }, { "value": 60, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 7 }, { "value": 110, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 8 }, { "value": 130, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 9 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 10 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 11 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 12 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 13 }], "x": [{ "value": 0, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 0 }, { "value": 4, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 1 }, { "value": 7, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 2 }, { "value": 15, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 3 }, { "value": 74, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 6 }, { "value": 86, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 7 }, { "value": 104, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 9 }, { "value": 163, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 12 }, { "value": 160, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 13 }], "skin": [{ "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }, { "value": "frog/tiao_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 1 }, { "value": "frog/tiao_03.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 2 }, { "value": "frog/tiao_04.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 3 }, { "value": "frog/tiao_05.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 4 }, { "value": "frog/tiao_06.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 6 }, { "value": "frog/tiao_07.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 8 }, { "value": "frog/tiao_07.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 9 }, { "value": "frog/tiao_08.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 10 }, { "value": "frog/tiao_09.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 11 }, { "value": "frog/tiao_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 12 }, { "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 13 }] } }], "name": "jump_small", "id": 1, "frameRate": 24, "action": 0 }, { "nodes": [{ "target": 2, "keyframes": { "y": [{ "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 0 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 3 }, { "value": 80, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 5 }, { "value": 54, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 7 }, { "value": 54, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 8 }, { "value": 90, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 9 }, { "value": 98, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 10 }, { "value": 110, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 11 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 12 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 13 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 14 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 15 }], "x": [{ "value": 0, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 0 }, { "value": 4, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 1 }, { "value": 7, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 2 }, { "value": 15, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 3 }, { "value": 154, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 7 }, { "value": 166, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 8 }, { "value": 200, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 9 }, { "value": 310, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 12 }, { "value": 312, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 13 }, { "value": 326, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 14 }, { "value": 320, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 15 }], "skin": [{ "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }, { "value": "frog/tiao_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 1 }, { "value": "frog/tiao_03.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 2 }, { "value": "frog/tiao_04.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 3 }, { "value": "frog/tiao_06.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 7 }, { "value": "frog/tiao_07.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 9 }, { "value": "frog/tiao_08.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 12 }, { "value": "frog/tiao_09.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 13 }, { "value": "frog/tiao_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 14 }, { "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 15 }] } }], "name": "jump_big", "id": 1, "frameRate": 24, "action": 0 }, { "nodes": [{ "target": 2, "keyframes": { "y": [{ "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 0 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 3 }, { "value": 80, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 5 }, { "value": 54, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 7 }, { "value": 54, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 8 }, { "value": 90, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 9 }, { "value": 98, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 10 }, { "value": 110, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 11 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 12 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 13 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 14 }, { "value": 160, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 15 }, { "value": 190, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 17 }], "x": [{ "value": 0, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 0 }, { "value": 4, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 1 }, { "value": 7, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 2 }, { "value": 15, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 3 }, { "value": 154, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 7 }, { "value": 166, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 8 }, { "value": 200, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 9 }, { "value": 310, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 12 }, { "value": 312, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 13 }, { "value": 312, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 14 }, { "value": 320, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 15 }], "skin": [{ "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }, { "value": "frog/tiao_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 1 }, { "value": "frog/tiao_03.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 2 }, { "value": "frog/tiao_04.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 3 }, { "value": "frog/tiao_06.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 7 }, { "value": "frog/tiao_07.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 9 }, { "value": "frog/tiao_08.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 12 }, { "value": "frog/zha_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 13 }, { "value": "frog/zha_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 14 }, { "value": "frog/zha_03.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 15 }, { "value": "frog/zha_04.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 17 }, { "value": "", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 19 }] } }], "name": "jump_big_blast", "id": 1, "frameRate": 24, "action": 0 }, { "nodes": [{ "target": 2, "keyframes": { "y": [{ "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 0 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 3 }, { "value": 126, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 4 }, { "value": 80, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 5 }, { "value": 60, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 6 }, { "value": 60, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 7 }, { "value": 110, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 8 }, { "value": 230, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 9 }, { "value": 240, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 12 }, { "value": 266, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 13 }], "x": [{ "value": 0, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 0 }, { "value": 4, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 1 }, { "value": 7, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 2 }, { "value": 15, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 3 }, { "value": 74, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 6 }, { "value": 86, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 7 }, { "value": 190, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 9 }, { "value": 194, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 10 }], "skin": [{ "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }, { "value": "frog/tiao_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 1 }, { "value": "frog/tiao_03.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 2 }, { "value": "frog/tiao_04.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 3 }, { "value": "frog/tiao_05.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 4 }, { "value": "frog/tiao_06.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 6 }, { "value": "frog/tiao_07.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 9 }, { "value": "frog/zha_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 10 }, { "value": "frog/zha_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 11 }, { "value": "frog/zha_03.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 12 }, { "value": "frog/zha_04.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 13 }, { "value": "", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 14 }] } }], "name": "jump_small_fall", "id": 1, "frameRate": 24, "action": 0 }, { "nodes": [{ "target": 2, "keyframes": { "y": [{ "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 0 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 3 }, { "value": 126, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 4 }, { "value": 80, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 5 }, { "value": 60, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 6 }, { "value": 60, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 7 }, { "value": 110, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 8 }, { "value": 110, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 9 }, { "value": 136, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 10 }, { "value": 138, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 11 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 12 }, { "value": 150, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 13 }, { "value": 166, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 14 }], "x": [{ "value": 0, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 0 }, { "value": 4, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 1 }, { "value": 7, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 2 }, { "value": 15, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 3 }, { "value": 74, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 6 }, { "value": 86, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 7 }, { "value": 104, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 9 }, { "value": 163, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 12 }, { "value": 160, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 13 }], "skin": [{ "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }, { "value": "frog/tiao_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 1 }, { "value": "frog/tiao_03.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 2 }, { "value": "frog/tiao_04.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 3 }, { "value": "frog/tiao_05.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 4 }, { "value": "frog/tiao_06.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 6 }, { "value": "frog/tiao_07.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 9 }, { "value": "frog/tiao_08.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 10 }, { "value": "frog/zha_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 11 }, { "value": "frog/zha_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 12 }, { "value": "frog/zha_03.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 13 }, { "value": "frog/zha_04.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 14 }, { "value": "", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 15 }] } }], "name": "jump_small_blast", "id": 1, "frameRate": 24, "action": 0 }, { "nodes": [{ "target": 2, "keyframes": { "y": [{ "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 0 }], "x": [{ "value": 0, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 0 }], "skin": [{ "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }] } }], "name": "jump_stand", "id": 1, "frameRate": 24, "action": 0 }, { "nodes": [{ "target": 2, "keyframes": { "y": [{ "value": 138, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 0 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 1 }, { "value": 150, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 2 }], "x": [{ "value": 0, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 0 }, { "value": 0, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 1 }, { "value": 0, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 2 }], "skin": [{ "value": "frog/zha_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }, { "value": "frog/zha_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 1 }, { "value": "frog/zha_03.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 2 }, { "value": "frog/zha_04.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 3 }, { "value": "", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 4 }] } }], "name": "stand_blast", "id": 1, "frameRate": 24, "action": 0 }, { "nodes": [{ "target": 2, "keyframes": { "y": [{ "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 0 }, { "value": 140, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 3 }, { "value": 80, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 5 }, { "value": 54, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 7 }, { "value": 54, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 8 }, { "value": 90, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 9 }, { "value": 98, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 10 }, { "value": 110, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 11 }, { "value": 176, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 14 }, { "value": 208, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 15 }, { "value": 240, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 16 }, { "value": 240, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 17 }, { "value": 240, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 18 }, { "value": 240, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 19 }, { "value": 246, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 20 }, { "value": 260, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 21 }, { "value": 240, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "y", "index": 22 }], "x": [{ "value": 0, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 0 }, { "value": 4, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 1 }, { "value": 7, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 2 }, { "value": 15, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 3 }, { "value": 154, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 7 }, { "value": 166, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 8 }, { "value": 200, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 9 }, { "value": 350, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 16 }, { "value": 356, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 17 }, { "value": 358, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 18 }, { "value": 358, "tweenMethod": "linearNone", "tween": true, "target": 2, "key": "x", "index": 19 }], "skin": [{ "value": "frog/tiao_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 0 }, { "value": "frog/tiao_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 1 }, { "value": "frog/tiao_03.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 2 }, { "value": "frog/tiao_04.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 3 }, { "value": "frog/tiao_06.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 7 }, { "value": "frog/tiao_07.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 9 }, { "value": "frog/tiao_08.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 16 }, { "value": "frog/tiao_09.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 17 }, { "value": "frog/zha_01.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 18 }, { "value": "frog/zha_02.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 19 }, { "value": "frog/zha_03.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 20 }, { "value": "frog/zha_04.png", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 21 }, { "value": "", "tweenMethod": "linearNone", "tween": false, "target": 2, "key": "skin", "index": 22 }] } }], "name": "jump_big_fall", "id": 1, "frameRate": 24, "action": 0 }] };
+            return FrogViewUI;
+        }(View));
+        game.FrogViewUI = FrogViewUI;
+    })(game = ui.game || (ui.game = {}));
+})(ui || (ui = {}));
+(function (ui) {
+    var game;
+    (function (game) {
         var GameMainUI = /** @class */ (function (_super) {
             __extends(GameMainUI, _super);
             function GameMainUI() {
@@ -53804,7 +53788,7 @@ var ui;
                 _super.prototype.createChildren.call(this);
                 this.createView(ui.game.GameMainUI.uiView);
             };
-            GameMainUI.uiView = { "type": "View", "props": {}, "child": [{ "type": "Image", "props": { "var": "img_bg", "top": 0, "skin": "frog/bg.png", "right": 0, "left": 0, "bottom": 0 } }, { "type": "Sprite", "props": { "var": "sp_map" } }, { "type": "Sprite", "props": { "y": 0, "x": 0, "var": "sp_water" } }, { "type": "Label", "props": { "visible": false, "var": "label_control", "top": 50, "text": "暂停", "left": 60, "fontSize": 46, "color": "#ffffff", "bold": true } }, { "type": "Label", "props": { "visible": false, "var": "label_time", "top": 200, "text": "3", "fontSize": 50, "color": "#ffffff", "centerX": 0, "bold": true } }, { "type": "Label", "props": { "width": 280, "var": "label_score", "top": 50, "text": "分数：0", "right": 60, "fontSize": 46, "color": "#c1deda", "bold": true, "align": "right" } }, { "type": "Box", "props": { "var": "box_tips", "top": 0, "right": 0, "left": 0, "bottom": 0 }, "child": [{ "type": "Sprite", "props": { "var": "sp_tips", "alpha": 0.5 } }, { "type": "Label", "props": { "text": "滑动操作", "fontSize": 50, "color": "#ffffff", "centerY": -200, "centerX": 0, "bold": true } }, { "type": "Label", "props": { "text": "向右小跳", "fontSize": 50, "color": "#ffffff", "centerY": -100, "centerX": 0, "bold": true } }, { "type": "Label", "props": { "text": "向上大跳", "fontSize": 50, "color": "#ffffff", "centerY": 0, "centerX": 0, "bold": true } }, { "type": "Label", "props": { "text": "非常简单", "fontSize": 50, "color": "#ffffff", "centerY": 100, "centerX": 0, "bold": true } }, { "type": "Label", "props": { "text": "点击屏幕开始游戏", "fontSize": 42, "color": "#ffffff", "centerX": 0, "bottom": 140 } }] }, { "type": "Image", "props": { "visible": false, "skin": "frog/go2.png", "centerY": -80, "centerX": 0 }, "compId": 17 }], "animations": [{ "nodes": [{ "target": 17, "keyframes": { "visible": [{ "value": true, "tweenMethod": "linearNone", "tween": false, "target": 17, "key": "visible", "index": 0 }, { "value": false, "tweenMethod": "linearNone", "tween": false, "target": 17, "key": "visible", "index": 9 }], "skin": [{ "value": "frog/go2.png", "tweenMethod": "linearNone", "tween": false, "target": 17, "key": "skin", "index": 0 }, { "value": "frog/go1.png", "tweenMethod": "linearNone", "tween": false, "target": 17, "key": "skin", "index": 4 }, { "value": "frog/go2.png", "tweenMethod": "linearNone", "tween": false, "target": 17, "key": "skin", "index": 8 }] } }], "name": "ani_go", "id": 1, "frameRate": 24, "action": 0 }] };
+            GameMainUI.uiView = { "type": "View", "props": {}, "child": [{ "type": "Box", "props": { "var": "box_control", "top": 0, "right": 0, "left": 0, "bottom": 0 } }, { "type": "Sprite", "props": { "var": "sp_map" } }, { "type": "Image", "props": { "skin": "frog/yun.png" } }, { "type": "Sprite", "props": { "y": 0, "x": 0, "var": "sp_water" } }, { "type": "Label", "props": { "visible": false, "var": "label_control", "top": 50, "text": "暂停", "left": 60, "fontSize": 46, "color": "#ffffff", "bold": true } }, { "type": "Label", "props": { "visible": false, "var": "label_time", "top": 200, "text": "3", "fontSize": 50, "color": "#ffffff", "centerX": 0, "bold": true } }, { "type": "Label", "props": { "var": "label_score", "top": 50, "text": "分数：0", "left": 60, "fontSize": 46, "color": "#3370ff", "bold": true, "align": "left" } }, { "type": "Box", "props": { "var": "box_tips", "top": 0, "right": 0, "left": 0, "bottom": 0 }, "child": [{ "type": "Sprite", "props": { "var": "sp_tips", "alpha": 0.5 } }, { "type": "Sprite", "props": { "y": 0, "x": 0, "var": "sp_white", "alpha": 0 }, "compId": 24, "child": [{ "type": "Rect", "props": { "y": 0, "x": 0, "width": 642, "lineWidth": 1, "height": 961, "fillColor": "#ffffff" } }] }, { "type": "Box", "props": { "var": "box_labels", "top": 0, "right": 0, "left": 0, "bottom": 0 }, "child": [{ "type": "Label", "props": { "y": -115, "x": -76, "text": "滑动操作", "fontSize": 50, "color": "#ffffff", "centerY": -200, "centerX": 0, "bold": true } }, { "type": "Label", "props": { "y": -115, "x": -76, "text": "向右小跳", "fontSize": 50, "color": "#ffffff", "centerY": -100, "centerX": 0, "bold": true } }, { "type": "Label", "props": { "y": -115, "x": -76, "text": "向上大跳", "fontSize": 50, "color": "#ffffff", "centerY": 0, "centerX": 0, "bold": true } }, { "type": "Label", "props": { "y": -115, "x": -76, "text": "非常简单", "fontSize": 50, "color": "#ffffff", "centerY": 100, "centerX": 0, "bold": true } }, { "type": "Label", "props": { "y": -115, "x": -76, "text": "点击屏幕开始游戏", "fontSize": 42, "color": "#ffffff", "centerX": 0, "bottom": 140 } }] }] }], "animations": [{ "nodes": [{ "target": 24, "keyframes": { "alpha": [{ "value": 0.5, "tweenMethod": "linearNone", "tween": true, "target": 24, "key": "alpha", "index": 0 }, { "value": 0.7, "tweenMethod": "linearNone", "tween": true, "target": 24, "key": "alpha", "index": 1 }, { "value": 0.2, "tweenMethod": "linearNone", "tween": true, "target": 24, "key": "alpha", "index": 2 }, { "value": 0.6, "tweenMethod": "linearNone", "tween": true, "target": 24, "key": "alpha", "index": 3 }, { "value": 0, "tweenMethod": "linearNone", "tween": true, "target": 24, "key": "alpha", "index": 4 }] } }], "name": "ani_go", "id": 1, "frameRate": 24, "action": 0 }] };
             return GameMainUI;
         }(View));
         game.GameMainUI = GameMainUI;
@@ -53822,7 +53806,7 @@ var ui;
                 _super.prototype.createChildren.call(this);
                 this.createView(ui.game.GameOverUI.uiView);
             };
-            GameOverUI.uiView = { "type": "View", "props": { "y": 0, "centerY": 0, "centerX": 0 }, "child": [{ "type": "Sprite", "props": { "var": "sp_bg", "alpha": 0.5 } }, { "type": "Image", "props": { "y": 10, "x": 10, "var": "img_score", "skin": "frog/score.png", "left": 20, "centerY": -240 } }, { "type": "Label", "props": { "var": "label_score", "text": "0", "left": 360, "fontSize": 100, "color": "#ffffff", "centerY": -240 } }, { "type": "Box", "props": { "visible": false, "var": "box_list", "top": 0, "right": 0, "left": 0, "bottom": 0 }, "child": [{ "type": "List", "props": { "x": 70, "width": 500, "visible": true, "var": "list", "spaceY": 20, "height": 800, "centerY": -10, "centerX": 0 }, "child": [{ "type": "Box", "props": { "y": 0, "x": 0, "width": 500, "renderType": "render", "height": 80 }, "child": [{ "type": "Label", "props": { "text": "1", "name": "label_rank", "left": 10, "fontSize": 40, "color": "#ffffff", "centerY": 0 } }, { "type": "Image", "props": { "width": 70, "skin": "frog/zha_01.png", "name": "img_head", "left": 50, "height": 70, "centerY": 0 } }, { "type": "Label", "props": { "text": "label", "name": "label_name", "left": 140, "fontSize": 40, "color": "#ffffff", "centerY": 0 } }, { "type": "Label", "props": { "text": "100", "right": 40, "name": "label_score", "fontSize": 40, "color": "#ffffff", "centerY": 0 } }] }] }] }] };
+            GameOverUI.uiView = { "type": "View", "props": { "y": 0, "centerY": 0, "centerX": 0 }, "child": [{ "type": "Sprite", "props": { "var": "sp_bg", "alpha": 0.5 } }, { "type": "Label", "props": { "var": "label_get", "text": "得分：", "left": 28, "fontSize": 110, "color": "#ffffff", "centerY": -240, "bold": true } }, { "type": "Label", "props": { "width": 157, "var": "label_score", "text": "0", "left": 350, "height": 100, "fontSize": 100, "color": "#ffffff", "centerY": -240, "align": "left" } }, { "type": "Box", "props": { "visible": false, "var": "box_list", "top": 0, "right": 0, "left": 0, "bottom": 0 }, "child": [{ "type": "List", "props": { "x": 70, "width": 500, "visible": true, "var": "list", "spaceY": 20, "height": 800, "centerY": -10, "centerX": 0 }, "child": [{ "type": "Box", "props": { "y": 0, "x": 0, "width": 500, "renderType": "render", "height": 80 }, "child": [{ "type": "Label", "props": { "text": "1", "name": "label_rank", "left": 10, "fontSize": 40, "color": "#ffffff", "centerY": 0 } }, { "type": "Image", "props": { "width": 70, "skin": "frog/tiao_01.png", "name": "img_head", "left": 50, "height": 70, "centerY": 0 } }, { "type": "Label", "props": { "text": "label", "name": "label_name", "left": 140, "fontSize": 40, "color": "#ffffff", "centerY": 0 } }, { "type": "Label", "props": { "text": "100", "right": 40, "name": "label_score", "fontSize": 40, "color": "#ffffff", "centerY": 0 } }] }] }] }] };
             return GameOverUI;
         }(View));
         game.GameOverUI = GameOverUI;
@@ -53840,7 +53824,7 @@ var ui;
                 _super.prototype.createChildren.call(this);
                 this.createView(ui.lobby.LobbyMianUI.uiView);
             };
-            LobbyMianUI.uiView = { "type": "View", "props": {}, "child": [{ "type": "Image", "props": { "top": 0, "skin": "frog/bg.png", "right": 0, "left": 0, "bottom": 0 } }, { "type": "Label", "props": { "width": 130, "var": "label_begin", "text": "开始", "fontSize": 42, "color": "#ffffff", "centerY": 0, "centerX": 0, "bold": true, "align": "center" } }] };
+            LobbyMianUI.uiView = { "type": "View", "props": {}, "child": [{ "type": "Label", "props": { "width": 130, "var": "label_begin", "text": "开始", "fontSize": 42, "color": "#ffffff", "centerY": 0, "centerX": 0, "bold": true, "align": "center" } }] };
             return LobbyMianUI;
         }(View));
         lobby.LobbyMianUI = LobbyMianUI;
@@ -53857,11 +53841,118 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var game;
+(function (game) {
+    var GameConfig = def.GameConfig;
+    var FrogJumpView = /** @class */ (function (_super) {
+        __extends(FrogJumpView, _super);
+        function FrogJumpView() {
+            var _this = _super.call(this) || this;
+            _this.inJump = false;
+            _this.pivot(0, _this.height);
+            _this.jump_small.on(Laya.Event.COMPLETE, _this, function () {
+                _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_STOP);
+                _this.playAction(FrogJumpView.ACTIONS.stand);
+                _this.x += GameConfig.SMALLSTEP;
+            });
+            _this.jump_big.on(Laya.Event.COMPLETE, _this, function () {
+                _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_STOP);
+                _this.playAction(FrogJumpView.ACTIONS.stand);
+                _this.x += GameConfig.BIGSTEP;
+            });
+            _this.stand_blast.on(Laya.Event.COMPLETE, _this, function () {
+                _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_DIE);
+            });
+            _this.jump_small_blast.on(Laya.Event.COMPLETE, _this, function () {
+                _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_DIE);
+            });
+            _this.jump_small_fall.on(Laya.Event.COMPLETE, _this, function () {
+                _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_DIE);
+            });
+            _this.jump_big_blast.on(Laya.Event.COMPLETE, _this, function () {
+                _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_DIE);
+            });
+            _this.jump_big_fall.on(Laya.Event.COMPLETE, _this, function () {
+                _this.event(FrogJumpView.ACTIONEND, FrogJumpView.EVENT_DIE);
+            });
+            return _this;
+        }
+        //设置初始位置
+        FrogJumpView.prototype.initPos = function (x, y) {
+            this.pos(x, y);
+        };
+        FrogJumpView.prototype.getRealPosX = function () {
+            return this.x + this.img_frog.x;
+        };
+        FrogJumpView.prototype.getRealPosY = function () {
+            return this.y + this.img_frog.y - this.height;
+        };
+        FrogJumpView.prototype.playAction = function (actionName) {
+            this.inJump = true;
+            if (actionName == FrogJumpView.ACTIONS.stand) {
+                this.jump_stand.play(0, false);
+                this.inJump = false;
+            }
+            else if (actionName == FrogJumpView.ACTIONS.jump_small) {
+                utl.MusicSoundTool.playSound(def.MusicConfig.CommonSound.jump);
+                this.jump_small.play(0, false);
+            }
+            else if (actionName == FrogJumpView.ACTIONS.jump_big) {
+                utl.MusicSoundTool.playSound(def.MusicConfig.CommonSound.jump);
+                this.jump_big.play(0, false);
+            }
+            else if (actionName == FrogJumpView.ACTIONS.stand_blast) {
+                utl.MusicSoundTool.playSound(def.MusicConfig.CommonSound.blast);
+                this.stand_blast.play(0, false);
+            }
+            else if (actionName == FrogJumpView.ACTIONS.jump_small_blast) {
+                this.jump_small_blast.play(0, false);
+            }
+            else if (actionName == FrogJumpView.ACTIONS.jump_small_fall) {
+                this.jump_small_fall.play(0, false);
+            }
+            else if (actionName == FrogJumpView.ACTIONS.jump_big_blast) {
+                this.jump_big_blast.play(0, false);
+            }
+            else if (actionName == FrogJumpView.ACTIONS.jump_big_fall) {
+                this.jump_big_fall.play(0, false);
+            }
+        };
+        //event
+        FrogJumpView.ACTIONEND = "actionEnd";
+        FrogJumpView.EVENT_DIE = "event_die";
+        FrogJumpView.EVENT_STOP = "event_stop";
+        FrogJumpView.ACTIONS = {
+            stand: "stand",
+            jump_small: "jump_small",
+            jump_big: "jump_big",
+            stand_blast: "stand_blast",
+            jump_small_blast: "jump_small_blast",
+            jump_small_fall: "jump_small_fall",
+            jump_big_blast: "jump_big_blast",
+            jump_big_fall: "jump_big_fall"
+        };
+        return FrogJumpView;
+    }(ui.game.FrogViewUI));
+    game.FrogJumpView = FrogJumpView;
+})(game || (game = {}));
+//# sourceMappingURL=FrogJumpView.js.map
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 //游戏主界面
 var game;
 (function (game) {
     var GameConfig = def.GameConfig;
-    var Frog = game.Frog;
+    var Frog = game.FrogJumpView;
+    var ButtonGo = kelong.ui.KButtonGO;
     var GameMainView = /** @class */ (function (_super) {
         __extends(GameMainView, _super);
         /**
@@ -53871,6 +53962,10 @@ var game;
             var _this = _super.call(this) || this;
             _this.BEGINXPOS = 180; //开始位置
             _this.COUNTDOWNNUM = 3; //倒计时时间
+            _this.roadIndex = 0; //青蛙再路上位置
+            _this.roadArray = []; //0-没有柱子，1-正常柱子，2-有刺柱子
+            _this.jumpToBlast = false; //要爆
+            _this.havePlayBlast = false;
             _this.gameStatus = 0; //游戏状态 0--暂停中，1--进行中
             _this.pillarArray = []; //柱子对象
             _this.lastStepBig = true; //上一次间隔是大间隔
@@ -53885,8 +53980,8 @@ var game;
             _this.gameMode = gameMode;
             _this.init();
             // this.start();
-            _this.img_bg.on(Laya.Event.MOUSE_DOWN, _this, _this.onMouseDown);
-            _this.img_bg.on(Laya.Event.MOUSE_UP, _this, _this.onMouseUp);
+            _this.box_control.on(Laya.Event.MOUSE_DOWN, _this, _this.onMouseDown);
+            _this.box_control.on(Laya.Event.MOUSE_UP, _this, _this.onMouseUp);
             return _this;
             // this.label_control.on("click", this, this.gameControl);
             // this.on(Event.RESIZE, this, () => {
@@ -53922,58 +54017,58 @@ var game;
                     return;
                 }
                 this.stepBig = false;
-                this.frog.jumpSmall();
+                this.score++;
+                this.label_score.changeText("分数：" + this.score);
+                this.jumpSmall();
             }
             if (angle < -Math.PI / 3 && angle > -Math.PI * 2 / 3) { //上滑动
                 if (difY > -100) {
                     return;
                 }
                 this.stepBig = true;
-                this.frog.jumbBig();
+                this.jumbBig();
+                this.score++;
+                this.label_score.changeText("分数：" + this.score);
             }
         };
-        //游戏控制
-        // gameControl() {
-        //     console.log("control...........", this.gameStatus);
-        //     if (this.gameStatus == 1) {
-        //         this.label_control.changeText("继续");
-        //         this.pause();
-        //     } else {
-        //         this.label_control.changeText("暂停");
-        //         this.continue();
-        //     }
-        // }
+        GameMainView.prototype.jumpSmall = function () {
+            this.roadIndex += 1;
+            //0-没有柱子，1-正常柱子，2-有刺柱子
+            if (this.roadArray[this.roadIndex] == 0) {
+                this.jumpToBlast = true;
+                this.frog.playAction(game.FrogJumpView.ACTIONS.jump_small_fall);
+            }
+            else if (this.roadArray[this.roadIndex] == 1) {
+                this.frog.playAction(game.FrogJumpView.ACTIONS.jump_small);
+            }
+            else {
+                this.jumpToBlast = true;
+                this.frog.playAction(game.FrogJumpView.ACTIONS.jump_small_blast);
+            }
+        };
+        GameMainView.prototype.jumbBig = function () {
+            this.roadIndex += 2;
+            //0-没有柱子，1-正常柱子，2-有刺柱子
+            if (this.roadArray[this.roadIndex] == 0) {
+                this.jumpToBlast = true;
+                this.frog.playAction(game.FrogJumpView.ACTIONS.jump_big_fall);
+            }
+            else if (this.roadArray[this.roadIndex] == 1) {
+                this.frog.playAction(game.FrogJumpView.ACTIONS.jump_big);
+            }
+            else {
+                this.jumpToBlast = true;
+                this.frog.playAction(game.FrogJumpView.ACTIONS.jump_big_blast);
+            }
+        };
         //开始
         GameMainView.prototype.start = function () {
             this.gameStatus = 1;
             Laya.timer.frameLoop(1, this, this.onLoop);
         };
-        // start() {
-        //     let countDown = this.COUNTDOWNNUM;
-        //     this.changeTime(countDown + "");
-        //     this.label_time.zOrder = 3;
-        //     this.label_time.visible = true;
-        //     Laya.timer.loop(1000, this, () => {  //倒计时
-        //         countDown--;
-        //         if (countDown < 0) {
-        //             this.gameStatus = 1;
-        //             this.label_time.visible = false;
-        //             Laya.timer.clearAll(this);
-        //             Laya.timer.frameLoop(1, this, this.onLoop);
-        //             this.label_control.visible = true;
-        //             return;
-        //         }
-        //         this.changeTime(countDown + "");
-        //         Laya.Tween.to(this.label_score, { scaleX: 1, scaleY: 1 }, 500);
-        //     });
-        // }
-        // changeTime(str) {
-        //     this.label_time.scale(2, 2);
-        //     this.label_time.changeText(str);
-        //     Laya.Tween.to(this.label_time, { scaleX: 1, scaleY: 1 }, 500);
-        // }
         //暂停
         GameMainView.prototype.pause = function () {
+            utl.MusicSoundTool.stopMusic();
             this.gameStatus = 0;
             Laya.timer.clearAll(this);
         };
@@ -53985,6 +54080,7 @@ var game;
         //游戏结束
         GameMainView.prototype.gameOver = function () {
             var _this = this;
+            this.pause();
             this.label_score.text = "";
             var oView = new game.GameOverView(this.score);
             oView.zOrder = 100;
@@ -53993,20 +54089,23 @@ var game;
             oView.on(oView.AGIN, this, function () {
                 _this.score = 0;
                 _this.playAgin();
+                _this.box_tips.visible = true;
             });
             //继续
             oView.on(oView.ADEND, this, function () {
                 _this.playAgin();
+                _this.box_tips.visible = true;
             });
         };
         //再来一局
         GameMainView.prototype.playAgin = function () {
             this.clearGame();
             this.initGoods();
-            this.start();
         };
         //清理游戏
         GameMainView.prototype.clearGame = function () {
+            this.jumpToBlast = false; //要爆
+            this.havePlayBlast = false;
             //回收柱子
             for (var i = this.pillarArray.length - 1; i > -1; i--) {
                 this.pillarArray[i].removeSelf();
@@ -54021,36 +54120,50 @@ var game;
             Laya.Pool.clearBySign(game.Pillar.PILLARTAG);
             this.destroy();
             // utl.comeToLobby();
-            var lobbyMian = new lobby.LobbyMainView;
-            Laya.stage.addChild(lobbyMian);
+            // let lobbyMian = new lobby.LobbyMainView;
+            // Laya.stage.addChild(lobbyMian);
             this.destroy();
         };
         ///////////游戏逻辑/////////////////
         //游戏初始化
         GameMainView.prototype.init = function () {
             var _this = this;
-            this.sp_tips.graphics.drawRect(0, 0, this.width, this.height, "#000000");
-            this.box_tips.on(Laya.Event.CLICK, this, function () {
-                _this.box_tips.visible = false;
-                _this.ani_go.play(0, false);
-            });
-            this.ani_go.on(Laya.Event.COMPLETE, this, function () {
-                Laya.timer.frameLoop(1, _this, _this.onLoop);
-                _this.start();
-            });
-            //云层
-            this.cloudsView = new game.CloudsView;
-            this.sp_map.addChild(this.cloudsView);
-            //远景
-            this.farView = new game.FarView;
-            this.sp_map.addChild(this.farView);
+            this.graphics.drawRect(0, 0, this.width, this.height, "#3584fb");
+            //滚动背景
+            this.bgView = new game.RepeatImageView("frog/bg.png");
+            this.bgView.pos(0, this.height - this.bgView.contentHeight);
+            this.bgView.zOrder = -99;
+            this.addChild(this.bgView);
+            //建筑景物
+            this.buildingView = new game.RepeatImageView("frog/yuanjingcen.png");
+            this.sp_map.addChild(this.buildingView);
             //水
             this.waterView = new game.WaterView;
             this.waterView.y = Laya.stage.height - this.waterView.picHeight;
             this.waterView.zOrder = this.sp_map.zOrder + 1;
             this.box_tips.zOrder = this.waterView.zOrder + 1;
             this.addChild(this.waterView);
-            this.farView.y = this.waterView.y - 209;
+            this.buildingView.y = this.waterView.y - 209;
+            this.sp_tips.graphics.drawRect(0, 0, this.width, this.height, "#000000");
+            this.sp_white.graphics.drawRect(0, 0, this.width, this.height, "#ffffff");
+            this.buttonGo = new ButtonGo("GO");
+            this.buttonGo.centerX = 0;
+            this.buttonGo.centerY = -80;
+            this.buttonGo.visible = false;
+            this.buttonGo.on(Laya.Event.CLICK, this, function () {
+                utl.MusicSoundTool.playMusic(def.MusicConfig.CommonMusic.game_bg);
+                _this.ani_go.play(0, false);
+                _this.buttonGo.visible = false;
+            });
+            this.box_tips.addChild(this.buttonGo);
+            this.box_tips.on(Laya.Event.CLICK, this, function () {
+                _this.box_labels.visible = false;
+                _this.buttonGo.visible = true;
+            });
+            this.ani_go.on(Laya.Event.COMPLETE, this, function () {
+                _this.box_tips.visible = false;
+                _this.start();
+            });
             this.initGoods();
         };
         GameMainView.prototype.initGoods = function () {
@@ -54058,14 +54171,15 @@ var game;
                 this.frog.destroy();
             }
             this.frog = new Frog;
-            this.frog.on(this.frog.ACTIONEND, this, this.frogActionOver);
+            this.roadIndex = 0;
+            this.roadArray = [];
+            this.frog.on(game.FrogJumpView.ACTIONEND, this, this.frogActionOver);
             this.sp_map.addChild(this.frog);
             this.lastXpos = this.BEGINXPOS;
             this.label_score.changeText("分数：" + this.score);
             this.gameSpeed = GameConfig.SPEED;
             this.frog.initPos(this.lastXpos, this.pillarYPos);
-            this.frog.playAnimation(Frog.ACTIONS.stand);
-            this.frog.speedX = 0;
+            this.frog.playAction(game.FrogJumpView.ACTIONS.stand);
             this.lastHaveTrap = false;
             this.pillarShowArray = (game.Pillar.getPillarShowArray(true)).array;
             this.pillarIndex = 0;
@@ -54087,6 +54201,7 @@ var game;
             }
             if (this.pillarShowArray[this.pillarIndex] == 2) { //无柱子
                 this.haveNullBefore = true;
+                this.roadArray.push(0);
             }
             else {
                 this.haveNullBefore = false;
@@ -54096,23 +54211,43 @@ var game;
                 pillar.zOrder = 1;
                 this.sp_map.addChild(pillar);
                 this.pillarArray.push(pillar);
+                if (haveTrap) {
+                    this.roadArray.push(2);
+                }
+                else {
+                    this.roadArray.push(1);
+                }
             }
             this.pillarIndex++;
         };
         //游戏循环
         GameMainView.prototype.onLoop = function () {
-            if (this.frog.inJump) {
-                this.frog.setSpeed();
-                this.frog.y -= this.frog.speedY;
+            //布景移动
+            this.waterView.run(this.gameSpeed + 0.1);
+            this.buildingView.run(this.gameSpeed - 1);
+            this.bgView.run(this.gameSpeed - 1.5);
+            this.frog.x -= this.gameSpeed;
+            var frogX = this.frog.getRealPosX();
+            //青蛙与墙壁碰撞
+            if (frogX <= 0 || frogX > this.width) {
+                if (frogX <= 0) {
+                    frogX = +27;
+                }
+                else {
+                    frogX = this.width - 27;
+                }
+                var frogY = this.frog.getRealPosY();
+                this.pause();
+                this.frog.initPos(frogX, frogY);
+                this.frog.playAction(game.FrogJumpView.ACTIONS.stand_blast);
             }
-            this.cloudsView.run(this.gameSpeed);
-            this.farView.run(this.gameSpeed - 1.5);
-            this.waterView.run(this.gameSpeed);
-            var fSpeed = this.gameSpeed - this.frog.speedX;
-            this.frog.x -= fSpeed;
-            if (this.frog.x - this.frog.width / 2 < 0 || this.frog.x + this.frog.width / 2 >= Laya.stage.width) { //撞墙
-                this.frogBlast();
-                return;
+            //要爆
+            if (this.jumpToBlast) {
+                var frogY = this.frog.getRealPosY();
+                if (frogY <= this.pillarYPos - 4 && !this.havePlayBlast) {
+                    this.havePlayBlast = true;
+                    utl.MusicSoundTool.playSound(def.MusicConfig.CommonSound.blast);
+                }
             }
             if (this.pillarArray.length) {
                 for (var i = this.pillarArray.length - 1; i > -1; i--) {
@@ -54123,57 +54258,6 @@ var game;
                         Laya.Pool.recover(game.Pillar.PILLARTAG, p);
                         this.pillarArray.shift();
                     }
-                    //青蛙与柱子的碰撞 
-                    if (this.frog.inJump) {
-                        if (this.frog.y >= this.pillarYPos && this.frog.x > p.x - p.width / 2 - this.frog.width / 2 && this.frog.x < p.x + p.width / 2) { //等于或低于柱子
-                            if (Math.abs(this.frog.x - p.x) < p.width / 2) { //落到柱子上了
-                                if (p.haveTrap) { //扎刺了
-                                    this.frogBlast();
-                                }
-                                else {
-                                    this.frog.x = p.x; //要漏一帧的速度
-                                    this.score += 1; //this.stepBig ? 2 : 1;
-                                    this.label_score.changeText("分数：" + this.score);
-                                    this.frog.playAnimation(Frog.ACTIONS.landing);
-                                    if (this.score > 10 && this.speedAddTag < 1) { //第一次加速
-                                        this.gameSpeed += 1;
-                                        this.speedAddTag++;
-                                    }
-                                    if (this.score > 30 && this.speedAddTag < 2) { //第三次加速
-                                        this.gameSpeed += 1;
-                                        this.speedAddTag++;
-                                    }
-                                    if (this.score > 50 && this.speedAddTag < 3) { //第四次加速
-                                        this.gameSpeed += 2;
-                                        this.speedAddTag++;
-                                    }
-                                    if (this.score > 80 && this.speedAddTag < 4) { //第五次加速
-                                        this.gameSpeed += 2;
-                                        this.speedAddTag++;
-                                    }
-                                    if (this.score > 100 && this.speedAddTag < 5) { //第六次加速
-                                        this.gameSpeed += 1;
-                                        this.speedAddTag++;
-                                    }
-                                    if (this.score > 120 && this.speedAddTag < 6) { //第七次加速
-                                        this.gameSpeed += 1;
-                                        this.speedAddTag++;
-                                    }
-                                    if (this.score > 150 && this.speedAddTag < 7) { //第八次加速
-                                        this.gameSpeed += 1;
-                                        this.speedAddTag++;
-                                    }
-                                    if (this.score > 200 && this.speedAddTag < 8) { //第九次加速
-                                        this.gameSpeed += 2;
-                                        this.speedAddTag++;
-                                    }
-                                }
-                            }
-                            else if (this.frog.y + this.frog.width / 2 >= this.pillarArray[i].x - this.pillarArray[i].width / 2) { //撞到柱子上了
-                                this.frogBlast();
-                            }
-                        }
-                    }
                 }
                 var lastXpos = this.pillarArray[this.pillarArray.length - 1].x;
                 if (lastXpos <= Laya.stage.width) {
@@ -54181,26 +54265,11 @@ var game;
                 }
             }
         };
-        //青蛙爆炸
-        GameMainView.prototype.frogBlast = function () {
-            this.pause();
-            this.frog.playAnimation(Frog.ACTIONS.blast);
-        };
         //青蛙动作结束
-        GameMainView.prototype.frogActionOver = function (actionName) {
-            if (actionName == Frog.ACTIONS.stand) { //静止
+        GameMainView.prototype.frogActionOver = function (eventName) {
+            if (eventName == game.FrogJumpView.EVENT_STOP) {
             }
-            else if (actionName == Frog.ACTIONS.flyUp) { //起跳
-            }
-            else if (actionName == Frog.ACTIONS.jump) { //起飞
-            }
-            else if (actionName == Frog.ACTIONS.upToDown) { //上升变下降
-            }
-            else if (actionName == Frog.ACTIONS.flyDown) { //下降
-            }
-            else if (actionName == Frog.ACTIONS.landing) { //落地
-            }
-            else if (actionName == Frog.ACTIONS.blast) { //爆炸
+            else if (eventName == game.FrogJumpView.EVENT_DIE) {
                 this.frog.visible = false;
                 this.gameOver();
             }
@@ -54223,8 +54292,8 @@ var __extends = (this && this.__extends) || (function () {
 var game;
 (function (game) {
     var Sprite = Laya.Sprite;
-    var KButton = kelong.ui.KButton;
     var KLabelButton = kelong.ui.KLabelButton;
+    var KColorButton = kelong.ui.KColorButton;
     var GameOverView = /** @class */ (function (_super) {
         __extends(GameOverView, _super);
         function GameOverView(socre) {
@@ -54244,14 +54313,14 @@ var game;
             _this.box_list.addChild(ok);
             ok.on(Laya.Event.CLICK, _this, function () {
                 _this.box_list.visible = false;
-                _this.img_score.visible = true;
+                _this.label_get.visible = true;
                 _this.label_score.visible = true;
                 _this.btn_ad.visible = true;
                 _this.btn_rank.visible = true;
                 _this.btn_agin.visible = true;
             });
             //广告
-            _this.btn_ad = new KButton("frog/bt_ad.png");
+            _this.btn_ad = new KColorButton("广告续命");
             _this.btn_ad.centerX = 0;
             _this.btn_ad.centerY = -80;
             _this.addChild(_this.btn_ad);
@@ -54259,7 +54328,7 @@ var game;
                 _this.adOperator();
             });
             //排行
-            _this.btn_rank = new KButton("frog/bt_rank.png");
+            _this.btn_rank = new KColorButton("排行总榜");
             _this.btn_rank.centerX = 0;
             _this.btn_rank.centerY = 40;
             _this.addChild(_this.btn_rank);
@@ -54267,7 +54336,7 @@ var game;
                 _this.showRank();
             });
             //再来一把
-            _this.btn_agin = new KButton("frog/bt_rank.png");
+            _this.btn_agin = new KColorButton("再来一盘");
             _this.btn_agin.centerX = 0;
             _this.btn_agin.centerY = 160;
             _this.addChild(_this.btn_agin);
@@ -54286,7 +54355,7 @@ var game;
         };
         //排行榜
         GameOverView.prototype.showRank = function () {
-            this.img_score.visible = false;
+            this.label_get.visible = false;
             this.label_score.visible = false;
             this.btn_ad.visible = false;
             this.btn_rank.visible = false;
@@ -54418,6 +54487,60 @@ var game;
 (function (game) {
     var Sprite = Laya.Sprite;
     var Image = Laya.Image;
+    var RepeatImageView = /** @class */ (function (_super) {
+        __extends(RepeatImageView, _super);
+        function RepeatImageView(pic) {
+            var _this = _super.call(this) || this;
+            _this.contentHeight = 0;
+            _this.source = pic;
+            _this.init();
+            return _this;
+        }
+        RepeatImageView.prototype.init = function () {
+            var _this = this;
+            this.img1 = new Image(this.source);
+            this.img1.x = 0;
+            this.addChild(this.img1);
+            this.contentHeight = this.img1.height;
+            this.img2 = new Image(this.source);
+            this.img2.anchorX = 1;
+            this.img2.scaleX = -1;
+            this.addChild(this.img2);
+            this.img2.x = this.img1.x + this.img1.width;
+            this.img1.on(Laya.Event.LOADED, this, function () {
+                _this.contentHeight = _this.img1.height;
+                _this.img2.x = _this.img1.x + _this.img1.width;
+            });
+        };
+        RepeatImageView.prototype.run = function (rate) {
+            if (this.img1.x + this.img1.width < -1) {
+                this.img1.x = this.img2.x + this.img2.width;
+            }
+            if (this.img2.x + this.img2.width < -1) {
+                this.img2.x = this.img1.x + this.img1.width;
+            }
+            this.img1.x -= rate;
+            this.img2.x -= rate;
+        };
+        return RepeatImageView;
+    }(Sprite));
+    game.RepeatImageView = RepeatImageView;
+})(game || (game = {}));
+//# sourceMappingURL=RepeatImageView.js.map
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var game;
+(function (game) {
+    var Sprite = Laya.Sprite;
+    var Image = Laya.Image;
     var WaterView = /** @class */ (function (_super) {
         __extends(WaterView, _super);
         function WaterView() {
@@ -54473,12 +54596,54 @@ var __extends = (this && this.__extends) || (function () {
 var lobby;
 (function (lobby) {
     var GameMainView = game.GameMainView;
+    var FrogJumpView = game.FrogJumpView;
+    var ViewColor = kelong.ui.ViewColor;
+    var Weixin = utl.WeiXin;
     var LobbyMainView = /** @class */ (function (_super) {
         __extends(LobbyMainView, _super);
         function LobbyMainView() {
             var _this = _super.call(this) || this;
+            _this.index = 0;
             _this.size(Laya.stage.width, Laya.stage.height);
-            _this.label_begin.on(Laya.Event.CLICK, _this, _this.beginGame);
+            _this.color = "3584fb";
+            // label_begin
+            _this.on(Laya.Event.CLICK, _this, _this.beginGame);
+            Weixin.login();
+            var frog1 = new game.FrogJumpView;
+            _this.addChild(frog1);
+            frog1.x = 200;
+            frog1.y = 200;
+            frog1.playAction(FrogJumpView.ACTIONS.stand);
+            var b = new Laya.Box;
+            b.size(Laya.stage.width, Laya.stage.height);
+            _this.addChild(b);
+            b.on(Laya.Event.CLICK, _this, function () {
+                console.log("mmmmmmm", "yyyyyyyyyyyy" + _this.index);
+                _this.index++;
+                switch (_this.index) {
+                    case 0:
+                        frog1.playAction(FrogJumpView.ACTIONS.stand);
+                        break;
+                    case 1:
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_small);
+                        break;
+                    case 2:
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_big);
+                        break;
+                    case 3:
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_small_blast);
+                        break;
+                    case 4:
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_small_fall);
+                        break;
+                    case 5:
+                        frog1.playAction(FrogJumpView.ACTIONS.jump_big_blast);
+                        break;
+                    case 6:
+                        _this.index = 0;
+                        break;
+                }
+            });
             return _this;
         }
         LobbyMainView.prototype.beginGame = function () {
@@ -54487,11 +54652,11 @@ var lobby;
             this.destroy();
         };
         return LobbyMainView;
-    }(ui.lobby.LobbyMianUI));
+    }(ViewColor));
     lobby.LobbyMainView = LobbyMainView;
 })(lobby || (lobby = {}));
 //# sourceMappingURL=LobbyMainView.js.map
-// import LobbyView = lobby.LobbyMainView;
+var LobbyView = lobby.LobbyMainView;
 var GameMainView = game.GameMainView;
 var Stage = Laya.Stage;
 //初始化微信小游戏
@@ -54507,9 +54672,9 @@ Laya.stage.screenMode = Stage.SCREEN_VERTICAL;
 var asset = def.SourceConfig.lobbySource.concat(def.SourceConfig.gameSource);
 Laya.loader.load(asset, new Laya.Handler(this, function () {
     asset = null;
-    // let lobby = new LobbyView;
-    // Laya.stage.addChild(lobby);
-    var game = new GameMainView(def.GAMEMODE.MODE1);
-    Laya.stage.addChild(game);
+    var lobby = new LobbyView;
+    Laya.stage.addChild(lobby);
+    // let game = new GameMainView(def.GAMEMODE.MODE1);
+    // Laya.stage.addChild(game);
 }));
 //# sourceMappingURL=main.js.map

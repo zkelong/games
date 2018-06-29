@@ -12,13 +12,18 @@ var lobby;
 (function (lobby) {
     var GameMainView = game.GameMainView;
     var FrogJumpView = game.FrogJumpView;
+    var ViewColor = kelong.ui.ViewColor;
+    var Weixin = utl.WeiXin;
     var LobbyMainView = /** @class */ (function (_super) {
         __extends(LobbyMainView, _super);
         function LobbyMainView() {
             var _this = _super.call(this) || this;
             _this.index = 0;
             _this.size(Laya.stage.width, Laya.stage.height);
-            _this.label_begin.on(Laya.Event.CLICK, _this, _this.beginGame);
+            _this.color = "3584fb";
+            // label_begin
+            _this.on(Laya.Event.CLICK, _this, _this.beginGame);
+            Weixin.login();
             var frog1 = new game.FrogJumpView;
             _this.addChild(frog1);
             frog1.x = 200;
@@ -62,7 +67,7 @@ var lobby;
             this.destroy();
         };
         return LobbyMainView;
-    }(ui.lobby.LobbyMianUI));
+    }(ViewColor));
     lobby.LobbyMainView = LobbyMainView;
 })(lobby || (lobby = {}));
 //# sourceMappingURL=LobbyMainView.js.map
