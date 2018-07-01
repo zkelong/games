@@ -3,10 +3,10 @@ var def;
     var GameConfig = /** @class */ (function () {
         function GameConfig() {
         }
-        GameConfig.SPEED = 2; //1;
-        GameConfig.BIGSTEP = 400;
-        GameConfig.SMALLSTEP = 200;
-        GameConfig.PILLARWIDTH = 200;
+        GameConfig.SPEED = 3;
+        GameConfig.BIGSTEP = 320;
+        GameConfig.SMALLSTEP = 160;
+        GameConfig.PILLARWIDTH = 160;
         return GameConfig;
     }());
     def.GameConfig = GameConfig;

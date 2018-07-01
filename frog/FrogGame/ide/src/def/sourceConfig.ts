@@ -6,8 +6,9 @@ namespace def {
         ];
         //游戏资源
         static gameSource = [
-            { url: "res/atlas/frog.json", type: Laya.Loader.ATLAS },
-            { url: "frog/zhuzi.png", type: Laya.Loader.IMAGE },
+            { url: "res/atlas/frog.atlas", type: Laya.Loader.ATLAS },
+            { url: "frog/yuanjingcen.png", type: Laya.Loader.IMAGE },
+            { url: "frog/yun.png", type: Laya.Loader.IMAGE },
         ];
     }
 }

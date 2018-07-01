@@ -20,17 +20,22 @@ var game;
         function Pillar() {
             var _this = _super.call(this) || this;
             _this.haveTrap = false;
-            var t = Laya.loader.getRes("frog/zhuzi.png");
-            _this.graphics.drawTexture(t, 0, 0, GameConfig.PILLARWIDTH, Laya.stage.height / 2);
             _this.size(GameConfig.PILLARWIDTH, Laya.stage.height / 2);
             _this.pivot(_this.width / 2, 0);
             _this.trap = new Sprite();
             var ttrap = Laya.loader.getRes("frog/xianjing.png");
-            var ttH = GameConfig.PILLARWIDTH * 0.21;
-            _this.trap.graphics.drawTexture(ttrap, 0, 0, GameConfig.PILLARWIDTH, ttH);
+            var trapWidth = GameConfig.PILLARWIDTH - 10;
+            var ttH = trapWidth * 0.31;
+            _this.trap.graphics.drawTexture(ttrap, 0, 0, trapWidth, ttH);
             _this.trap.size(GameConfig.PILLARWIDTH, ttH);
-            _this.trap.pos(0, -ttH);
+            _this.trap.pos(5, -ttH + 25);
             _this.addChildren(_this.trap);
+            // this.trap = new Image("frog/xianjing.png")
+            var p = new Sprite;
+            var t = Laya.loader.getRes("frog/zhuzi.png");
+            p.graphics.drawTexture(t, 0, 0, GameConfig.PILLARWIDTH, Laya.stage.height / 2);
+            p.pos(0, 0);
+            _this.addChild(p);
             return _this;
         }
         Pillar.prototype.init = function (x, y, haveTrap) {
@@ -55,7 +60,7 @@ var game;
                 if (idx == Pillar.NEXTARRAY.length) {
                     idx--;
                 }
-                if (idx == idx) { //跟上一组一样了
+                if (idx == idx) {
                     idx = idx == Pillar.NEXTARRAY.length - 1 ? 0 : idx + 1;
                 }
                 return {
