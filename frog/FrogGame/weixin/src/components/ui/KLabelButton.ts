@@ -3,9 +3,11 @@ namespace kelong.ui {
     import Event = Laya.Event;
 
     export class KLabelButton extends Label {
-        constructor(txt) {
+        constructor(txt, fontSize) {
             super();
             this.text = txt;
+            this.font = "Microsoft YaHei";
+            this.fontSize = fontSize;
             this.on(Event.MOUSE_OUT, this, () => {
                 this.scale(1, 1);
             });

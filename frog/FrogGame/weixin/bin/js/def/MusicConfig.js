@@ -4,12 +4,22 @@ var def;
     (function (MusicConfig) {
         //通用音效url
         MusicConfig.CommonMusic = {
-            game_bg: "music/beijin.mp3"
+            game_bg: "beijin"
         };
         MusicConfig.CommonSound = {
-            blast: "music/did.mp3",
-            jump: "music/jump.mp3" //跳
+            blast: "did",
+            jump: "jump",
+            eat: "eat" //吃金币
         };
+        function initMusic(type) {
+            for (var m in MusicConfig.CommonMusic) {
+                MusicConfig.CommonMusic[m] = "music/" + type + "/" + MusicConfig.CommonMusic[m] + "." + type;
+            }
+            for (var m in MusicConfig.CommonSound) {
+                MusicConfig.CommonSound[m] = "music/" + type + "/" + MusicConfig.CommonSound[m] + "." + type;
+            }
+        }
+        MusicConfig.initMusic = initMusic;
     })(MusicConfig = def.MusicConfig || (def.MusicConfig = {}));
 })(def || (def = {}));
 //# sourceMappingURL=MusicConfig.js.map

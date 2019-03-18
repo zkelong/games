@@ -38,8 +38,6 @@
     <script type="text/javascript" src="libs/laya.tiledmap.js"></script>
 	<!--提供了制作UI的各种组件实现-->
     <script type="text/javascript" src="libs/laya.ui.js"></script>
-	<!-- 微信sdk -->
-    <script type="text/javascript" src="libs/weixin/jweixin-1.2.0.js"></script>
 	<!-- 物理引擎matter.js -->
 	<!--用户自定义顺序文件添加到这里-->
 	<!--jsfile--Custom-->
@@ -48,16 +46,21 @@
 	<!--自定义的js(src文件夹下)文件自动添加到下面jsfile模块标签里面里-->
 	<!--删除标签，ide不会自动添加js文件，请谨慎操作-->
 	<!--jsfile--startTag-->
-	<script src="js/utl/WeiXinOp.js"></script>
 	<script src="js/utl/utl.js"></script>
+	<script src="js/utl/ThirdSdk.js"></script>
 	<script src="js/utl/MusicSoundTool.js"></script>
+	<script src="js/utl/AppInit.js"></script>
+	<script src="js/def/UserInfo.js"></script>
 	<script src="js/def/Type.js"></script>
 	<script src="js/def/SourceConfig.js"></script>
 	<script src="js/def/MusicConfig.js"></script>
+	<script src="js/def/LanguageConfig.js"></script>
 	<script src="js/def/GameConfig.js"></script>
 	<script src="js/components/ui/KButtonGo.js"></script>
 	<script src="js/components/ui/KColorButton.js"></script>
 	<script src="js/components/ui/KLabelButton.js"></script>
+	<script src="js/components/ui/ViewColor.js"></script>
+	<script src="js/game/AdLoadingView.js"></script>
 	<script src="js/ui/layaUI.max.all.js"></script>
 	<script src="js/game/FrogJumpView.js"></script>
 	<script src="js/game/GameMainView.js"></script>
@@ -65,7 +68,10 @@
 	<script src="js/game/Pillar.js"></script>
 	<script src="js/game/RepeatImageView.js"></script>
 	<script src="js/game/WaterView.js"></script>
+	<script src="js/lobby/LoadingView.js"></script>
 	<script src="js/lobby/LobbyMainView.js"></script>
+	<script src="js/lobby/LogoView.js"></script>
+	<script src="js/lobby/TipDialog.js"></script>
 	<!--jsfile--endTag-->
 
 	<!--启动类添加到这里-->

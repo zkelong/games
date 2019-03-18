@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":1,
-    "selecteID":27,
+    "selectedBox":16,
+    "selecteID":16,
     "props":{"sceneWidth":640,"sceneHeight":960,"sceneColor":"#000000"},
     "nodeParent":-1,
     "label":"View",
@@ -43,9 +43,9 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"skin":"frog/yun.png"},
+            "props":{"visible":false,"var":"img_clound","skin":"frog/yun.png"},
             "nodeParent":1,
-            "label":"Image",
+            "label":"Image(img_clound)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -69,7 +69,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"visible":false,"var":"label_control","top":50,"text":"暂停","left":60,"fontSize":46,"color":"#ffffff","bold":true},
+            "props":{"visible":false,"var":"label_control","top":50,"text":"暂停","left":60,"fontSize":46,"font":"黑体","color":"#ffffff","bold":true},
             "nodeParent":1,
             "label":"Label(label_control)",
             "isDirectory":false,
@@ -97,17 +97,30 @@
         },
         {
             "x":15,
-            "type":"Label",
-            "props":{"var":"label_score","top":50,"text":"分数：0","left":60,"fontSize":46,"color":"#3370ff","bold":true,"align":"left"},
+            "type":"Image",
+            "props":{"width":220,"top":60,"skin":"frog/rectBg.png","left":20,"height":60},
             "nodeParent":1,
-            "label":"Label(label_score)",
-            "isDirectory":false,
+            "label":"Image",
+            "isOpen":true,
+            "isDirectory":true,
             "isAniNode":true,
-            "hasChild":false,
-            "compId":6,
+            "hasChild":true,
+            "compId":28,
             "child":[
-                ],
-            "$LOCKED":true
+                {
+                    "x":30,
+                    "type":"Label",
+                    "props":{"var":"label_score","left":16,"fontSize":36,"font":"黑体","color":"#ffffff","centerY":0,"bold":true,"align":"left"},
+                    "nodeParent":28,
+                    "label":"Label(label_score)",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":6,
+                    "child":[
+                        ],
+                    "$LOCKED":true
+                }]
         },
         {
             "x":15,
@@ -176,9 +189,9 @@
                         {
                             "x":45,
                             "type":"Label",
-                            "props":{"y":-115,"x":-76,"text":"滑动操作","fontSize":50,"color":"#ffffff","centerY":-200,"centerX":0,"bold":true},
+                            "props":{"y":-115,"x":-76,"var":"label_op1","fontSize":50,"font":"黑体","color":"#ffffff","centerY":-200,"centerX":0,"bold":true},
                             "nodeParent":23,
-                            "label":"Label",
+                            "label":"Label(label_op1)",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
@@ -190,9 +203,9 @@
                         {
                             "x":45,
                             "type":"Label",
-                            "props":{"y":-115,"x":-76,"text":"向右小跳","fontSize":50,"color":"#ffffff","centerY":-100,"centerX":0,"bold":true},
+                            "props":{"y":-115,"x":-76,"var":"label_opRight","fontSize":50,"font":"黑体","color":"#ffffff","centerY":-100,"centerX":0,"bold":true},
                             "nodeParent":23,
-                            "label":"Label",
+                            "label":"Label(label_opRight)",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
@@ -204,9 +217,9 @@
                         {
                             "x":45,
                             "type":"Label",
-                            "props":{"y":-115,"x":-76,"text":"向上大跳","fontSize":50,"color":"#ffffff","centerY":0,"centerX":0,"bold":true},
+                            "props":{"y":-115,"x":-76,"var":"label_opUp","fontSize":50,"font":"黑体","color":"#ffffff","centerY":0,"centerX":0,"bold":true},
                             "nodeParent":23,
-                            "label":"Label",
+                            "label":"Label(label_opUp)",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
@@ -218,9 +231,9 @@
                         {
                             "x":45,
                             "type":"Label",
-                            "props":{"y":-115,"x":-76,"text":"非常简单","fontSize":50,"color":"#ffffff","centerY":100,"centerX":0,"bold":true},
+                            "props":{"y":-115,"x":-76,"var":"label_opEasy","fontSize":50,"font":"黑体","color":"#ffffff","centerY":100,"centerX":0,"bold":true},
                             "nodeParent":23,
-                            "label":"Label",
+                            "label":"Label(label_opEasy)",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
@@ -232,9 +245,9 @@
                         {
                             "x":45,
                             "type":"Label",
-                            "props":{"y":-115,"x":-76,"text":"点击屏幕开始游戏","fontSize":42,"color":"#ffffff","centerX":0,"bottom":140},
+                            "props":{"y":-115,"x":-76,"var":"label_opClick","fontSize":42,"font":"黑体","color":"#ffffff","centerX":0,"bottom":140},
                             "nodeParent":23,
-                            "label":"Label",
+                            "label":"Label(label_opClick)",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
@@ -297,6 +310,14 @@
                 }],
             "name":"ani_go",
             "id":1,
+            "frameRate":24,
+            "action":0
+        },
+        {
+            "nodes":[
+                ],
+            "name":"ani_play",
+            "id":2,
             "frameRate":24,
             "action":0
         }]

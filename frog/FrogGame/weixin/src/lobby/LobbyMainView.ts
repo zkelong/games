@@ -1,70 +1,294 @@
 namespace lobby {
     import GameMainView = game.GameMainView;
-    import FrogJumpView = game.FrogJumpView;
-    export class LobbyMainView extends ui.lobby.LobbyMianUI {
+    import Frog = ui.game.FrogJumpUI;
+    import ViewColor = kelong.ui.ViewColor;
+    import Image = Laya.Image;
+    import Label = Laya.Label;
+    import Event = Laya.Event;
+    import Browser = Laya.Browser;
+    import Storage = laya.net.LocalStorage;
+    import KColorButton = kelong.ui.KColorButton;
+    import LangConfig = def.LanguageConfig;
+    
+    export class LobbyMainView extends ViewColor {
 
         index = 0;
+        label_loading: Label;
+        button: Image;
+        ha: Image;
+        setBtn: KColorButton;
+        rank: Label;
+        tip: Image;
+
         constructor() {
             super();
+            this.color = "#3584fb";
             this.size(Laya.stage.width, Laya.stage.height);
-            this.label_begin.on(Laya.Event.CLICK, this, this.beginGame);
-
-
-            if(wx) {
-            var bodyConfig: BodyConfig = new BodyConfig();
-            // bodyConfig.appId = "gh_0e3372b7e621";
-            // bodyConfig.debug = true;
-            /// ... 其他的配置属性赋值
-            /// 通过config接口注入权限验证配置
-                wx.config(bodyConfig);
-                wx.ready(function() {
-                /// 在这里调用微信相关功能的 API
-                });
-            }
-
-            let frog1 = new game.FrogJumpView;
-            this.addChild(frog1);
-            frog1.x = 200;
-            frog1.y = 200;
-            frog1.playAction(FrogJumpView.ACTIONS.stand)
-
-            let b = new Laya.Box;
-            b.size(Laya.stage.width, Laya.stage.height);
-            this.addChild(b);
+            this.graphics.drawRect(0, 0, this.width, this.height, this.color);
             
-            b.on(Laya.Event.CLICK, this, () => {
-                console.log("mmmmmmm", "yyyyyyyyyyyy" + this.index);
-                this.index++;
-                switch (this.index) {
-                    case 0:
-                        frog1.playAction(FrogJumpView.ACTIONS.stand)
-                        break;
-                    case 1:
-                        frog1.playAction(FrogJumpView.ACTIONS.jump_small)
-                        break;
-                    case 2:
-                        frog1.playAction(FrogJumpView.ACTIONS.jump_big)
-                        break;
-                    case 3:
-                        frog1.playAction(FrogJumpView.ACTIONS.jump_small_blast)
-                        break;
-                    case 4:
-                        frog1.playAction(FrogJumpView.ACTIONS.jump_small_fall)
-                        break;
-                    case 5:
-                        frog1.playAction(FrogJumpView.ACTIONS.jump_big_blast)
-                        break;
-                    case 6:
-                        this.index = 0;
-                        break;
+            this.getMyScore();
+            this.initView();
+            this.getAuthorize();
+            this.loadSomeAnimation();
+        }
+        
+        //加载一些游戏中要使用的动画，生成模板
+        loadSomeAnimation() {
+            let anis = def.SourceConfig.animationSource;
+            for (let ani in anis) {
+                let animation = new Laya.Animation();
+                animation.loadAnimation(anis[ani], Laya.Handler.create(this, () => {                    
+                }));
+            }
+        }
+
+        initView() {
+            //背景
+            let bg = new Image("frog/bg.png");
+            bg.bottom = 0;
+            bg.width = this.width;
+            this.addChild(bg);
+            this.ha = new Image();
+            this.ha.skin = def.getSource("ha.png");
+            this.ha.bottom = 0;
+            let rate = this.width/this.ha.width;
+            this.ha.scale(rate, rate);
+            this.addChild(this.ha);
+            //语言切换
+            let langStr = def.getLanguageStr(def.LanguageConfig.Keys.LANGUAGE);
+            //语言设置
+            // this.setBtn = new KColorButton(100, 50, 25, "#e6755b", langStr);
+            // this.setBtn.top = 100;
+            // this.setBtn.right = 30;
+            // this.setBtn.on(Event.CLICK, this, ()=>{
+            //     let value = "ch";
+            //     if(LangConfig.Lang == LangConfig.Langs.ch) {
+            //         value = "en";
+            //     }
+            //     Storage.setItem("language", value);
+            //     // Browser.window.location.reload(); //重启(bug)
+            //     LangConfig.Lang = value;
+            //     this.setLanguage();
+            // });
+            // this.addChild(this.setBtn);
+
+            this.showTip();
+            
+            this.button = new Image();
+            this.button.skin = def.getSource("button_begin.png");
+            this.button.anchorX=0.5
+            this.button.anchorY=0.5
+            this.button.centerX = 0;
+            this.button.y = this.ha.height * 0.36
+            this.ha.addChild(this.button);
+            this.button.on(Event.MOUSE_OUT, this, () => {
+                this.button.scale(1, 1);
+            });
+            this.button.on(Event.MOUSE_DOWN, this, () =>{
+                this.button.scale(0.9, 0.9);
+            });
+            this.button.on(Event.MOUSE_UP, this, () => {
+                this.button.scale(1, 1);
+            });
+            this.button.on(Event.CLICK, this, this.beginGame);
+
+            let frog = new Frog;
+            frog.centerX = 0;
+            frog.y = this.button.y - 240;
+            frog.scale(2.5,2.5);
+            frog.jump.play(0, true);
+            this.ha.addChild(frog);
+
+            this.label_loading = new Label;
+            this.label_loading.text = def.getLanguageStr(LangConfig.Keys.LOADING);
+            this.label_loading.font = "黑体"
+            this.label_loading.bold = true;
+            this.label_loading.color = "#e6755b";
+            this.label_loading.centerX = 0;
+            this.label_loading.y = this.button.y + 20;
+            this.label_loading.fontSize = 40;
+            this.ha.addChild(this.label_loading);
+
+            this.showAd();
+        }
+
+        showTip() {
+            utl.ThirdSdk.showTip(this);
+            // if(def.GameConfig.MYSCORE > 0) {
+            //     this.tip = new Image("frog/img_tip.png");
+            //     this.tip.top = 0;
+            //     this.tip.centerX = 0;
+            //     this.tip.width = 490;
+            //     if(def.LanguageConfig.Lang == def.LanguageConfig.Langs.en) {
+            //         this.tip.width = 520;
+            //     }
+            //     this.addChild(this.tip);
+            //     let str = def.getLanguageStr(LangConfig.Keys.RANK) + this.getRanck() + def.getLanguageStr(LangConfig.Keys.RANK1);
+            //     this.rank = new Label(str);
+            //     this.rank.font = "黑体";
+            //     this.rank.fontSize = 24;
+            //     this.rank.color = "#ffffff";
+            //     this.rank.centerX = 0;
+            //     this.rank.centerY = 0;
+            //     this.tip.addChild(this.rank);
+            // }
+        }
+
+        //获取用户信息
+        getAuthorize() {
+            utl.ThirdSdk.authorize(()=>{ //调用成功
+                this.getUserInfo()
+            }, ()=> { //调用失败
+                let ask = new TipDialog;
+                ask.setTip(def.getLanguageStr(def.LanguageConfig.Keys.OPEN_AUTHORIZE));
+                ask.on(ask.EVENTSURE, this, ()=>{ //打开授权设置
+                    utl.ThirdSdk.openSetting(()=> { //成功
+                        this.getUserInfo()
+                    }, ()=> {   //失败
+                        let over = new TipDialog;
+                        over.setTip(def.getLanguageStr(def.LanguageConfig.Keys.RESTARTgAME));
+                        over.popup(true);
+                    });
+                });
+                ask.popup(true);
+            });
+        }
+
+        //获取用户信息，分数
+        getUserInfo() {
+            utl.ThirdSdk.getUserInfo((userInfo)=>{
+                def.UserInfo.init(userInfo);
+            });
+            utl.ThirdSdk.getScore((data)=>{
+                // def.UserInfo.setScore(data)
+            });
+            utl.ThirdSdk.getFriendsInfo((data)=>{
+                // def.UserInfo.setFriendsInfo(data)
+            });
+            //分享监听
+            utl.ThirdSdk.shareInit();
+        }
+
+        showAd() {
+            //广告加载后方可进入游戏          
+            this.label_loading.visible = true;
+            this.button.visible = false;
+            utl.ThirdSdk.bannerAD(true, (json)=>{
+                console.log("======>>>>>> bannerAd back : " + json);
+                let val = JSON.parse(json);
+                console.log(val.ret);
+                this.label_loading.visible = false;
+                this.button.visible = true;
+            })
+
+            //3秒后可以进入游戏
+            let countDown = 3;
+            Laya.timer.loop(1000, this, () => {  //倒计时
+                countDown--;
+                if (countDown < 0) {
+                    Laya.timer.clearAll(this);
+                    this.label_loading.visible = false;
+                    this.button.visible = true;
                 }
             });
         }
 
         beginGame() {
+            utl.ThirdSdk.bannerAD(false, (json)=>{
+                console.log("======>>>>>> bannerAd back : ", json);
+            });
             let game = new GameMainView(def.GAMEMODE.MODE1);
             Laya.stage.addChild(game);
             this.destroy();
+        }
+
+        getMyScore() {
+            let score = Storage.getItem("score");
+            if(score != null && score != "") {
+                def.GameConfig.MYSCORE = parseInt(score);
+            }
+        }
+
+        setView() {
+            this.ha.skin = def.getSource("ha.png");
+
+            if(def.GameConfig.MYSCORE > 0) {
+                this.tip.width = 490;
+                if(def.LanguageConfig.Lang == def.LanguageConfig.Langs.en) {
+                    this.tip.width = 520;
+                }
+                this.rank.text = def.getLanguageStr(LangConfig.Keys.RANK) + this.getRanck() + def.getLanguageStr(LangConfig.Keys.RANK1);
+            }
+            
+            this.button.skin = def.getSource("button_begin.png");
+            this.setBtn.setLabel(def.getLanguageStr(def.LanguageConfig.Keys.LANGUAGE));
+            this.label_loading.text = def.getLanguageStr(LangConfig.Keys.LOADING);
+        }
+
+        setLanguage() {
+            let lanSource = def.SourceConfig.gameSourceEn;
+            let nenSource = def.SourceConfig.gameSourceCh;
+            if (LangConfig.Lang == LangConfig.Langs.en) {
+                lanSource = def.SourceConfig.gameSourceCh;
+                nenSource = def.SourceConfig.gameSourceEn;
+            }
+            let logo = new LogoView;
+            this.addChild(logo);
+            for (let i = 0; i < lanSource.length; ++i) {
+                Laya.loader.clearRes(lanSource[i].url);
+            }
+            Laya.loader.load(nenSource, new Laya.Handler(this, () => {
+                nenSource = null;
+                this.setView();
+                this.showAd();
+                logo.removeSelf();
+                logo.destroy();
+            }));
+        }
+
+        getRanck() {
+            // let now = new Date().getTime();
+            // let begin = new Date("2018.7.1").getTime();
+            // let difDays = Math.floor((now - begin)/(1000*60*60*24));
+            let myScore = def.GameConfig.MYSCORE;
+            let maxScore = 200;  //设计一个区间
+            let begin = 0;
+            let add = 0;
+            if(myScore > 150) {
+                begin = 99;
+            } else if(myScore > 120) {
+                begin = 90;
+                add = (myScore - 120) * 9 / (150-120)
+            } else if(myScore > 100) {
+                begin = 84;
+                add = (myScore - 100) * 6 / (120-100)
+            } else if(myScore > 90) {
+                begin = 76;
+                add = (myScore - 90) * 8 / (100-90)
+            } else if(myScore > 80) {
+                begin = 70;
+                add = (myScore - 80) * 6 / (90-80)
+            } else if(myScore > 70) {
+                begin = 60;
+                add = (myScore - 70) * 10 / (80-70)
+            } else if(myScore > 60){
+                begin = 40;
+                add = (myScore - 60) * 20 / (70-60)
+            } else if(myScore > 40) {
+                begin = 20;
+                add = (myScore - 40) * 20 / (60-40);
+            } else if(myScore > 20) {
+                begin = 8;
+                add = (myScore - 20) * 12 / (40-20);
+            } else if(myScore > 10) {
+                begin = 3;
+                add = (myScore - 10) * 10 / (20-10)
+            } else if(myScore > 0){
+                begin = 1
+            } else {
+                begin = 0;
+            }
+            return Math.floor(begin + add) + "%";
         }
     }
 }

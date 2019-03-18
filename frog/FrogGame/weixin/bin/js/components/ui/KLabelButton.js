@@ -16,9 +16,11 @@ var kelong;
         var Event = Laya.Event;
         var KLabelButton = /** @class */ (function (_super) {
             __extends(KLabelButton, _super);
-            function KLabelButton(txt) {
+            function KLabelButton(txt, fontSize) {
                 var _this = _super.call(this) || this;
                 _this.text = txt;
+                _this.font = "Microsoft YaHei";
+                _this.fontSize = fontSize;
                 _this.on(Event.MOUSE_OUT, _this, function () {
                     _this.scale(1, 1);
                 });

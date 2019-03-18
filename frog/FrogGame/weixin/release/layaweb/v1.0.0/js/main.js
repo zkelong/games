@@ -1,6 +1,10 @@
-// import LobbyView = lobby.LobbyMainView;
-var GameMainView = game.GameMainView;
+var LogoView = lobby.LogoView;
+var LobbyMain = lobby.LobbyMainView;
 var Stage = Laya.Stage;
+var AppInit = utl.AppInit;
+var LangConfig = def.LanguageConfig;
+//初始化微信小游戏
+Laya.MiniAdpter.init();
 Laya.init(640, 960, Laya.WebGL);
 // 设置适配模式
 Laya.stage.scaleMode = Stage.SCALE_FIXED_WIDTH;
@@ -9,12 +13,15 @@ Laya.stage.alignH = Stage.ALIGN_CENTER;
 Laya.stage.screenMode = Stage.SCREEN_VERTICAL;
 //显示FPS
 // Laya.Stat.show(0, 50);
-var asset = def.SourceConfig.lobbySource.concat(def.SourceConfig.gameSource);
+AppInit.init();
+var lanSource = def.SourceConfig.gameSourceCh;
+// if (LangConfig.Lang == LangConfig.Langs.en) {
+//     lanSource = def.SourceConfig.gameSourceEn;
+// }
+var asset = def.SourceConfig.lobbySource.concat(def.SourceConfig.gameSourceCommon).concat(lanSource);
 Laya.loader.load(asset, new Laya.Handler(this, function () {
     asset = null;
-    // let lobby = new LobbyView;
-    // Laya.stage.addChild(lobby);
-    var game = new GameMainView(def.GAMEMODE.MODE1);
-    Laya.stage.addChild(game);
+    var lobby = new LobbyMain;
+    Laya.stage.addChild(lobby);
 }));
 //# sourceMappingURL=main.js.map
